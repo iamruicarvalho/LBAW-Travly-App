@@ -19,7 +19,8 @@ DROP TABLE IF EXISTS user_notifications CASCADE;
 DROP TABLE IF EXISTS post_notifications CASCADE;
 DROP TABLE IF EXISTS request_ CASCADE;
 DROP TABLE IF EXISTS follows_ CASCADE;
-DROP TABLE IF EXISTS likes_ CASCADE;
+DROP TABLE IF EXISTS post_likes CASCADE;
+DROP TABLE IF EXISTS comment_likes CASCADE;
 DROP TABLE IF EXISTS saved_post CASCADE;
 
 DROP TYPE IF EXISTS post_content_types;
@@ -109,37 +110,43 @@ CREATE TABLE belongs_ (
     PRIMARY KEY (userID, groupID)
 );
 
-CREATE TABLE User_Notification(
+CREATE TABLE User_Notification (
     notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
     userID INTEGER NOT NULL REFERENCES user_ (userID), 
     notification_type user_notification_types NOT NULL
 );
 
-CREATE TABLE Post_Notification(
+CREATE TABLE Post_Notification (
     notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE, 
     notification_type post_notification_types NOT NULL
 );
 
-CREATE TABLE request_(
+CREATE TABLE request_ (
     senderID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
     receiverID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
     PRIMARY KEY (senderID, receiverID)
 );
 
-CREATE TABLE follows_(
+CREATE TABLE follows_ (
     followerID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
     followedID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
     PRIMARY KEY (followerID, followedID)
 );
 
-CREATE TABLE likes_(
+CREATE TABLE post_likes (
     userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
     postID INTEGER REFERENCES post_ (postID) ON UPDATE CASCADE,
     PRIMARY KEY (userID, postID)
 );
 
-CREATE TABLE saved_post(
+CREATE TABLE comment_likes (
+    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    postID INTEGER REFERENCES comment_ (commentID) ON UPDATE CASCADE,
+    PRIMARY KEY (userID, commentID)
+);
+
+CREATE TABLE saved_post (
     userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
     postID INTEGER REFERENCES post_ (postID) ON UPDATE CASCADE,
     PRIMARY KEY (userID, postID)
@@ -149,15 +156,15 @@ CREATE TABLE saved_post(
 --              Indexes               --
 --====================================--
 
-CREATE INDEX Author_Post ON Post USING hash (author_id);
+CREATE INDEX Author_Post ON Post USING hash (created_by);
 
-CREATE INDEX Notified_User_Notification ON Notification USING btree (notified_user);
+CREATE INDEX Notified_User_Notification ON Notification USING btree (notifies);
 CLUSTER Notification USING Notified_User_Notification;
 
-CREATE INDEX Emitter_User_Notification ON Notification USING btree (emitter_user);
+CREATE INDEX Emitter_User_Notification ON Notification USING btree (send_notif);
 CLUSTER Notification USING Emitter_User_Notification;
 
-CREATE INDEX Comment_Post ON Comment USING btree(post_id);
+CREATE INDEX Comment_Post ON Comment USING btree (postID);
 
 
 --====================================--
@@ -196,12 +203,11 @@ END $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER user_search_update
- BEFORE INSERT OR UPDATE ON "User"
- FOR EACH ROW
- EXECUTE FUNCTION user_search_update();
+    BEFORE INSERT OR UPDATE ON "User"
+    FOR EACH ROW
+    EXECUTE FUNCTION user_search_update();
 
 CREATE INDEX user_search_idx ON "User" USING GIN (user_tsvectors);
-
 
 
 -- ### Index IDX06 for "Group"
@@ -237,9 +243,9 @@ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER group_search_update
- BEFORE INSERT OR UPDATE ON "Group"
- FOR EACH ROW
- EXECUTE FUNCTION group_search_update();
+    BEFORE INSERT OR UPDATE ON "Group"
+    FOR EACH ROW
+    EXECUTE FUNCTION group_search_update();
 
 CREATE INDEX group_search_idx ON "Group" USING GIN (group_tsvectors);
 
@@ -276,9 +282,9 @@ END $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER post_search_update
- BEFORE INSERT OR UPDATE ON "Post"
- FOR EACH ROW
- EXECUTE FUNCTION post_search_update();
+    BEFORE INSERT OR UPDATE ON "Post"
+    FOR EACH ROW
+    EXECUTE FUNCTION post_search_update();
 
 CREATE INDEX post_search_idx ON "Post" USING GIN (post_tsvectors);
 
@@ -309,9 +315,9 @@ END $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER message_search_update
- BEFORE INSERT OR UPDATE ON "Message"
- FOR EACH ROW
- EXECUTE FUNCTION message_search_update();
+    BEFORE INSERT OR UPDATE ON "Message"
+    FOR EACH ROW
+    EXECUTE FUNCTION message_search_update();
 
 CREATE INDEX message_search_idx ON "Message" USING GIN (message_tsvectors);
 
@@ -342,9 +348,9 @@ END $$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER comment_search_update
- BEFORE INSERT OR UPDATE ON "Comment"
- FOR EACH ROW
- EXECUTE FUNCTION comment_search_update();
+    BEFORE INSERT OR UPDATE ON "Comment"
+    FOR EACH ROW
+    EXECUTE FUNCTION comment_search_update();
 
 CREATE INDEX comment_search_idx ON "Comment" USING GIN (comment_tsvectors);
 
@@ -354,81 +360,81 @@ CREATE INDEX comment_search_idx ON "Comment" USING GIN (comment_tsvectors);
 --              Triggers              --
 --====================================--
 
--- | **Trigger**      | TRIGGER01                             |
--- | ---              | ---                                    |
--- | **Description**  |A user cannot like his/her own posts or comments. (business rule BR10).|
--- | `SQL code`    |  
+--TRIGGER01
+-- A user cannot like his/her own posts (Business rule BR10).
 
-CREATE FUNCTION verify_self_liking() RETURNS TRIGGER AS 
+CREATE FUNCTION verify_self_liking_post() RETURNS TRIGGER AS 
 $BODY$
 BEGIN
     IF EXISTS (SELECT * FROM post_ WHERE NEW.postID = post_.postID AND NEW.userID = post_.created_by) 
         THEN RAISE EXCEPTION 'A user cannot like their own posts';
     END IF;
 
+    RETURN NEW;
+END 
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER verify_self_liking_post
+    BEFORE INSERT OR UPDATE ON post_likes
+    FOR EACH ROW
+    EXECUTE PROCEDURE verify_self_liking_post();
+
+
+--TRIGGER02
+--A user cannot like his/her own comments.
+
+CREATE FUNCTION verify_self_liking_comment() RETURNS TRIGGER AS 
+$BODY$
+BEGIN
     IF EXISTS (SELECT * FROM comment_ WHERE NEW.commentID = comment_.commentID AND NEW.userID = comment_.userID) 
         THEN RAISE EXCEPTION 'A user cannot like their own comments';
     END IF;
 
     RETURN NEW;
 END 
-
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER verify_self_liking
-    BEFORE INSERT OR UPDATE ON likes_
+CREATE TRIGGER verify_self_liking_comment
+    BEFORE INSERT OR UPDATE ON comment_likes
     FOR EACH ROW
-    EXECUTE PROCEDURE verify_self_liking();
+    EXECUTE PROCEDURE verify_self_liking_comment();
 
 
-
--- | **Trigger**      | TRIGGER02                              |
--- | ---              | ---                                    |
--- | **Description**  | A user can only like a post once. (business rule BR21) |
--- | `SQL code`    |   
+--TRIGGER03
+--A user can only like a post once.
 
 CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM likes_ WHERE NEW.userID = likes_.userID AND NEW.postID = likes_.postID) 
-        THEN RAISE EXCEPTION 'A user can only like a post once';
-    END IF;
-
-    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_.userID
-            AND user_.private_) 
-        AND NOT EXISTS (SELECT * FROM  follows_ WHERE NEW.userID = follows_.followerID AND follows_.followedID= post_.created_by) 
+    IF EXISTS (SELECT * FROM post_likes WHERE NEW.userID = post_likes.userID AND NEW.postID = post_likes.postID) 
         THEN RAISE EXCEPTION 'A user can only like a post once';
     END IF;
 
     RETURN NEW;
 END
-
 $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER verify_post_likes
-    BEFORE INSERT OR UPDATE ON likes_
+    BEFORE INSERT OR UPDATE ON post_likes
     FOR EACH ROW
     EXECUTE PROCEDURE verify_post_likes();
 
 
-
--- | **Trigger**      | TRIGGER03                             |
--- | ---              | ---                                    |
--- | **Description**  | A user can only like a comment once (business rule BR22). |
--- | `SQL code`    |   
+--TRIGGER04
+--A user can only like a comment once.
 
 CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM comment_likes WHERE NEW.userID = userID AND NEW.postID = postID) 
+    IF EXISTS (SELECT * FROM comment_likes WHERE NEW.userID = userID AND NEW.commentID = commentID) 
         THEN RAISE EXCEPTION 'A user can only like a comment once';
     END IF;
 
     RETURN NEW;
 END
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -438,22 +444,18 @@ CREATE TRIGGER verify_comment_likes
     EXECUTE PROCEDURE verify_comment_likes();
 
 
-
--- | **Trigger**      | TRIGGER04                             |
--- | ---              | ---                                    |
--- | **Description**  | A user cannot follow itself (business rule BR23).|
--- | `SQL code`    |   
+--TRIGGER05
+-- A user cannot follow itself.
 
 CREATE FUNCTION verify_self_follow() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.followerID = NEW.followedID 
-        THEN RAISE EXCEPTION 'A user can not follow itself';
+    IF NEW.followerID = NEW.followedID THEN
+        RAISE EXCEPTION 'A user can not follow itself';
     END IF;
 
     RETURN NEW;
 END
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -463,11 +465,8 @@ CREATE TRIGGER verify_self_follow
     EXECUTE PROCEDURE verify_self_follow();
 
 
-
--- | **Trigger**      | TRIGGER05                             |
--- | ---              | ---                                    |
--- | **Description**  | A user can only comment on posts from public users or  posts from users they follow (business rule BR24).|
--- | `SQL code`    |   
+--TRIGGER06
+--A user can only comment on posts from public users or posts from users they follow.
 
 CREATE FUNCTION verify_comment() RETURNS TRIGGER AS
 $BODY$
@@ -479,7 +478,6 @@ BEGIN
 
     RETURN NEW;
 END
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -489,22 +487,18 @@ CREATE TRIGGER verify_comment
     EXECUTE PROCEDURE verify_comment();
 
 
-
--- | **Trigger**      | TRIGGER06                             |
--- | ---              | ---                                    |
--- | **Description**  | A group owner is also a member of your group (business rule BR25).|
--- | `SQL code`    |   
+--TRIGGER07
+--A group owner is also a member of your group.
 
 CREATE FUNCTION group_owner() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NOT EXISTS (SELECT * FROM belongs_ WHERE NEW.userID = belongs_.userID AND NEW.groupID = belongs_.groupID)    
+    IF NOT EXISTS ( SELECT  * FROM belongs_ WHERE NEW.userID = belongs_.userID AND NEW.groupID = belongs_.groupID) 
         THEN RAISE EXCEPTION 'A group owner must also be a member of the group';
     END IF;
 
     RETURN NEW;
 END;
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -514,11 +508,8 @@ CREATE TRIGGER group_owner
     EXECUTE PROCEDURE group_owner();
 
 
-
--- | **Trigger**      | TRIGGER07                             |
--- | ---              | ---                                    |
--- | **Description**  | A user cannot request to follow a user that he/she already follow (business rule BR26).|
--- | `SQL code`    |  
+--TRIGGER08
+--A user cannot request to follow a user that he/she already follow.
 
 CREATE FUNCTION check_follow_request() RETURNS TRIGGER AS
 $BODY$
@@ -526,10 +517,9 @@ BEGIN
     IF EXISTS (SELECT * FROM follows_ WHERE NEW.senderID = follows_.followerID AND NEW.receiverID = follows_.followedID)
         THEN RAISE EXCEPTION 'Can not make a follow request to someone you already follow';
     END IF;
-
+    
     RETURN NEW;
 END;
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -539,11 +529,8 @@ CREATE TRIGGER check_follow_request
     EXECUTE PROCEDURE check_follow_request();
 
 
-
--- | **Trigger**      | TRIGGER08                             |
--- | ---              | ---                                    |
--- | **Description**  | A user cannot request to follow themselves (business rule BR27).|
--- | `SQL code`    |  
+--TRIGGER09
+--A user cannot request to follow themselves.
 
 CREATE FUNCTION verify_self_follow_req() RETURNS TRIGGER AS
 $BODY$
@@ -554,7 +541,6 @@ BEGIN
 
     RETURN NEW;
 END
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -564,22 +550,18 @@ CREATE TRIGGER verify_self_follow_req
     EXECUTE PROCEDURE verify_self_follow_req();
 
 
-
--- | **Trigger**      | TRIGGER09                             |
--- | ---              | ---                                    |
--- | **Description**  |When deleting a post it also deletes its comments, subcomments, likes and notifications (business rule BR28).|
--- | `SQL code`    |  
+--TRIGGER10
+--When deleting a post it also deletes its comments, subcomments, likes and notifications.
 
 CREATE FUNCTION delete_post_action() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    DELETE FROM likes_ WHERE OLD.postID = likes_.postID;
+    DELETE FROM post_likes WHERE OLD.postID = post_likes.postID;
     DELETE FROM Post_Notification WHERE OLD.postID = Post_Notification.postID;
     DELETE FROM comment_ WHERE OLD.postID IN (SELECT postID FROM comment_ WHERE OLD.postID = comment_.postID OR OLD.postID = comment_.commentID);
 
     RETURN OLD;
 END;
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -589,22 +571,18 @@ CREATE TRIGGER delete_post_action
     EXECUTE PROCEDURE delete_post_action();
 
 
-
--- | **Trigger**      | TRIGGER10                             |
--- | ---              | ---                                    |
--- | **Description**  |When deleting a comment it also deletes its likes, subcomments and notifications (business rule BR29).|
--- | `SQL code`    |  
+--TRIGGER11
+--When deleting a comment it also deletes its likes, subcomments and notifications.
 
 CREATE FUNCTION delete_comment_action() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    DELETE FROM likes_ WHERE OLD.commentID = likes_.commentID;
+    DELETE FROM comment_likes WHERE OLD.commentID = comment_likes.commentID;
     DELETE FROM Post_Notification WHERE OLD.commentID = Post_Notification.commentID;
     DELETE FROM comment_ WHERE OLD.commentID = comment_.commentID;
 
     RETURN OLD;
 END;
-
 $BODY$
 LANGUAGE plpgsql;
 
@@ -629,44 +607,45 @@ CREATE TRIGGER delete_comment_action
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 BEGIN;
-
-    UPDATE User
-    SET name = 'deleted',
-        username = 'deleted' || 'ID_do_utilizador',
-        password = 'deleted' || 'ID_do_utilizador',
-        email = 'deleted' || 'ID_do_utilizador',
-        description = '',
-        is_public = false
+    DELETE FROM User_Notification
     WHERE userID = 'ID_do_utilizador';
 
-    INSERT INTO Blocked (id)
-    VALUES ('ID_do_utilizador');
+    DELETE FROM Post_Notification
+    WHERE postID IN (SELECT postID FROM post_ WHERE created_by = 'ID_do_utilizador');
 
-    DELETE FROM UserPhoto
-    WHERE userID = 'ID_do_utilizador';
-
-    DELETE FROM Follow
-    WHERE followerID = 'ID_do_utilizador' OR followedID = 'ID_do_utilizador';
-
-    DELETE FROM Request
+    DELETE FROM request_
     WHERE senderID = 'ID_do_utilizador' OR receiverID = 'ID_do_utilizador';
 
-    DELETE FROM Notification
-    WHERE notifies = 'ID_do_utilizador' OR sends_notif = 'ID_do_utilizador';
+    DELETE FROM follows_
+    WHERE followerID = 'ID_do_utilizador' OR followedID = 'ID_do_utilizador';
 
-    DELETE FROM Configuration
+    DELETE FROM post_likes
     WHERE userID = 'ID_do_utilizador';
 
-    SELECT groupID
-    FROM Group
+    DELETE FROM comment_likes
+    WHERE userID = 'ID_do_utilizador';
+
+    DELETE FROM comment_
+    WHERE userID = 'ID_do_utilizador';
+
+    DELETE FROM message_
+    WHERE sender = 'ID_do_utilizador';
+
+    UPDATE message_
+    SET receiver = NULL
+    WHERE receiver = 'ID_do_utilizador';
+
+    DELETE FROM belongs_
+    WHERE userID = 'ID_do_utilizador';
+
+    DELETE FROM owner_
+    WHERE userID = 'ID_do_utilizador';
+
+    DELETE FROM group_
     WHERE ownerID = 'ID_do_utilizador';
 
-    DELETE FROM Group
-    WHERE ownerID = 'ID_do_utilizador';
-
-    DELETE FROM GroupPhoto
-    WHERE groupID IN (IDs_dos_grupos_obtidos_anteriormente);
-
+    DELETE FROM user_
+    WHERE userID = 'ID_do_utilizador';
 COMMIT;
 
 
@@ -676,31 +655,19 @@ COMMIT;
 -- | Isolation level      | REPEATABLE READ                                            |
 -- | SQL Code             |          |
 
-BEGIN TRANSACTION;
-
-    INSERT INTO `Group` (name, description)
+BEGIN;
+    INSERT INTO group_ (name_, description_)
     VALUES ('Novo Nome do Grupo', 'Descrição do Grupo');
 
     DECLARE @newGroupID INT;
     SET @newGroupID = SCOPE_IDENTITY();
 
-    INSERT INTO `Owner` (userID, groupID)
+    INSERT INTO owner_ (userID, groupID)
     VALUES (<owner_user_id>, @newGroupID);
 
-    INSERT INTO `Belongs` (userID, groupID)
-    VALUES (<owner_user_id>, @newGroupID);
-
-    INSERT INTO `Notification` (emitter_user, notified_user, date, viewed)
-    VALUES (<owner_user_id>, <owner_user_id>, NOW(), 0);
-
-    DECLARE @newNotificationID INT;
-    SET @newNotificationID = SCOPE_IDENTITY();
-
-    INSERT INTO `GroupNotification` (id, groupID, notification_type)
-    VALUES (@newNotificationID, @newGroupID, 'new_group');
-
+    INSERT INTO belongs_ (userID, groupID)
+    VALUES (<user_id>, @newGroupID);
 COMMIT;
-
 
 
 -- | SQL Reference   | New comment notification                    |
@@ -710,23 +677,16 @@ COMMIT;
 -- | `SQL Code`                                   |↓↓↓↓↓↓↓↓↓↓↓|
 
 
-INSERT INTO Notification (description, time, notifies, sends_notif)
-VALUES ('Nova notificação de comentário em post', NOW(), (SELECT userID FROM User WHERE username = 'username_do_proprietario_do_post'), (SELECT userID FROM User WHERE username = 'username_do_utilizador_autenticado'));
+BEGIN;
+    INSERT INTO notification_ (description_, time, notifies, sends_notif)
+    VALUES ('Nova notificação de comentário em post', NOW(), (SELECT userID FROM user_ WHERE username = 'username_do_proprietario_do_post'), (SELECT userID FROM user_ WHERE username = 'username_do_utilizador_autenticado'));
 
-SELECT notificationID
-FROM Notification
-WHERE notifies = (SELECT userID FROM User WHERE username = 'username_do_utilizador_autenticado')
-  AND sends_notif = (SELECT userID FROM User WHERE username = 'username_do_proprietario_do_post')
-ORDER BY time DESC
-LIMIT 1;
+    DECLARE newNotificationID INT;
+    SET newNotificationID = LAST_INSERT_ID();
 
-INSERT INTO CommentNotification (notificationID, comment_id, notification_type)
-VALUES ('ID_da_notificacao_obtido_anteriormente', 'ID_do_comentario', 'comment_post');
-
-SELECT owner_id
-FROM Comment
-WHERE commentID = 'ID_do_comentario_anterior';
-
+    INSERT INTO comment_ (notificationID, postID, description_, likes, time, comment_replies)
+    VALUES (newNotificationID, 'ID_do_post', 'Descrição do comentário', 0, NOW(), NULL);
+COMMIT;
 
 
 -- | SQL Reference   | Like post notification                    |
@@ -738,12 +698,11 @@ WHERE commentID = 'ID_do_comentario_anterior';
 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
-IF EXISTS (SELECT 1 FROM PostLike WHERE user_id = 'ID_do_utilizador_autenticado' AND post_id = 'ID_do_post') THEN
-    -- Caso já tenha dado "like," sair sem fazer nada
+IF EXISTS (SELECT 1 FROM post_likes WHERE userID = 'ID_do_utilizador_autenticado' AND postID = 'ID_do_post') THEN
     RETURN;
 END IF;
 
-INSERT INTO PostLike (user_id, post_id)
+INSERT INTO post_likes (userID, postID)
 VALUES ('ID_do_utilizador_autenticado', 'ID_do_post');
 
 IF 'ID_do_utilizador_autenticado' = 'ID_do_proprietario_do_post' THEN
@@ -751,22 +710,19 @@ IF 'ID_do_utilizador_autenticado' = 'ID_do_proprietario_do_post' THEN
 END IF;
 
 BEGIN;
-
-    INSERT INTO Notification (description, time, notifies, sends_notif)
-    VALUES ('Nova notificação de "like" em post', NOW(), 'ID_do_utilizador_autenticado', 'ID_do_proprietario_do_post');
+    INSERT INTO notification_ (description_, time, notifies, sends_notif)
+    VALUES ('Nova notificação de "like" em post', NOW(), 'ID_do_proprietario_do_post', 'ID_do_utilizador_autenticado');
 
     SELECT notificationID
-    FROM Notification
-    WHERE notifies = 'ID_do_proprietario_do_post'
+    FROM notification_
+    WHERE notifies = 'ID_do_proprietario_do_post' 
     AND sends_notif = 'ID_do_utilizador_autenticado'
     ORDER BY time DESC
     LIMIT 1;
 
-    INSERT INTO PostNotification (notificationID, post_id, notification_type)
+    INSERT INTO Post_Notification (notificationID, postID, notification_type)
     VALUES ('ID_da_notificacao_obtido_anteriormente', 'ID_do_post', 'liked_post');
-
 COMMIT;
-
 
 
 -- | SQL Reference   | Follow notification                    |
@@ -776,28 +732,741 @@ COMMIT;
 -- | `SQL Code`                                   |↓↓↓↓↓↓↓↓↓↓↓|
 
 
+
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 BEGIN;
-
-    INSERT INTO Follow (follower_id, followed_id)
+    INSERT INTO follows_ (followerID, followedID)
     VALUES ('ID_do_utilizador_autenticado', 'ID_do_utilizador_seguido');
 
-    INSERT INTO Notification (description, time, notifies, sends_notif)
-    VALUES ('Nova notificação de seguidor', NOW(), 'ID_do_utilizador_autenticado', 'ID_do_utilizador_seguido');
+    INSERT INTO notification_ (description_, time, notifies, sends_notif)
+    VALUES ('Nova notificação de seguidor', NOW(), 'ID_do_proprietario_do_post', 'ID_do_utilizador_autenticado');
 
     SELECT notificationID
-    FROM Notification
+    FROM notification_
     WHERE notifies = 'ID_do_utilizador_seguido'
     AND sends_notif = 'ID_do_utilizador_autenticado'
     ORDER BY time DESC
     LIMIT 1;
 
-    INSERT INTO UserNotification (notificationID, notification_type)
+    INSERT INTO User_Notification (notificationID, notification_type)
     VALUES ('ID_da_notificacao_obtida_anteriormente', 'started_following');
-
 COMMIT;
 
 
+--====================================--
+--            Populate DB             --
+--====================================--
 
+INSERT INTO user_(username, email, password_, private_) VALUES
+            ('andrdr28', 'andr28@gmail.com', '$2y$10$WKYx7hG2PyC9rnadSKUAD.oMISWkBGWW32DKtayWxjWjQy8ltelRC', True),
+            ('georgekatie', 'georgekatie350@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('hannahquinn', 'hannahquinn842@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('yarasam', 'yarasam976@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('meganwendy', 'meganwendy463@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('nathanxander', 'nathanxander785@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('quinnsam', 'quinnsam18@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('jackzane', 'jackzane328@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('zaneeva', 'zaneeva990@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('zanesam', 'zanesam914@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('alicewendy', 'alicewendy126@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('liamkatie', 'liamkatie67@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('yaracarlos', 'yaracarlos799@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('hannahzane', 'hannahzane619@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('liamzane', 'liamzane311@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('zanehannah', 'zanehannah195@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('oliviaalice', 'oliviaalice475@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('zanebob', 'zanebob976@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('tomtom', 'tomtom684@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('davidquinn', 'davidquinn754@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('liamdavid', 'liamdavid227@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('tomyara', 'tomyara219@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('oliviabob', 'oliviabob192@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('racheljack', 'racheljack573@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('samdavid', 'samdavid355@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('jackjack', 'jackjack82@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('nathanolivia', 'nathanolivia518@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('liamquinn', 'liamquinn677@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('jackbob', 'jackbob786@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('oliviauma', 'oliviauma108@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('tombob', 'tombob848@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('victoryara', 'victoryara612@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('liamhannah', 'liamhannah96@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('georgerachel', 'georgerachel363@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('liamivan', 'liamivan331@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('katieolivia', 'katieolivia38@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('meganpeter', 'meganpeter830@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('georgemegan', 'georgemegan607@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('fionayara', 'fionayara985@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('rachelmegan', 'rachelmegan896@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('oliviageorge', 'oliviageorge754@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('davidjack', 'davidjack408@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('peterkatie', 'peterkatie191@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('tomeva', 'tomeva205@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('fionaquinn', 'fionaquinn493@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('davidcarlos', 'davidcarlos909@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('samtom', 'samtom78@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('samsam', 'samsam106@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('peteryara', 'peteryara541@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('victorcarlos', 'victorcarlos518@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('ivansam', 'ivansam811@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('fionaliam', 'fionaliam901@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('peteralice', 'peteralice614@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('wendykatie', 'wendykatie654@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('liampeter', 'liampeter806@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('sammegan', 'sammegan753@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('aliceeva', 'aliceeva176@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('victorrachel', 'victorrachel214@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('georgedavid', 'georgedavid857@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('alicemegan', 'alicemegan232@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('quinnivan', 'quinnivan690@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('hannahgeorge', 'hannahgeorge489@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('liamnathan', 'liamnathan348@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('jackkatie', 'jackkatie72@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('xanderzane', 'xanderzane447@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('fionaxander', 'fionaxander858@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('quinnbob', 'quinnbob335@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('tommegan', 'tommegan928@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('jackfiona', 'jackfiona763@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('xanderalice', 'xanderalice220@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('liammegan', 'liammegan311@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('nathanyara', 'nathanyara617@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('peternathan', 'peternathan918@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('katiequinn', 'katiequinn734@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('tomxander', 'tomxander563@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('tomuma', 'tomuma592@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('ivancarlos', 'ivancarlos377@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('fionahannah', 'fionahannah467@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('quinndavid', 'quinndavid314@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('rachelsam', 'rachelsam253@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('quinnjack', 'quinnjack323@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('wendyivan', 'wendyivan457@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('nathanrachel', 'nathanrachel404@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('davidtom', 'davidtom668@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('fionacarlos', 'fionacarlos514@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('davidolivia', 'davidolivia447@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
+            ('carlosmegan', 'carlosmegan216@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('carlostom', 'carlostom87@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('zanedavid', 'zanedavid855@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('fionatom', 'fionatom693@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('xanderxander', 'xanderxander175@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('katiejack', 'katiejack723@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('victoralice', 'victoralice298@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True);
 
+INSERT INTO post_(content, description_, likes_, comments, time_, created_by, content_type) VALUES
+            ('imagina uma imagem aqui', 'linda paisagem', 3, 0, 0, 1,'image'),
+            ('imagina um video aqui', 'boa jogada', 4, 0, 0, 1,'video'),
+            ('imagina um video aqui', 'dia de folga', 4, 0, 0, 1,'video'),
+            ('imagina uma imagem aqui', 'a próxima tentativa será melhor', 4, 0, 0, 1,'image'),
+            ('imagina uma imagem aqui', 'boa escolha', 4, 0, 0, 1,'video'),
+            ('imagina uma imagem aqui', 'experiência única', 4, 0, 0, 1,'video'),
+            ('imagina um video aqui', 'vou repetir', 4, 0, 0, 1,'image'),
+            ('imagina um video aqui', 'não gostei', 4, 0, 0, 1,'image'),
+            ('imagina uma imagem aqui', 'adorei este passeio', 4, 0, 0, 1,'video'),
+            ('imagina uma imagem aqui', 'recomendo muito este restaurante', 4, 0, 0, 1,'image');
+
+INSERT INTO group_(name_, description_) VALUES
+            ('Mundo Fora do Mapa', ''),
+            ('Aventura sem Limites', ''),
+            ('ADOROVIAJAR!ADOROVIAJAR!', 'ADOROVIAJAR!ADOROVIAJAR!ADOROVIAJAR!ADOROVIAJAR!ADOROVIAJAR!ADOROVIAJAR!ADOROVIAJAR!ADOROVIAJAR!'),
+            ('Rota dos Sonhos', ''),
+            ('Festival2031', 'Vens? S/N'),
+            ('Roteiro Aventura', '');
+
+INSERT INTO message_(description_, time_, sender, receiver, sent_to, message_replies) VALUES
+            ('ADORO VIAJAR!!!!', 0, 1, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', 1, 5, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', 2, 48, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', 3, 31, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', 4, 22, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', 5, 23, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', 6, 67, NULL, 3, NULL),
+            ('Olá, espero que gostes do Travly!', 0, 1, 48, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', 0, 1, 23, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', 0, 1, 67, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', 0, 1, 31, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', 0, 1, 5, NULL, NULL),
+            ('Por acaso até estou :)', 0, 67, 1, NULL, 10);
+
+INSERT INTO comment_(description_, likes_, time_, userID, postID, comment_replies) VALUES
+            ('Ganda post chavalo!', 0, 0, 34, 1, NULL),
+            ('Brigadão sócio.', 0, 0, 1, 1, 1),
+            ('Nunca vi nada assim!', 0, 0, 67, 2, NULL),
+            ('Uau!!!', 0, 0, 45, 2, NULL);
+
+INSERT INTO notification_(notificationID, description NN, time NN, notifies, sends_notif) VALUES
+            (1, 'JohnDoe started following you', '2023-10-25 08:30:15', 5, 3),
+            (2, 'AliceSmith liked your recent post', '2023-10-25 10:15:40', 2, 4),
+            (3, 'RobertJohnson requested to follow you', '2023-10-25 12:20:55', 8, 6),
+            (4, 'EmilyBrown commented on your vacation post', '2023-10-25 14:45:30', 7, 9),
+            (5, 'You accepted SarahWilson follow request', '2023-10-25 15:55:10', 1, 5),
+            (6, 'DanielRoberts liked your cooking recipe', '2023-10-25 16:40:25', 10, 2),
+            (7, 'SophiaGarcia requested to follow you', '2023-10-25 17:25:55', 3, 7),
+            (8, 'MichaelAnderson started following your art account', '2023-10-25 18:10:45', 6, 8),
+            (9, 'AlexaHall liked your travel photography', '2023-10-25 19:30:20', 8, 2),
+            (10, 'OliverSmith commented on your latest blog post', '2023-10-25 20:15:35', 11, 5),
+            (11, 'You accepted LilyBrown follow request', '2023-10-25 21:05:50', 12, 10),
+            (12, 'LucasJones requested to follow you', '2023-10-25 22:40:10', 9, 1),
+            (13, 'EllaDavis started following your fashion page', '2023-10-25 23:30:30', 7, 4),
+            (14, 'GraceTurner liked your new artwork', '2023-10-26 08:00:15', 13, 6),
+            (15, 'NoahMartinez commented on your tech review', '2023-10-26 10:45:25', 14, 3),
+            (16, 'CharlotteWhite requested to follow you', '2023-10-26 12:20:50', 1, 5),
+            (17, 'You accepted JamesJohnson follow request', '2023-10-26 14:35:40', 7, 9),
+            (18, 'WilliamSmith liked your gardening tips', '2023-10-26 15:50:10', 4, 8),
+            (19, 'AvaTaylor commented on your fitness post', '2023-10-26 16:30:30', 2, 11),
+            (20, 'SophiaHarris started following your photography account', '2023-10-26 17:15:55', 9, 1),
+            (21, 'BenjaminWilson requested to follow you', '2023-10-26 18:25:15', 12, 2),
+            (22, 'EthanAnderson liked your recent artwork', '2023-10-26 19:40:40', 10, 3),
+            (23, 'You accepted MiaGarcia follow request', '2023-10-26 20:50:25', 4, 7),
+            (24, 'LucyDavis commented on your travel blog', '2023-10-26 21:35:10', 3, 8),
+            (25, 'DavidClark started following your fitness page', '2023-10-26 22:20:35', 15, 6),
+            (26, 'EmmaMartinez liked your food photography', '2023-10-27 08:10:20', 14, 5),
+            (27, 'LoganSmith requested to follow you', '2023-10-27 10:40:45', 11, 6),
+            (28, 'You accepted GraceRoberts follow request', '2023-10-27 12:55:30', 2, 7),
+            (29, 'JackTurner liked your new fashion collection', '2023-10-27 14:30:15', 4, 9),
+            (30, 'SophieJohnson commented on your art exhibit', '2023-10-27 15:20:25', 3, 1),
+            (31, 'You accepted DanielWilson follow request', '2023-10-27 16:15:50', 5, 8),
+            (32, 'LiamHarris started following your travel blog', '2023-10-27 17:45:55', 6, 10),
+            (33, 'ZoeSmith requested to follow you', '2023-10-27 18:30:40', 7, 12),
+            (34, 'You accepted WilliamDavis follow request', '2023-10-27 19:55:30', 1, 13),
+            (35, 'OliviaTaylor liked your latest tech review', '2023-10-27 21:40:15', 15, 2),
+            (36, 'JacksonTurner commented on your gardening post', '2023-10-27 22:25:55', 8, 14),
+            (37, 'IsabellaHarris started following your cooking channel', '2023-10-28 08:05:25', 10, 3),
+            (38, 'MasonAnderson liked your music composition', '2023-10-28 10:45:10', 7, 6),
+            (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', 4, 5),
+            (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', 2, 9);
+
+INSERT INTO admin_(userID) VALUES
+            (1);
+
+INSERT INTO owner_(userID, groupID) VALUES
+            (23, 1),
+            (7,2),
+            (1,3),
+            (15,4),
+            (31,5),
+            (9,6);
+
+INSERT INTO belongs_(userID, groupID) VALUES 
+            (23, 1),
+            (7,2),
+            (1,3),
+            (15,4),
+            (31,5),
+            (9,6),
+            (3, 1), 
+            (4, 2), 
+            (5, 3), 
+            (6, 4), 
+            (8, 5), 
+            (10, 6), 
+            (12, 1), 
+            (13, 2), 
+            (14, 3), 
+            (16, 4), 
+            (17, 5), 
+            (18, 6), 
+            (20, 1), 
+            (21, 2), 
+            (22, 3), 
+            (24, 4), 
+            (25, 5), 
+            (26, 6), 
+            (28, 1), 
+            (29, 2), 
+            (30, 3), 
+            (32, 4), 
+            (33, 5), 
+            (34, 6), 
+            (36, 1), 
+            (37, 2), 
+            (38, 3), 
+            (39, 4), 
+            (40, 5), 
+            (41, 6), 
+            (42, 1), 
+            (43, 2), 
+            (44, 3), 
+            (45, 4), 
+            (46, 5), 
+            (47, 6), 
+            (49, 1), 
+            (50, 2), 
+            (51, 3), 
+            (52, 4), 
+            (53, 5), 
+            (54, 6), 
+            (56, 1), 
+            (57, 2), 
+            (58, 3), 
+            (59, 3), 
+            (60, 4), 
+            (61, 5), 
+            (62, 6), 
+            (64, 1), 
+            (65, 2), 
+            (66, 3), 
+            (67, 4), 
+            (68, 5), 
+            (69, 6), 
+            (71, 2), 
+            (72, 3), 
+            (73, 4), 
+            (74, 5), 
+            (75, 6), 
+            (76, 1), 
+            (77, 1), 
+            (78, 2), 
+            (79, 3), 
+            (80, 4), 
+            (81, 5), 
+            (82, 6), 
+            (83, 1);
+
+INSERT INTO user_notification(notificationID, userID, notification_type) VALUES
+            (1, 3, 'request follow'),
+            (2, 5, 'accepted follow'),
+            (3, 8, 'started following'),
+            (4, 2, 'request follow'),
+            (5, 6, 'accepted follow'),
+            (6, 1, 'started following'),
+            (7, 7, 'accepted follow'),
+            (8, 4, 'request follow'),
+            (9, 10, 'accepted follow'),
+            (10, 9, 'started following'),
+            (11, 5, 'request follow'),
+            (12, 2, 'accepted follow'),
+            (13, 3, 'started following'),
+            (14, 6, 'request follow'),
+            (15, 8, 'started following'),
+            (16, 7, 'accepted follow'),
+            (17, 1, 'started following'),
+            (18, 4, 'request follow'),
+            (19, 10, 'accepted follow'),
+            (20, 9, 'started following'),
+            (21, 5, 'request follow'),
+            (22, 2, 'accepted follow'),
+            (23, 3, 'started following'),
+            (24, 6, 'request follow'),
+            (25, 8, 'started following'),
+            (26, 1, 'accepted follow'),
+            (27, 4, 'request follow'),
+            (28, 10, 'started following'),
+            (29, 9, 'request follow'),
+            (30, 5, 'accepted follow'),
+            (31, 2, 'started following'),
+            (32, 6, 'request follow'),
+            (33, 1, 'accepted follow'),
+            (34, 8, 'started following'),
+            (35, 3, 'request follow'),
+            (36, 7, 'accepted follow'),
+            (37, 4, 'started following'),
+            (38, 10, 'request follow'),
+            (39, 9, 'accepted follow'),
+            (40, 5, 'started following');
+
+INSERT INTO post_notification(notificationID, postID, notification_type) VALUES
+            (1, 3, 'liked post'),
+            (2, 5, 'liked post'),
+            (3, 8, 'commented post'),
+            (4, 2, 'liked post'),
+            (5, 6, 'commented post'),
+            (6, 1, 'liked post'),
+            (7, 7, 'commented post'),
+            (8, 4, 'liked post'),
+            (9, 10, 'commented post'),
+            (10, 9, 'liked post'),
+            (11, 5, 'liked post'),
+            (12, 2, 'commented post'),
+            (13, 3, 'liked post'),
+            (14, 6, 'commented post'),
+            (15, 8, 'liked post'),
+            (16, 7, 'commented post'),
+            (17, 1, 'liked post'),
+            (18, 4, 'commented post'),
+            (19, 10, 'liked post'),
+            (20, 9, 'commented post'),
+            (21, 5, 'liked post'),
+            (22, 2, 'liked post'),
+            (23, 3, 'commented post'),
+            (24, 6, 'liked post'),
+            (25, 8, 'commented post'),
+            (26, 1, 'liked post'),
+            (27, 4, 'liked post'),
+            (28, 10, 'commented post'),
+            (29, 9, 'liked post'),
+            (30, 5, 'commented post'),
+            (31, 2, 'liked post'),
+            (32, 6, 'liked post'),
+            (33, 1, 'commented post'),
+            (34, 8, 'liked post'),
+            (35, 3, 'commented post'),
+            (36, 7, 'liked post'),
+            (37, 4, 'commented post'),
+            (38, 10, 'liked post'),
+            (39, 9, 'commented post'),
+            (40, 5, 'liked post');
+
+INSERT INTO request_(senderID, receiverID) VALUES
+            (6, 17),
+            (34, 48),
+            (71, 32),
+            (54, 19),
+            (81, 2),
+            (4, 97),
+            (12, 85),
+            (63, 25),
+            (93, 7),
+            (9, 77),
+            (31, 44),
+            (16, 73),
+            (41, 55),
+            (38, 67),
+            (90, 14),
+            (46, 26),
+            (84, 65),
+            (3, 50),
+            (10, 86),
+            (20, 59),
+            (23, 47),
+            (29, 53),
+            (66, 78),
+            (58, 68),
+            (30, 22),
+            (37, 91),
+            (94, 8),
+            (61, 42),
+            (75, 15),
+            (52, 36),
+            (1, 80),
+            (28, 64),
+            (11, 27),
+            (51, 79),
+            (35, 33),
+            (72, 5),
+            (88, 76),
+            (24, 74),
+            (62, 70),
+            (45, 98),
+            (40, 69),
+            (43, 49),
+            (39, 57),
+            (82, 60),
+            (89, 21),
+            (56, 87),
+            (64, 18),
+            (82, 37),
+            (8, 33),
+            (57, 76),
+            (13, 83),
+            (70, 4),
+            (91, 26),
+            (6, 49),
+            (17, 75),
+            (88, 45),
+            (29, 55),
+            (2, 23),
+            (48, 61),
+            (38, 58),
+            (30, 9),
+            (94, 47),
+            (41, 25),
+            (31, 81),
+            (15, 68),
+            (59, 86),
+            (79, 22),
+            (32, 66),
+            (53, 44),
+            (72, 85),
+            (42, 77),
+            (7, 20),
+            (12, 73),
+            (27, 35),
+            (67, 3),
+            (54, 80),
+            (50, 34),
+            (60, 40),
+            (43, 10),
+            (92, 19),
+            (78, 56),
+            (71, 63),
+            (46, 24),
+            (1, 84),
+            (74, 28),
+            (5, 69),
+            (36, 98);
+
+INSERT INTO follows_(followerID, followedID) VALUES
+            (23, 67),
+            (10, 35),
+            (5, 51),
+            (3, 70),
+            (7, 37),
+            (59, 80),
+            (13, 25),
+            (18, 58),
+            (4, 55),
+            (22, 72),
+            (45, 76),
+            (44, 71),
+            (11, 34),
+            (12, 43),
+            (30, 50),
+            (21, 77),
+            (46, 60),
+            (42, 52),
+            (41, 48),
+            (31, 63),
+            (38, 74),
+            (53, 65),
+            (24, 33),
+            (33, 22),
+            (75, 32),
+            (8, 36),
+            (64, 29),
+            (77, 68),
+            (48, 27),
+            (35, 57),
+            (61, 79),
+            (14, 70),
+            (16, 53),
+            (67, 8),
+            (66, 62),
+            (54, 3),
+            (15, 17),
+            (25, 2),
+            (1, 18),
+            (51, 19),
+            (49, 14),
+            (20, 45),
+            (19, 73),
+            (76, 64),
+            (26, 78),
+            (58, 40),
+            (39, 69),
+            (27, 12),
+            (73, 47),
+            (28, 56),
+            (6, 9),
+            (57, 41),
+            (47, 85),
+            (32, 5),
+            (69, 1),
+            (52, 83),
+            (43, 59),
+            (37, 84),
+            (70, 81),
+            (56, 30),
+            (36, 16),
+            (68, 66),
+            (50, 26),
+            (40, 15),
+            (62, 82),
+            (17, 28),
+            (34, 38),
+            (31, 46),
+            (2, 7),
+            (29, 54),
+            (19, 21),
+            (9, 31),
+            (60, 67),
+            (55, 24),
+            (68, 7),
+            (20, 74),
+            (83, 79),
+            (54, 50),
+            (67, 45),
+            (31, 62),
+            (3, 2),
+            (61, 48),
+            (66, 73),
+            (84, 34),
+            (21, 33),
+            (18, 63),
+            (13, 80),
+            (72, 39),
+            (81, 86),
+            (22, 37),
+            (74, 69),
+            (30, 78),
+            (5, 13),
+            (38, 61),
+            (80, 50),
+            (66, 43),
+            (7, 58),
+            (51, 71),
+            (23, 49),
+            (62, 10),
+            (39, 12),
+            (14, 25),
+            (28, 36),
+            (42, 72),
+            (21, 63),
+            (31, 11),
+            (35, 33),
+            (15, 46),
+            (55, 8),
+            (19, 68),
+            (45, 32),
+            (52, 67),
+            (6, 44),
+            (47, 16),
+            (73, 64),
+            (26, 74),
+            (60, 20),
+            (34, 1),
+            (18, 24),
+            (4, 70),
+            (56, 41),
+            (69, 76),
+            (22, 75),
+            (59, 3),
+            (48, 17),
+            (37, 29),
+            (27, 40),
+            (53, 2),
+            (9, 57),
+            (65, 79),
+            (77, 81),
+            (82, 86),
+            (83, 84),
+            (85, 82),
+            (86, 6),
+            (84, 59),
+            (81, 14),
+            (80, 19),
+            (79, 66),
+            (78, 30),
+            (76, 46),
+            (75, 23),
+            (74, 53),
+            (72, 49),
+            (71, 51),
+            (70, 62),
+            (68, 13),
+            (67, 37),
+            (64, 24),
+            (63, 73),
+            (61, 28),
+            (58, 22),
+            (57, 35),
+            (56, 31),
+            (54, 45),
+            (47, 29),
+            (44, 27),
+            (42, 18),
+            (41, 40),
+            (39, 38),
+            (36, 34),
+            (33, 32),
+            (5, 4),
+            (2, 1);
+
+INSERT INTO post_likes(userID, postID) VALUES
+            (4, 36),
+            (19, 65),
+            (52, 9),
+            (27, 81),
+            (70, 22),
+            (14, 47),
+            (33, 73),
+            (85, 15),
+            (6, 11),
+            (43, 29),
+            (66, 53),
+            (3, 28),
+            (95, 50),
+            (76, 60),
+            (18, 1),
+            (80, 84),
+            (58, 17),
+            (2, 92),
+            (41, 39),
+            (24, 78),
+            (68, 13),
+            (7, 49),
+            (56, 64),
+            (37, 97),
+            (16, 20),
+            (46, 42),
+            (77, 5),
+            (89, 76),
+            (9, 88),
+            (91, 31),
+            (63, 32),
+            (21, 23),
+            (45, 96),
+            (74, 30),
+            (40, 87),
+            (48, 51),
+            (25, 67),
+            (10, 62),
+            (71, 74),
+            (54, 98),
+            (34, 79),
+            (1, 35),
+            (83, 57),
+            (26, 38),
+            (55, 75),
+            (72, 61),
+            (12, 94);
+
+INSERT INTO comment_likes(userID, commentID) VALUES
+            (12, 47),
+            (89, 5),
+            (28, 34),
+            (67, 68),
+            (33, 15),
+            (54, 79),
+            (10, 29),
+            (25, 71),
+            (57, 8),
+            (41, 62),
+            (72, 24),
+            (1, 38),
+            (49, 84),
+            (45, 92),
+            (66, 19),
+            (78, 55),
+            (22, 74),
+            (88, 21),
+            (76, 9),
+            (60, 58),
+            (18, 35),
+            (2, 95),
+            (36, 85),
+            (98, 32),
+            (14, 44),
+            (13, 48),
+            (77, 81),
+            (40, 63),
+            (23, 42),
+            (46, 53),
+            (6, 7),
+            (69, 61),
+            (99, 27),
+            (31, 64),
+            (73, 43),
+            (16, 80),
+            (37, 70),
+            (30, 86),
+            (91, 56),
+            (75, 3),
+            (87, 17),
+            (50, 20),
+            (51, 4),
+            (26, 90),
+            (59, 66),
+            (64, 37),
+            (82, 31),
+            (52, 2),
+            (94, 50);
+
+INSERT INTO saved_post(userID, postID) VALUES
+            (3, 1),
+            (56, 1),
+            (38, 1),
+            (23, 2),
+            (2, 2), 
+            (49, 2),
+            (36, 2);
