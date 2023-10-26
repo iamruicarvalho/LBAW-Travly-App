@@ -759,7 +759,7 @@ COMMIT;
 --            Populate DB             --
 --====================================--
 
-INSERT INTO user_(username, email, password_, private_) VALUES
+INSERT INTO user_(username, name, email, password_, private_) VALUES
             ('andrdr28', 'Andre', 'andr28@gmail.com', '$2y$10$WKYx7hG2PyC9rnadSKUAD.oMISWkBGWW32DKtayWxjWjQy8ltelRC', True),
             ('georgekatie', 'George', 'georgekatie350@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
             ('hannahquinn', 'Hannah', 'hannahquinn842@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
