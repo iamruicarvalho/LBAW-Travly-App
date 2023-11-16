@@ -656,19 +656,21 @@ COMMIT;
 -- | Isolation level      | REPEATABLE READ                                            |
 -- | SQL Code             |          |
 
+DO $$
+DECLARE newGroupID INT;
 BEGIN;
     INSERT INTO group_ (name_, description_)
     VALUES ('Novo Nome do Grupo', 'Descrição do Grupo');
 
-    DECLARE @newGroupID INT;
-    SET @newGroupID = SCOPE_IDENTITY();
+    SET newGroupID = SCOPE_IDENTITY();
 
     INSERT INTO owner_ (userID, groupID)
-    VALUES (<owner_user_id>, @newGroupID);
+    VALUES (<owner_user_id>, newGroupID);
 
     INSERT INTO belongs_ (userID, groupID)
-    VALUES (<user_id>, @newGroupID);
+    VALUES (<user_id>, newGroupID);
 COMMIT;
+END $$;
 
 
 -- | SQL Reference   | New comment notification                    |
@@ -677,17 +679,18 @@ COMMIT;
 -- | Isolation level | REPEATABLE READ |
 -- | `SQL Code`                                   |↓↓↓↓↓↓↓↓↓↓↓|
 
-
+DO $$
+DECLARE newNotificationID INT;
 BEGIN;
     INSERT INTO notification_ (description_, time, notifies, sends_notif)
     VALUES ('Nova notificação de comentário em post', NOW(), (SELECT userID FROM user_ WHERE username = 'username_do_proprietario_do_post'), (SELECT userID FROM user_ WHERE username = 'username_do_utilizador_autenticado'));
 
-    DECLARE newNotificationID INT;
     SET newNotificationID = LAST_INSERT_ID();
 
     INSERT INTO comment_ (notificationID, postID, description_, likes, time, comment_replies)
     VALUES (newNotificationID, 'ID_do_post', 'Descrição do comentário', 0, NOW(), NULL);
 COMMIT;
+END $$;
 
 
 -- | SQL Reference   | Like post notification                    |
@@ -696,6 +699,7 @@ COMMIT;
 -- | Isolation level | REPEATABLE READ |
 -- | `SQL Code`                                   |↓↓↓↓↓↓↓↓↓↓↓|
 
+-- Está a dar erros
 
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
