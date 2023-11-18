@@ -90,7 +90,7 @@ CREATE TABLE comment_ (
 CREATE TABLE notification_ (
     notificationID SERIAL PRIMARY KEY,
     description_ TEXT NOT NULL, 
-    time_ INTEGER NOT NULL,
+    time_ TIMESTAMP NOT NULL,
     notifies INTEGER NOT NULL REFERENCES user_ (userID),
     sends_notif INTEGER NOT NULL REFERENCES user_ (userID)
 );
@@ -188,14 +188,14 @@ BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.user_tsvectors = (
          setweight(to_tsvector('english', NEW.username), 'A') ||
-         setweight(to_tsvector('english', NEW.name), 'B')
+         setweight(to_tsvector('english', NEW.name_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.username <> OLD.username OR NEW.name <> OLD.name) THEN
+         IF (NEW.username <> OLD.username OR NEW.name_ <> OLD.name_) THEN
            NEW.user_tsvectors = (
              setweight(to_tsvector('english', NEW.username), 'A') ||
-             setweight(to_tsvector('english', NEW.name), 'B')
+             setweight(to_tsvector('english', NEW.name_), 'B')
            );
          END IF;
  END IF;
@@ -226,15 +226,15 @@ CREATE OR REPLACE FUNCTION group_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.group_tsvectors = (
-         setweight(to_tsvector('english', NEW.name), 'A') ||
-         setweight(to_tsvector('english', NEW.description), 'B')
+         setweight(to_tsvector('english', NEW.name_), 'A') ||
+         setweight(to_tsvector('english', NEW.description_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) THEN
+         IF (NEW.name_ <> OLD.name_ OR NEW.description_ <> OLD.description_) THEN
            NEW.group_tsvectors = (
-             setweight(to_tsvector('english', NEW.name), 'A') ||
-             setweight(to_tsvector('english', NEW.description), 'B')
+             setweight(to_tsvector('english', NEW.name_), 'A') ||
+             setweight(to_tsvector('english', NEW.description_), 'B')
            );
          END IF;
  END IF;
@@ -267,14 +267,14 @@ BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.post_tsvectors = (
          setweight(to_tsvector('english', NEW.content), 'A') ||
-         setweight(to_tsvector('english', NEW.description), 'B')
+         setweight(to_tsvector('english', NEW.description_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.content <> OLD.content OR NEW.description <> OLD.description) THEN
+         IF (NEW.content <> OLD.content OR NEW.description_ <> OLD.description_) THEN
            NEW.post_tsvectors = (
              setweight(to_tsvector('english', NEW.content), 'A') ||
-             setweight(to_tsvector('english', NEW.description), 'B')
+             setweight(to_tsvector('english', NEW.description_), 'B')
            );
          END IF;
  END IF;
@@ -304,11 +304,11 @@ ADD COLUMN message_tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION message_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
-        NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+        NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.description <> OLD.description) THEN
-           NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+         IF (NEW.description_ <> OLD.description_) THEN
+           NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
          END IF;
  END IF;
  RETURN NEW;
@@ -337,11 +337,11 @@ ADD COLUMN comment_tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION comment_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
-        NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+        NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.description <> OLD.description) THEN
-           NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+         IF (NEW.description_ <> OLD.description_) THEN
+           NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
          END IF;
  END IF;
  RETURN NEW;
@@ -579,7 +579,7 @@ CREATE FUNCTION delete_comment_action() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     DELETE FROM comment_likes WHERE OLD.commentID = comment_likes.commentID;
-    DELETE FROM post_notification WHERE OLD.commentID = post_notification.commentID;
+    DELETE FROM post_notification WHERE OLD.commentID = post_notification.postID;
     DELETE FROM comment_ WHERE OLD.commentID = comment_.commentID;
 
     RETURN OLD;
