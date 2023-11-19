@@ -8074,7 +8074,12 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
+<<<<<<< HEAD
         "php": "^8.1"
+=======
+        "php": "^8.1",
+        "ext-pdo_pgsql": "*"
+>>>>>>> f657aaa8bde7ac617756c103e54adb1e9bf019fb
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
