@@ -2,58 +2,59 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
 
-// Added to define Eloquent relationships.
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Post;
+use App\Models\Admin;
+use App\Models\Comment;
+use App\Models\Follow;
+use App\Models\Request;
+use App\Models\UserNotification;
 
-class User extends Authenticatable
+class User extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    protected $table = 'user_';
 
-    // Don't add create and update timestamps in database.
-    public $timestamps  = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'username', 'name_', 'email', 'password_', 'private_'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password_', 
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
-
-    /**
-     * Get the cards for a user.
-     */
-    public function cards(): HasMany
+    public function posts()
     {
-        return $this->hasMany(Card::class);
+        return $this->hasMany(Post::class, 'created_by');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'userID');
+    }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'userID');
+    }
+
+    public function requestsSent()
+    {
+        return $this->hasMany(Request::class, 'senderID');
+    }
+
+    public function requestsReceived()
+    {
+        return $this->hasMany(Request::class, 'receiverID');
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(Follow::class, 'followerID');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(UserNotification::class, 'userID');
     }
 }
