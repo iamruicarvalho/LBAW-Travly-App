@@ -1,5 +1,5 @@
 <?php
-/*
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
@@ -8,7 +8,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-
+/*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -18,7 +18,7 @@ use App\Http\Controllers\Auth\RegisterController;
 | be assigned to the "web" middleware group. Make something great!
 |
 
-
+*/
 // Home
 Route::redirect('/', '/login');
 
@@ -53,9 +53,9 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
-*/
 
 
+/*
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
@@ -65,9 +65,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\Auth\LoginController;
 
-Route::get('/', [LoginController::class, 'showLoginForm']);
+
 
 // AdminController
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -125,3 +124,4 @@ Route::middleware(['auth'])->group(function () {
 
     Route::put('/profile/{userId}', [UserController::class, 'updateProfile'])->name('profile.update');
 });
+*/
