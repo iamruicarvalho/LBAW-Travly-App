@@ -1,237 +1,1192 @@
 openapi: 3.0.0
 
 info:
- version: '1.0'
- title: 'LBAW MediaLibrary Web API'
- description: 'Web Resources Specification (A7) for MediaLibrary'
+  version: '1.0'
+  title: 'Travly Web API'
+  description: 'Web Resources Specification (A7) for Travly'
 
 servers:
-- url: http://lbaw.fe.up.pt
- description: Production server
+- url: https://lbaw2334.lbaw.fe.up.pt
+  description: Production server
 
 externalDocs:
  description: Find more info here.
- url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
+ url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw2334/-/wikis/eap
 
 tags:
- - name: 'M01: Authentication and Individual Profile'
- - name: 'M02: Works'
- - name: 'M03: Reviews and Wish list'
- - name: 'M04: Loans'
- - name: 'M05: User Administration and Static pages'
+ - name: 'M01: Authentication'
+ - name: 'M02: Users'
+ - name: 'M03: Administration'
+ - name: 'M04: Posts'
+ - name: 'M05: Groups'
+ - name: 'M06: Search'
+ - name: 'M07: Comments'
 
 paths:
- /login:
-   get:
-     operationId: R101
-     summary: 'R101: Login Form'
-     description: 'Provide login form. Access: PUB'
-     tags:
-       - 'M01: Authentication and Individual Profile'
-     responses:
-       '200':
-         description: 'Ok. Show Log-in UI'
-   post:
-     operationId: R102
-     summary: 'R102: Login Action'
-     description: 'Processes the login form submission. Access: PUB'
-     tags:
-       - 'M01: Authentication and Individual Profile'
 
-     requestBody:
-       required: true
-       content:
-         application/x-www-form-urlencoded:
-           schema:
-             type: object
-             properties:
-               email:          # <!--- form field name
-                 type: string
-               password:    # <!--- form field name
-                 type: string
-             required:
+# ------------------------------
+# Authentication Module
+# ------------------------------
+
+# User login
+
+  /login:
+
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+
+      responses:
+        '200':
+          description: 'OK. Show log-in UI'
+
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urllencoded:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
                   - email
                   - password
 
-     responses:
-       '302':
-         description: 'Redirect after processing the login credentials.'
-         headers:
-           Location:
-             schema:
-               type: string
-             examples:
-               302Success:
-                 description: 'Successful authentication. Redirect to user profile.'
-                 value: '/users/{id}'
-               302Error:
-                 description: 'Failed authentication. Redirect to login form.'
-                 value: '/login'
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'OK. You are in. Redirect to homepage.'
+                  value: '/home'
+                302Failure:
+                  description: 'You shall not pass. Redirect again to login form.'
+                  value: '/login'
 
- /logout:
+# ------------------------------
 
-   post:
-     operationId: R103
-     summary: 'R103: Logout Action'
-     description: 'Logout the current authenticated user. Access: USR, ADM'
-     tags:
-       - 'M01: Authentication and Individual Profile'
-     responses:
-       '302':
-         description: 'Redirect after processing logout.'
-         headers:
-           Location:
-             schema:
-               type: string
-             examples:
-               302Success:
-                 description: 'Successful logout. Redirect to login form.'
-                 value: '/login'
+# User logout
 
- /register:
-   get:
-     operationId: R104
-     summary: 'R104: Register Form'
-     description: 'Provide new user registration form. Access: PUB'
-     tags:
-       - 'M01: Authentication and Individual Profile'
-     responses:
-       '200':
-         description: 'Ok. Show Sign-Up UI'
+  /logout:
 
-   post:
-     operationId: R105
-     summary: 'R105: Register Action'
-     description: 'Processes the new user registration form submission. Access: PUB'
-     tags:
-       - 'M01: Authentication and Individual Profile'
+    get:
+      operationId: R103
+      summary: 'R103 : Logout Action'
+      description: 'Logout the current logged user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication'
 
-     requestBody:
-       required: true
-       content:
-         application/x-www-form-urlencoded:
-           schema:
-             type: object
-             properties:
-               name:
-                 type: string
-               email:
-                 type: string
-               picture:
-                 type: string
-                 format: binary
-             required:
-                                    - email
-                                   - password
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful logout. Redirect to public feed.'
+                  value: '/'
 
-     responses:
-       '302':
-         description: 'Redirect after processing the new user information.'
-         headers:
-           Location:
-             schema:
-               type: string
-             examples:
-               302Success:
-                 description: 'Successful authentication. Redirect to user profile.'
-                 value: '/users/{id}'
-               302Failure:
-                 description: 'Failed authentication. Redirect to login form.'
-                 value: '/login'
 
- /users/{id}:
-   get:
-     operationId: R106
-     summary: 'R106: View user profile'
-     description: 'Show the individual user profile. Access: USR'
-     tags:
-       - 'M01: Authentication and Individual Profile'
+# ------------------------------
 
-     parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
+# User register
 
-     responses:
-       '200':
-         description: 'Ok. Show User Profile UI'
- 
+  /register:
 
- /api/works:
-   get:
-     operationId: R202
-     summary: 'R202: Search Works API'
-     description: 'Searches for works and returns the results as JSON. Access: PUB.'
+    get:
+      operationId: R104
+      summary: 'R104 : Register Form'
+      description: 'Register a new user. Access: PUB'
+      tags:
+        - 'M01: Authentication'
 
-     tags:
-       - 'M02: Works'
+      responses:
+        '200':
+          description: 'Lets Sign-up.'
 
-     parameters:
-       - in: query
-         name: query
-         description: String to use for full-text search
-         schema:
-           type: string
-         required: false
-       - in: query
-         name: item
-         description: Category of the works
-         schema:
-           type: string
-         required: false
-       - in: query
-         name: loaned
-         description: Boolean with the loaned flag value
-         schema:
-           type: boolean
-         required: false
-       - in: query
-         name: owner
-         description: Boolean with the owner flag value
-         schema:
-           type: boolean
-         required: false
-       - in: query
-         name: classification
-         description: Integer corresponding to the work classification
-         schema:
-           type: integer
-         required: false
+    post:
+      operationId: R105
+      summary: 'R105 : Register Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
 
-     responses:
-       '200':
-         description: Success
-         content:
-           application/json:
-             schema:
-               type: array
-               items:
-                 type: object
-                 properties:
-                   id:
-                     type: string
-                   title:
-                     type: string
-                   obs:
-                     type: string
-                   year:
-                     type: string
-                   owner:
-                     type: string
-                   type:
-                     type: string
-               example:
-                 - id: 1
-                   title: Rihanna - Unapologetic
-                   obs: Good pop music album.
-                   year: 2012
-                   owner: Joana Lima
-                   type: MP3
-                 - id: 15
-                   title: Mr. Bean
-                   obs: The best comedy movie.
-                   year: 1995
-                   owner: Manuel Teixeira
-                   type: DVD
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                  type: string
+                  format: password
+              required:
+                - username
+                - name
+                - email
+                - password
+                - confirm_password;
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                  302Success:
+                    description: 'Successful registration. Redirect to home page.'
+                    value: '/home'
+                  302Failure:
+                    description: 'Failed registration. Redirect again to register form.'
+                    value: '/register'
+
+# ------------------------------
+
+# Recover password
+
+  /recoverPassword:
+
+    post:
+      operationId: R107
+      summary: 'R107 : Recover Password Action'
+      description: 'Changes the current password after receiving the validation token. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                verify_password:
+                  type: string
+                  format: password
+              required:
+                - token
+                - password
+                - verify_password;
+
+      responses:
+        '200':
+          description: 'Success. Your password has been changed successfully.'
+        '404':
+          description: 'Error. Invalid token.'
+
+# ------------------------------
+# Users Module
+# ------------------------------
+
+# View user profile
+
+  /users/{id}:
+    get:
+      operationId: R201
+      summary: 'R201: View user profile'
+      description: 'Endpoint to view user profile information. Access: USR, ADM, VST, OWN'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 'User profile retrieved successfully.'
+        '302':
+          description: 'Redirect if user is not logged in or other user doesnt exists'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure.'
+
+# ------------------------------
+# Update user profile
+
+  /user/edit:
+    get:
+      operationId: R202
+      summary: 'R202: Edit User Profile Page'
+      description: 'Displays the edit profile page for the user. Access: OWN'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. The edit profile page is now available.'
+        '401':
+          description: 'Unauthorized. You do not have permission to edit this profile.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                401Success:
+                  description: 'Unauthorized. Redirect to the user profile.'
+                  value: '/user/{id}'
+
+    post:
+      operationId: R203
+      summary: 'R203: Save Edited User Profile'
+      description: 'Processes and saves the changes made by the user. Access: USR'
+      tags:
+        - 'M02: Users'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                description:
+                  type: string
+                  format: password
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                  type: string
+                  format: password
+                image:
+                  type: string
+                  format: binary
+
+              required:
+                - name
+                - username
+                - email
+                - description
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful update. Redirect to the user profile page.'
+                  value: '/user/{id}'
+                302Failure:
+                  description: 'Failed update. Redirect again to the edit profile page.'
+                  value: '/user/edit'
+        '400':
+          description: 'Bad Request. The provided data is invalid.'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+
+# ------------------------------
+# View user's home page
+
+  /home:
+    get:
+      operationId: R206
+      summary: 'R206: View user home page'
+      description: 'Displays the home page for an individual user. Access: User, Admin, Visitor, Owner'
+      tags:
+        - 'M02: Users'
+      responses:
+        '200':
+          description: 'OK. Display user home page.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure'
+
+# ------------------------------
+# Delete user profile
+
+  /users/{id}/delete:
+    delete:
+      operationId: R207
+      summary: 'R207: Delete User Profile'
+      description: 'Endpoint to delete a user profile. Access: OWN, ADM'
+      tags:
+        - 'M02: Users'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after deleting user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful delete. Redirect to login page.'
+                  value: '/login'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+        '404':
+          description: 'Not Found. The user does not exist.'
+        '500':
+          description: 'Internal Server Error. An unexpected error occurred.'
+
+# ------------------------------
+
+# ------------------------------
+# Administration Module
+# ------------------------------
+
+# Admin Page
+
+  /admin:
+    get:
+      operationId: R301
+      summary: 'R301: View admin page'
+      description: 'Shows the admin page. Access: ADM'
+      tags:
+        - 'M03: Administration'
+      responses:
+        '200':
+          description: 'OK. Show the admin page'
+        '302':
+          description: 'Redirect if user is not logged in or does not have admin access'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure. Redirect to login page.'
+                  value: '/login'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                403Failure:
+                  description: 'Forbidden. Redirect to home page.'
+                  value: '/home'
+
+
+# ------------------------------
+
+# Block a user from logging in action
+  /admin/user/block:
+    post:
+      operationId: R302
+      summary: 'R302: Block a user from logging in action'
+      description: 'Blocks a user from logging in. Access: ADM'
+      tags:
+        - 'M03: Admin'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '302':
+          description: 'Redirect after processing block action.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful block action. Redirect to admin page.'
+                  value: '/admin'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+        '404':
+          description: 'Not Found. The user does not exist.'
+
+# Unblocking a user from logging in action
+  /admin/user/unblock:
+    post:
+      operationId: R303
+      summary: 'R303: Unblocking a user from logging in action'
+      description: 'Unblocks a user from logging in. Access: ADM'
+      tags:
+        - 'M03: Admin'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '302':
+          description: 'Redirect after processing unblock action.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful unblock action. Redirect to admin page.'
+                  value: '/admin'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+        '404':
+          description: 'Not Found. The user does not exist.'
+
+# ------------------------------
+# Ban a user action
+  /admin/user/ban:
+    post:
+      operationId: R304
+      summary: 'R304: Ban a user action'
+      description: 'Bans a user. Access: ADM'
+      tags:
+        - 'M03: Admin'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '302':
+          description: 'Redirect after processing ban action.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful ban action. Redirect to admin page.'
+                  value: '/admin'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+        '404':
+          description: 'Not Found. The user does not exist.'
+
+# ------------------------------
+# Delete post or comment
+
+  /admin/delete/post/{postId}:
+    delete:
+      operationId: R305
+      summary: 'R305: Delete Post'
+      description: 'Endpoint to delete a post. Access: ADM, USR'
+      tags:
+        - 'M03: Administration'
+      parameters:
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '204':
+          description: 'Post deleted successfully.'
+        '401':
+          description: 'Unauthorized. You cannot deleted this post.'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+        '404':
+          description: 'Not Found. The post does not exist.'
+
+  /admin/delete/comment/{commentId}:
+    delete:
+      operationId: R306
+      summary: 'R306: Delete Comment'
+      description: 'Endpoint to delete a comment. Access: ADM, USR'
+      tags:
+        - 'M03: Administration'
+      parameters:
+        - in: path
+          name: commentId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '204':
+          description: 'Comment deleted successfully.'
+        '401':
+          description: 'Unauthorized. You cannot deleted this comment.'
+        '403':
+          description: 'Forbidden. You do not have permission to perform this action.'
+        '404':
+          description: 'Not Found. The comment does not exist.'
+
+# ------------------------------
+# Posts Module
+# ------------------------------
+
+# List posts
+
+  /posts:
+    get:
+      operationId: R401
+      summary: 'R401: List Posts'
+      description: 'Lists all posts. Access: USR, ADM'
+      tags:
+        - 'M04: Posts'
+      parameters:
+        - in: query
+          name: userId
+          description: 'Filter posts by user ID.'
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          description: 'OK. Display the list of posts.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure. Redirect to login.'
+                  value: '/login'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                403Failure:
+                  description: 'Forbidden. Redirect to home page.'
+                  value: '/home'
+
+
+# ------------------------------
+# Create a post
+
+  /posts/create:
+    post:
+      operationId: R402
+      summary: 'R402: Create Post'
+      description: 'Endpoint to create a new post. Access: USR'
+      tags:
+        - 'M04: Posts'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'Post content.'
+                media:
+                  type: string
+                  format: binary
+                userId:
+                  type: integer
+                  description: 'ID of the user creating the post.'
+              required:
+                - content
+      responses:
+        '201':
+          description: 'Post created successfully.'
+          content:
+            application/json:
+              example:
+                message: 'Post created successfully.'
+                post_id: 123
+                link: '/posts/123'
+        '401':
+          description: 'Unauthorized. User not allowed to create a post.'
+        '400':
+          description: 'Bad Request. Invalid or missing parameters.'
+
+# ------------------------------
+# Edit a post
+
+  /posts/edit/{postId}:
+    put:
+      operationId: R403
+      summary: 'R403: Edit an existing post page.'
+      description: 'Endpoint to edit an existing post.'
+      tags:
+        - 'M04: Posts'
+      parameters:
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                media:
+                  type: string
+                  format: binary
+              required:
+                - content
+      responses:
+        '200':
+          description: 'Ok. You can now edit. Show edit post UI.'
+        '401':
+          description: 'Unauthorized. You cannot edit this post.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                401Success:
+                  description: 'Unauthorized. Redirect to post view.'
+                  value: '/posts/{id}'
+        '404':
+          description: 'Not Found. The specified post does not exist.'
+
+# ------------------------------
+# Delete a post
+
+  /posts/delete/{postId}:
+    delete:
+      operationId: R404
+      summary: 'R404: Delete Post'
+      description: 'Endpoint to delete a post.'
+      tags:
+        - 'M04: Posts'
+      parameters:
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the post deletion.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful deletion. Redirect to posts feed.'
+                  value: '/posts'
+                302Failure:
+                  description: 'Failed deletion. Redirect again to post view.'
+                  value: '/posts/{id}'
+        '401':
+          description: 'Unauthorized. You cannot delete this post.'
+        '404':
+          description: 'Not Found. The specified post does not exist.'
+
+# ------------------------------
+# Like a post
+
+  /posts/like/{postId}:
+    post:
+      operationId: R405
+      summary: 'R405: Like Post'
+      description: 'Endpoint to like a post.'
+      tags:
+        - 'M04: Posts'
+      parameters:
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '302':
+          description: 'Redirect after processing the post like.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful like. Redirect to posts feed.'
+                  value: '/posts'
+                302Failure:
+                  description: 'Failed like. Redirect again to post view.'
+                  value: '/posts/{id}'
+        '401':
+          description: 'Unauthorized. You cannot like this post.'
+        '404':
+          description: 'Not Found. The specified post does not exist.'
+
+# ------------------------------
+# Comment on a post
+
+  /posts/comment/{postId}:
+    post:
+      operationId: R406
+      summary: 'R406: Comment on Post'
+      description: 'Endpoint to add a comment on a post.'
+      tags:
+        - 'M04: Posts'
+      parameters:
+        - in: path
+          name: postId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: 'The content of the comment.'
+                  example: 'Great post!'
+              required:
+                - content
+      responses:
+        '302':
+          description: 'Redirect after processing the post comment.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful comment. Redirect to post view.'
+                  value: '/posts/{id}'
+                302Failure:
+                  description: 'Failed comment. Redirect again to post view.'
+                  value: '/posts/{id}'
+        '401':
+          description: 'Unauthorized. You cannot comment on this post.'
+        '404':
+          description: 'Not Found. The specified post does not exist.'
+
+# ------------------------------
+# Groups Module
+# ------------------------------
+
+# View Group Page
+
+  /group/{id}:
+    get:
+      operationId: R501
+      summary: 'R501: View Group Page'
+      description: 'Show the group page for an individual user. Access: USR, ADM, VST, OWN'
+      tags:
+        - 'M05: Groups'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 'ID of the group to view.'
+      responses:
+        '200':
+          description: 'OK. Show the group page.'
+        '302':
+          description: 'Redirect if the user is not logged in or the group doesn't exist.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Failure:
+                  description: 'Failure. Redirect to a specific location.'
+        '403':
+          description: 'Forbidden. You do not have permission to access this group.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                403Failure:
+                  description: 'Forbidden. Redirect to home page.'
+                  value: '/home'
+
+
+# ------------------------------
+# Create a group
+
+  /group/create:
+    post:
+      operationId: R502
+      summary: 'R502: Create Group'
+      description: 'Create a new group. Access: USR'
+      tags:
+        - 'M05: Groups'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the group.'
+                description:
+                  type: string
+                  description: 'Description of the group.'
+              required:
+                - name
+                - description
+      responses:
+        '201':
+          description: 'Created. The group has been successfully created.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                201Success:
+                  description: 'Successful creation. Redirect to the new group page.'
+                  value: '/groups/{id}'
+        '400':
+          description: 'Bad Request. Invalid parameters provided.'
+        '403':
+          description: 'Forbidden. You do not have permission to create a group.'
+
+# ------------------------------
+# Edit a group
+
+  /group/edit/{id}:
+    put:
+      operationId: R503
+      summary: 'R503: Edit Group'
+      description: 'Edit an existing group. Access: USR, ADM, OWN'
+      tags:
+        - 'M05: Groups'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 'ID of the group to edit.'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'New name of the group.'
+                description:
+                  type: string
+                  description: 'New description of the group.'
+              required:
+                - name
+                - description
+      responses:
+        '200':
+          description: 'OK. The group has been successfully edited.'
+        '400':
+          description: 'Bad Request. Invalid parameters provided.'
+        '403':
+          description: 'Forbidden. You do not have permission to edit this group.'
+        '404':
+          description: 'Not Found. The specified group was not found.'
+
+# ------------------------------
+# Delete a group
+
+  /group/delete/{id}:
+    delete:
+      operationId: R504
+      summary: 'R504: Delete Group'
+      description: 'Delete an existing group. Access: USR, ADM, OWN'
+      tags:
+        - 'M05: Groups'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 'ID of the group to delete.'
+      responses:
+        '204':
+          description: 'Group deleted successfully.'
+        '401':
+          description: 'Unauthorized. You cannot delete this group.'
+        '403':
+          description: 'Forbidden. You do not have permission to delete this group.'
+        '404':
+          description: 'Not Found. The specified group was not found.'
+
+# ------------------------------
+# Join a group
+
+  /group/join/{id}:
+    post:
+      operationId: R505
+      summary: 'R505: Join Group'
+      description: 'Join an existing group. Access: USR'
+      tags:
+        - 'M05: Groups'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 'ID of the group to join.'
+      responses:
+        '200':
+          description: 'OK. Successfully joined the group.'
+        '403':
+          description: 'Forbidden. You do not have permission to join this group.'
+        '404':
+          description: 'Not Found. The specified group was not found.'
+        '409':
+          description: 'Conflict. You are already a member of this group.'
+
+# ------------------------------
+# Leave a group
+
+  /group/leave/{id}:
+    post:
+      operationId: R506
+      summary: 'R506: Leave Group'
+      description: 'Leave an existing group. Access: USR'
+      tags:
+        - 'M05: Groups'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 'ID of the group to leave.'
+      responses:
+        '200':
+          description: 'OK. Successfully left the group.'
+        '403':
+          description: 'Forbidden. You do not have permission to leave this group.'
+        '404':
+          description: 'Not Found. The specified group was not found.'
+        '409':
+          description: 'Conflict. You are not a member of this group.'
+
+# ------------------------------
+
+# ------------------------------
+# Search Module
+# ------------------------------
+
+# Search Users
+
+  /search/users:
+    get:
+      operationId: R601
+      summary: 'R601: Search Users'
+      description: 'Search for users based on specified criteria. Access: USR'
+      tags:
+        - 'M06: Search'
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: 'Search query for users.'
+      responses:
+        '200':
+          description: 'OK. Successfully retrieved search results.'
+          content:
+            application/json:
+              example:
+                users:
+                  - id: 1
+                    username: 'user1'
+                    profile_url: '/users/1'
+                  - id: 2
+                    username: 'user2'
+                    profile_url: '/users/2'
+        '400':
+          description: 'Bad Request. Invalid search query.'
+        '403':
+          description: 'Forbidden. You do not have permission to search for users.'
+
+# ------------------------------
+# Search Groups
+
+  /search/groups:
+    get:
+      operationId: R602
+      summary: 'R602: Search Groups'
+      description: 'Search for groups based on specified criteria. Access: USR'
+      tags:
+        - 'M06: Search'
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+          description: 'Search query for groups.'
+      responses:
+        '200':
+          description: 'OK. Successfully retrieved search results.'
+          content:
+            application/json:
+              example:
+                groups:
+                  - id: 1
+                    name: 'Group 1'
+                    group_url: '/group/1'
+                  - id: 2
+                    name: 'Group 2'
+                    group_url: '/group/2'
+        '400':
+          description: 'Bad Request. Invalid search query.'
+        '403':
+          description: 'Forbidden. You do not have permission to search for groups.'
+
+# ------------------------------
+
+# ------------------------------
+# Comments Module
+# ------------------------------
+
+# Create Comment
+
+  /comments:
+    post:
+      operationId: R701
+      summary: 'R701: Create Comment'
+      description: 'Create a new comment on a post. Access: USR'
+      tags:
+        - 'M07: Comments'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postID:
+                  type: integer
+                  description: 'ID of the post to which the comment is added.'
+                content:
+                  type: string
+                  description: 'Content of the comment.'
+                  example: 'This is a comment.'
+              required:
+                - postID
+                - content
+      responses:
+        '201':
+          description: 'Created. Comment successfully added.'
+          content:
+            application/json:
+              example:
+                id: 456
+                postId: 123
+                content: 'This is a comment.'
+        '400':
+          description: 'Bad Request. Invalid data provided in the request body.'
+        '401':
+          description: 'Unauthorized. You do not have permission to create a comment.'
+        '403':
+          description: 'Forbidden. You do not have access to add a comment to this post.'
+
+# ------------------------------
+# Delete Comment
+  
+  /comments/{id}:
+    delete:
+      operationId: R702
+      summary: 'R702: Delete Comment'
+      description: 'Delete an existing comment. Access: USR'
+      tags:
+        - 'M07: Comments'
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: 'ID of the comment to delete.'
+          example: 456
+      responses:
+        '204':
+          description: 'No Content. Comment successfully deleted.'
+        '401':
+          description: 'Unauthorized. You do not have permission to delete this comment.'
+        '403':
+          description: 'Forbidden. You do not have access to delete this comment.'
+        '404':
+          description: 'Not Found. Comment not found.'
