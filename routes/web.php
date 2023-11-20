@@ -65,8 +65,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Auth\LoginController;
 
-
+Route::get('/', [LoginController::class, 'showLoginForm']);
 
 // AdminController
 Route::middleware(['auth', 'admin'])->group(function () {

@@ -1,3 +1,4 @@
+/*
 @extends('layouts.app')
 
 @section('content')
@@ -36,4 +37,75 @@
     </button>
     <a class="button button-outline" href="{{ route('login') }}">Login</a>
 </form>
+@endsection
+*/
+// antigo register.blade.php
+
+
+<!-- resources/views/auth/register.blade.php -->
+
+@extends('layouts.app')
+
+@section('content')
+    <div class="register">
+        <div class="card">
+            <div class="left">
+                <h1>Lama Social.</h1>
+                <p>
+                  Your traveler's community, where sharing, exploring, 
+                  and finding inspiration in global adventures becomes a reality.
+                </p>
+                <span>Do you have an account?</span>
+                <a href="{{ route('login') }}">
+                    <button>Login</button>
+                </a>
+            </div>
+            <div class="right">
+                <h1>Register</h1>
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        name="username"
+                        value="{{ old('username') }}"
+                        required
+                    />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Name"
+                        name="name"
+                        value="{{ old('name') }}"
+                        required
+                    />
+                    @error('username')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    @error('email')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    @error('password')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    @error('name')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection

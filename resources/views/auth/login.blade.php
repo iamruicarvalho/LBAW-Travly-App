@@ -1,3 +1,4 @@
+/*
 @extends('layouts.app')
 
 @section('content')
@@ -34,4 +35,55 @@
         </p>
     @endif
 </form>
+@endsection
+*/
+// antigo login.blade.php
+
+
+<!-- login.blade.php -->
+
+@extends('layouts.app')
+
+@section('content')
+    <div class="login">
+        <div class="card">
+            <div class="left">
+                <h1>Travly</h1>
+                <p>
+                    Your traveler's community, where sharing, exploring, 
+                    and finding inspiration in global adventures becomes a reality.
+                </p>
+                <span>Don't you have an account?</span>
+                <a href="{{ route('register') }}">
+                    <button>Register</button>
+                </a>
+            </div>
+            <div class="right">
+                <h1>Login</h1>
+                <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <input
+                    type="email" 
+                    placeholder="E-mail"
+                    name="email" 
+                    value="{{ old('email') }}" 
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    required
+                />
+                    @error('username')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    @error('password')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
