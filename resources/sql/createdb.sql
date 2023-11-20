@@ -52,11 +52,11 @@ CREATE TABLE user_ (
 
 CREATE TABLE post_ (
     postID SERIAL PRIMARY KEY,
-    content TEXT NOT NULL, 
+    content_ TEXT NOT NULL, 
     description_ TEXT,
     likes_ INTEGER DEFAULT 0,
-    comments INTEGER DEFAULT 0, 
-    time_ INTEGER NOT NULL,
+    comments_ INTEGER DEFAULT 0, 
+    time_ TIMESTAMP NOT NULL,
     created_by INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE,
     content_type post_content_types
 );
@@ -70,7 +70,7 @@ CREATE TABLE group_ (
 CREATE TABLE message_ (
     messageID SERIAL PRIMARY KEY, 
     description_ TEXT NOT NULL, 
-    time_ INTEGER NOT NULL, 
+    time_ TIMESTAMP NOT NULL, 
     sender INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE, 
     receiver INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE, 
     sent_to INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE, 
@@ -81,7 +81,7 @@ CREATE TABLE comment_ (
     commentID SERIAL PRIMARY KEY, 
     description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0, 
-    time_ INTEGER NOT NULL,
+    time_ TIMESTAMP NOT NULL,
     userID INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE,
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE,
     comment_replies INTEGER DEFAULT NULL REFERENCES comment_ (commentID) ON UPDATE CASCADE          -- tirar default null
@@ -250,7 +250,6 @@ CREATE TRIGGER group_search_update
 
 CREATE INDEX group_search_idx ON "group_" USING GIN (group_tsvectors);
 
-
 -- ### Index IDX07 for "Post"
 
 -- - **Index relation:** "Post"
@@ -266,14 +265,14 @@ CREATE OR REPLACE FUNCTION post_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.post_tsvectors = (
-         setweight(to_tsvector('english', NEW.content), 'A') ||
+         setweight(to_tsvector('english', NEW.content_), 'A') ||
          setweight(to_tsvector('english', NEW.description_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.content <> OLD.content OR NEW.description_ <> OLD.description_) THEN
+         IF (NEW.content_ <> OLD.content_ OR NEW.description_ <> OLD.description_) THEN
            NEW.post_tsvectors = (
-             setweight(to_tsvector('english', NEW.content), 'A') ||
+             setweight(to_tsvector('english', NEW.content_), 'A') ||
              setweight(to_tsvector('english', NEW.description_), 'B')
            );
          END IF;
@@ -287,7 +286,7 @@ CREATE TRIGGER post_search_update
     FOR EACH ROW
     EXECUTE FUNCTION post_search_update();
 
-CREATE INDEX post_search_idx ON "post_" USING GIN (post_tsvectors);
+CREATE INDEX post_search_idx ON "post_" USING GIN (post_tsvectors); 
 
 
 -- ### Index IDX08 for "Message"
@@ -472,7 +471,7 @@ CREATE TRIGGER verify_self_follow
 CREATE FUNCTION verify_comment() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_userID AND user_.private_ )
+    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_.userID AND user_.private_ )
         AND NOT EXISTS (SELECT * FROM post_,follows_ WHERE NEW.postID = post_.postID AND NEW.userID = follows_.followerID AND follows_.followedID = post_.created_by) 
         THEN RAISE EXCEPTION 'A user can only comment on posts from public users or users they follow';
     END IF;
@@ -515,7 +514,7 @@ CREATE TRIGGER group_owner
 CREATE FUNCTION check_follow_request() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM follows_ WHERE NEW.senderID = follows_.followerID AND NEW.receiverID = follows_.followedID)
+    IF EXISTS (SELECT * FROM follows_ WHERE NEW.followerID = follows_.followerID AND NEW.followedID = follows_.followedID)
         THEN RAISE EXCEPTION 'Can not make a follow request to someone you already follow';
     END IF;
     
@@ -536,7 +535,7 @@ CREATE TRIGGER check_follow_request
 CREATE FUNCTION verify_self_follow_req() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.senderID = NEW.receiverID 
+    IF NEW.followerID = NEW.followedID 
         THEN RAISE EXCEPTION 'A user can not request to follow themselves';
     END IF;
 
@@ -567,7 +566,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_post_action
-    BEFORE INSERT ON post_
+    BEFORE DELETE ON post_
     FOR EACH ROW
     EXECUTE PROCEDURE delete_post_action();
 
@@ -588,6 +587,6 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_comment_action
-    BEFORE INSERT ON comment_
+    BEFORE DELETE ON comment_
     FOR EACH ROW
     EXECUTE PROCEDURE delete_comment_action();
