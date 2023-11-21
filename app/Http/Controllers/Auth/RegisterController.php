@@ -3,17 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\View\View; // Adicione esta linha para importar a classe View
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use App\Models\User;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+use Illuminate\View\View;
+
+use App\Models\User;
 
 class RegisterController extends Controller
 {
     /**
-     * Display a registration form.
+     * Display a login form.
      */
     public function showRegistrationForm(): View
     {
@@ -26,20 +28,20 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|unique:user_,username', 
-            'email' => 'required|email|unique:user_,email',
-            'password' => 'required|min:8|confirmed',
+            'name_' => 'required|string|max:250',
+            'username' => 'required|string|max:250|unique:users',
+            'email' => 'required|email|max:250|unique:users',
+            'password_' => 'required|min:8|confirmed'
         ]);
 
-        User::create([   
-            'name_' => $request->name,
+        User::create([
+            'name_' => $request->name_,
             'username' => $request->username,
             'email' => $request->email,
-            'password_' => Hash::make($request->password),
+            'password_' => Hash::make($request->password_)
         ]);
 
-        $credentials = $request->only('up', 'password');
+        $credentials = $request->only('email', 'password_');
         Auth::attempt($credentials);
         $request->session()->regenerate();
         return redirect()->route('home')
