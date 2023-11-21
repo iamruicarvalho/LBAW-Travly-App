@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable; # <-----
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 
 use App\Models\Post;
 use App\Models\Admin;
@@ -14,7 +15,7 @@ use App\Models\UserNotification;
 
 class User extends Model implements Authenticatable # <-----
 {   
-    use Illuminate\Contracts\Auth\Authenticatable; # <-----
+    use AuthenticatableTrait; # <-----
 
     protected $table = 'user_';
 

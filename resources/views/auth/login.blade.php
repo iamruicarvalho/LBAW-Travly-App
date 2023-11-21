@@ -1,7 +1,8 @@
 @extends('layouts.app')
+<script src="{{ asset('js/register.js') }}"></script>
 
 @section('content')
-<form method="POST" action="{{ route('login') }}">
+<form method="POST" action="{{ route('login') }}" onsubmit="return redirectToHome()">
     {{ csrf_field() }}
 
     <label for="email">E-mail</label>
