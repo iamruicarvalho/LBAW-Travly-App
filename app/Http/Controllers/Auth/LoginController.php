@@ -32,7 +32,7 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
+            'password' => ['required', 'string'],
         ]);
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
