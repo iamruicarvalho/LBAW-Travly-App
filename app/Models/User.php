@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\Authenticatable; # <-----
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Post;
@@ -11,8 +12,10 @@ use App\Models\Follow;
 use App\Models\Request;
 use App\Models\UserNotification;
 
-class User extends Model
-{
+class User extends Model implements Authenticatable # <-----
+{   
+    use Illuminate\Contracts\Auth\Authenticatable; # <-----
+
     protected $table = 'user_';
 
     protected $fillable = [
