@@ -17,8 +17,9 @@ class User extends Model implements Authenticatable # <-----
 {   
     use AuthenticatableTrait; # <-----
 
-    protected $table = 'user_';
-
+    public $timestamps = false;
+    protected $table = 'user';
+    protected $primaryKey = 'user.userID';
     protected $fillable = [
         'username', 'name_', 'email', 'password_', 'private_'
     ];
