@@ -1,6 +1,6 @@
 body {
   background-color: #EAE5DF; /* Alterei a cor de fundo para um cinza claro */
-  color: #333; /* Cor do texto principal */
+  color: #13472E; /* Cor do texto principal */
   font-family: 'Arial', sans-serif; /* Adicionei uma fonte padrão */
   margin: 0;
 }
@@ -11,7 +11,7 @@ header {
   align-items: center;
   background-color: #BE959F; /* Alterei a cor do cabeçalho para um azul escuro */
   padding: 1em;
-  margin: 0;
+  margin-bottom: 20px;
 }
 
 .logo h1 {
@@ -39,7 +39,7 @@ header {
 }
 
 .nav-links a:hover {
-  color: #3498db; /* Cor ao passar o mouse */
+  color: #13472E; /* Cor ao passar o mouse */
 }
 
 .user-info {
@@ -68,12 +68,15 @@ header {
   margin: 0 auto;
   padding: 1em;
   max-width: 20em;
-  border: 1px solid #d2afe7;
+  color: white;
+  background-color: #BE959F;
+  border: 1px solid  #13472E;
 }
 #content > form .error {
   font-weight: bold;
   color: #ff3333;
 }
+
 #content > form .success {
   font-weight: bold;
   color: #106af1;
@@ -118,29 +121,6 @@ header {
     border-bottom: 1px solid rgba(96, 108, 118, 0.4);
   }
 }
-/**
- * Override milligram colors
- * Some styles might be missing
- **/
-button {
-  background-color: #9b4dca;
-  border-color: #9b4dca;
-}
-a.button {
-  background-color: #9b4dca;
-  border-color: #9b4dca;
-}
-a.button.button-outline {
-  color: #9b4dca;
-}
-a {
-  color: #9b4dca;
-}
-input[type=text]:focus,
-input[type=email]:focus,
-input[type=password]:focus {
-  border-color: #9b4dca;
-}
 
   /**
    * Override milligram colors
@@ -176,7 +156,7 @@ input[type=password]:focus {
 
 /* Barra Lateral Esquerda */
 .left-sidebar {
-  width: 240px;
+  width: 200px;
   background-color: #BE959F; /* Cinza claro */
   color: #13472E; /* Cor do texto preto */
   padding: 20px;
@@ -184,7 +164,7 @@ input[type=password]:focus {
   flex-direction: column;
   align-items: center;
   border-radius: 15px;
-  margin-left: 20px; /* Adiciona espaço inferior */
+  margin-left: 10px; /* Adiciona espaço inferior */
 }
 
 
@@ -380,7 +360,7 @@ input[type=password]:focus {
 
 /* Barra Lateral Direita */
 .right-sidebar {
-  width: 240px;
+  width: 200px;
   padding: 20px;
   background-color: #BE959F;
   color: #13472E;
@@ -388,7 +368,7 @@ input[type=password]:focus {
   flex-direction: column;
   align-items: center;
   border-radius: 15px;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .search-bar {
@@ -418,7 +398,6 @@ ul li {
   margin-bottom: 5px;
 }
 
-
 .right-sidebar .sidebar-box {
   margin-bottom: 20px;
   border: 1px solid #BE959F;
@@ -431,17 +410,22 @@ ul li {
   margin-bottom: 10px;
 }
 
-body .profile-container {
-  max-width: 600px;
-  margin: 0 auto;
+body .profile-sidebar-header-container {
+  display: flex;
+  position: relative;
+  gap: 20px;
 }
 
 body .profile-header {
+  width: 60%;
   display: flex;
   flex-direction: column;
   font-size: small;
   background-color: #BE959F;
-  
+}
+
+body .profile-header-picture {
+  width: 100%;
 }
 
 body .profile-picture {
@@ -450,6 +434,8 @@ body .profile-picture {
   border-radius: 50%;
   object-fit: cover;
   margin-left: 50px;
+  position: absolute;
+  margin-top: 15%;
 }
 
 body .user-info {
@@ -459,23 +445,28 @@ body .user-info {
   width: 100%;
   gap: 10px;
   margin-left: 50px;
+  margin-top: 20px;
 }
 
 body .profile-body {
+  display: flex;
   margin-top: 20px;
+  width: 60%;
+  gap: 20px;
+  margin-left: 15%;
 }
 
 body .profile-body .post {
   border: 1px solid #ddd;
   background-color: white;
-  padding: 100px;
+  padding: 30%;
   margin-bottom: 10px;
   text-align: center;
 }
 
 body .edit-profile-link {
   display: block;
-    margin-top: 10px;
+    margin-top: 40px;
     margin-left: auto; 
     margin-right: 50px;
     color: white;
@@ -488,4 +479,10 @@ body .edit-profile-link {
     text-decoration: none;
     text-align: center;
     width: fit-content;
+}
+
+body .profile-right-sidebars{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
