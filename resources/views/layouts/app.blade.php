@@ -22,9 +22,9 @@
     </head>
     <body>
         <main>
-        <header>
+        <header style="display: flex; justify-content: space-between; align-items: center;">
             <div class="logo">
-                <h1><a href="{{ url('/cards') }}">Travly ✈︎</a></h1>
+                <h1><a href="{{ url('/cards') }}">Travly ✈</a></h1>
             </div>
             <nav class="nav-links">
                 <ul>
@@ -41,6 +41,7 @@
                 </div>
             @endif
         </header>
+
 
             <section id="content">
                 @yield('content')
