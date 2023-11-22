@@ -37,7 +37,8 @@
             @if (Auth::check())
                 <div class="user-info">
                     <a class="button" href="{{ url('/logout') }}"> Logout </a>
-                    <span>{{ Auth::user()->name }}</span>
+                    <a class="button" href="{{ route('profile.show', Auth::user()->username) }}"> {{ Auth::user()->username }} </a>
+                    <!-- <div>{{ Auth::user()->username }}</div> -->
                 </div>
             @endif
         </header>
