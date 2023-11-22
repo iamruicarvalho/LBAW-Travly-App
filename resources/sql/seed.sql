@@ -1,5 +1,6 @@
-create schema if not exists lbaw2334;
-
+DROP SCHEMA IF EXISTS lbaw2334 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw2334;
+SET search_path TO lbaw2334;
 SET DateStyle TO European;
 
 --====================================--
