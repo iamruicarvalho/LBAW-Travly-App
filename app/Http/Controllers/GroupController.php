@@ -32,7 +32,7 @@ class GroupController extends Controller
         $group->save();
 
         // Associe o usuário autenticado como proprietário do grupo
-        $group->owners()->attach(auth()->user()->userID);
+        $group->owners()->attach(auth()->user()->id);
 
         return redirect()->route('group.show', ['groupId' => $group->groupID])
             ->with('success', 'Group created successfully');
@@ -69,14 +69,14 @@ class GroupController extends Controller
         }
 
         // Adicione a solicitação ao grupo
-        $group->joinRequests()->attach($user->userID);
+        $group->joinRequests()->attach($user->id);
 
         return redirect()->route('group.show', ['groupId' => $groupId])
             ->with('success', 'Join request sent successfully');
     }
 
     // Permite que um proprietário do grupo aceite uma solicitação de entrada
-    public function acceptJoinRequest($groupId, $userId)
+    public function acceptJoinRequest($groupId, $id)
     {
         $group = Group::find($groupId);
 
@@ -85,13 +85,13 @@ class GroupController extends Controller
         }
 
         // Verifique se o usuário autenticado é o proprietário do grupo
-        if (!$group->isOwner(auth()->user()->userID)) {
+        if (!$group->isOwner(auth()->user()->id)) {
             return redirect()->route('home')->with('error', 'Permission denied');
         }
 
         // Aceite a solicitação de entrada
-        $group->joinRequests()->detach($userId);
-        $group->members()->attach($userId);
+        $group->joinRequests()->detach($id);
+        $group->members()->attach($id);
 
         return redirect()->route('group.show', ['groupId' => $groupId])
             ->with('success', 'User joined the group successfully');

@@ -22,7 +22,7 @@ class PostController extends Controller
         $post = new Post();
         $post->content_ = $request->input('content');
         // Defina o ID do usuário para o post (ajuste conforme necessário)
-        $post->created_by = auth()->user()->userID;
+        $post->created_by = auth()->user()->id;
         $post->save();
 
         // Redirecione para a página principal

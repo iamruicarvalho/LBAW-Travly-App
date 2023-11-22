@@ -24,12 +24,12 @@ class PostPolicy
 
     public function delete(User $user, Post $post)
     {
-      return ($user->id == Auth::user()->id) && ($user->id == $post->userID || $user->admin());
+      return ($user->id == Auth::user()->id) && ($user->id == $post->id || $user->admin());
     }
 
     public function edit(User $user, Post $post)
     {
-      return $user->id == Auth::user()->id && $user->id == $post->userID;
+      return $user->id == Auth::user()->id && $user->id == $post->id;
     }
 
     public function comment()

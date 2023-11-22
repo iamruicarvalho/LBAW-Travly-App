@@ -47,7 +47,7 @@ class Post extends Model
     public static function publicPosts()
     {
         return static::select('post.*')
-            ->join('users', 'users.userID', '=', 'post.created_by')
+            ->join('users', 'users.id', '=', 'post.created_by')
             ->where('users.is_public', true)
             ->where('post.is_public', true)
             ->orderBy('time_', 'desc');

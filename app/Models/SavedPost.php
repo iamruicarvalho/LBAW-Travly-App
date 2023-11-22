@@ -16,13 +16,13 @@ class SavedPost extends Model
     public $incrementing = false; 
 
     protected $fillable = [
-        'userID',
+        'id',
         'postID',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function post()

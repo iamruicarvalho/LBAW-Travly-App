@@ -18,8 +18,8 @@ class User extends Model implements Authenticatable # <-----
     use AuthenticatableTrait; # <-----
 
     public $timestamps = false;
-    protected $table = 'user';
-    protected $primaryKey = 'user.userID';
+    protected $table = 'user_';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'username', 'name_', 'email', 'password_', 'private_'
     ];
@@ -35,12 +35,12 @@ class User extends Model implements Authenticatable # <-----
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'userID');
+        return $this->hasMany(Comment::class, 'id');
     }
 
     public function admin()
     {
-        return $this->hasOne(Admin::class, 'userID');
+        return $this->hasOne(Admin::class, 'id');
     }
 
     public function requestsSent()
@@ -60,6 +60,6 @@ class User extends Model implements Authenticatable # <-----
 
     public function notifications()
     {
-        return $this->hasMany(UserNotification::class, 'userID');
+        return $this->hasMany(UserNotification::class, 'id');
     }
 }

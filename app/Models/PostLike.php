@@ -12,12 +12,12 @@ class PostLike extends Model
     protected $table = 'post_likes';
 
     protected $fillable = [
-        'userID', 'postID'
+        'id', 'postID'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function post()

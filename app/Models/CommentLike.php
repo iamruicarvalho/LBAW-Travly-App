@@ -12,12 +12,12 @@ class CommentLike extends Model
     protected $table = 'comment_likes';
 
     protected $fillable = [
-        'userID', 'commentID'
+        'id', 'commentID'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function comment()

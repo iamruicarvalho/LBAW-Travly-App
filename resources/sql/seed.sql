@@ -1,6 +1,6 @@
 DROP SCHEMA IF EXISTS lbaw2334 CASCADE;
 CREATE SCHEMA IF NOT EXISTS lbaw2334;
-SET search_path TO lbaw2334;
+SET search_path TO lbaw2334;
 SET DateStyle TO European;
 
 --====================================--
@@ -43,7 +43,7 @@ CREATE TYPE post_notification_types AS ENUM ('liked_post', 'commented_post');
 --====================================--
 
 CREATE TABLE user_ (
-    userID SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     name_ TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE post_ (
     likes_ INTEGER DEFAULT 0,
     comments_ INTEGER DEFAULT 0, 
     time_ TIMESTAMP NOT NULL,
-    created_by INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE,
+    created_by INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
     content_type post_content_types
 );
 
@@ -72,8 +72,8 @@ CREATE TABLE message_ (
     messageID SERIAL PRIMARY KEY, 
     description_ TEXT NOT NULL, 
     time_ TIMESTAMP NOT NULL, 
-    sender INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE, 
-    receiver INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE, 
+    sender INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE, 
+    receiver INTEGER REFERENCES user_ (id) ON UPDATE CASCADE, 
     sent_to INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE, 
     message_replies INTEGER DEFAULT NULL REFERENCES message_ (messageID) ON UPDATE CASCADE          -- tirar default null
 );
@@ -83,7 +83,7 @@ CREATE TABLE comment_ (
     description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0, 
     time_ TIMESTAMP NOT NULL,
-    userID INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE,
     comment_replies INTEGER DEFAULT NULL REFERENCES comment_ (commentID) ON UPDATE CASCADE          -- tirar default null
 );
@@ -92,29 +92,29 @@ CREATE TABLE notification_ (
     notificationID SERIAL PRIMARY KEY,
     description_ TEXT NOT NULL, 
     time_ TIMESTAMP NOT NULL,
-    notifies INTEGER NOT NULL REFERENCES user_ (userID),
-    sends_notif INTEGER NOT NULL REFERENCES user_ (userID)
+    notifies INTEGER NOT NULL REFERENCES user_ (id),
+    sends_notif INTEGER NOT NULL REFERENCES user_ (id)
 );
 
 CREATE TABLE admin_ (
-    userID SERIAL PRIMARY KEY REFERENCES user_ (userID) ON UPDATE CASCADE
+    id SERIAL PRIMARY KEY REFERENCES user_ (id) ON UPDATE CASCADE
 );
 
 CREATE TABLE owner_ (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     groupID INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, groupID)
+    PRIMARY KEY (id, groupID)
 );
 
 CREATE TABLE belongs_ (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     groupID INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, groupID)
+    PRIMARY KEY (id, groupID)
 );
 
 CREATE TABLE user_notification (
     notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
-    userID INTEGER NOT NULL REFERENCES user_ (userID), 
+    id INTEGER NOT NULL REFERENCES user_ (id), 
     notification_type user_notification_types NOT NULL
 );
 
@@ -125,33 +125,33 @@ CREATE TABLE post_notification (
 );
 
 CREATE TABLE request_ (
-    senderID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
-    receiverID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    senderID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    receiverID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     PRIMARY KEY (senderID, receiverID)
 );
 
 CREATE TABLE follows_ (
-    followerID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
-    followedID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    followerID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    followedID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     PRIMARY KEY (followerID, followedID)
 );
 
 CREATE TABLE post_likes (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     postID INTEGER REFERENCES post_ (postID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, postID)
+    PRIMARY KEY (id, postID)
 );
 
 CREATE TABLE comment_likes (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     commentID INTEGER REFERENCES comment_ (commentID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, commentID)
+    PRIMARY KEY (id, commentID)
 );
 
 CREATE TABLE saved_post (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     postID INTEGER REFERENCES post_ (postID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, postID)
+    PRIMARY KEY (id, postID)
 );
 
 --====================================--
@@ -367,7 +367,7 @@ CREATE INDEX comment_search_idx ON "comment_" USING GIN (comment_tsvectors);
 CREATE FUNCTION verify_self_liking_post() RETURNS TRIGGER AS 
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM post_ WHERE NEW.postID = post_.postID AND NEW.userID = post_.created_by) 
+    IF EXISTS (SELECT * FROM post_ WHERE NEW.postID = post_.postID AND NEW.id = post_.created_by) 
         THEN RAISE EXCEPTION 'A user cannot like their own posts';
     END IF;
 
@@ -388,7 +388,7 @@ CREATE TRIGGER verify_self_liking_post
 CREATE FUNCTION verify_self_liking_comment() RETURNS TRIGGER AS 
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM comment_ WHERE NEW.commentID = comment_.commentID AND NEW.userID = comment_.userID) 
+    IF EXISTS (SELECT * FROM comment_ WHERE NEW.commentID = comment_.commentID AND NEW.id = comment_.id) 
         THEN RAISE EXCEPTION 'A user cannot like their own comments';
     END IF;
 
@@ -409,7 +409,7 @@ CREATE TRIGGER verify_self_liking_comment
 CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM post_likes WHERE NEW.userID = post_likes.userID AND NEW.postID = post_likes.postID) 
+    IF EXISTS (SELECT * FROM post_likes WHERE NEW.id = post_likes.id AND NEW.postID = post_likes.postID) 
         THEN RAISE EXCEPTION 'A user can only like a post once';
     END IF;
 
@@ -430,7 +430,7 @@ CREATE TRIGGER verify_post_likes
 CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM comment_likes WHERE NEW.userID = userID AND NEW.commentID = commentID) 
+    IF EXISTS (SELECT * FROM comment_likes WHERE NEW.id = id AND NEW.commentID = commentID) 
         THEN RAISE EXCEPTION 'A user can only like a comment once';
     END IF;
 
@@ -472,8 +472,8 @@ CREATE TRIGGER verify_self_follow
 CREATE FUNCTION verify_comment() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_.userID AND user_.private_ )
-        AND NOT EXISTS (SELECT * FROM post_,follows_ WHERE NEW.postID = post_.postID AND NEW.userID = follows_.followerID AND follows_.followedID = post_.created_by) 
+    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_.id AND user_.private_ )
+        AND NOT EXISTS (SELECT * FROM post_,follows_ WHERE NEW.postID = post_.postID AND NEW.id = follows_.followerID AND follows_.followedID = post_.created_by) 
         THEN RAISE EXCEPTION 'A user can only comment on posts from public users or users they follow';
     END IF;
 
@@ -494,7 +494,7 @@ CREATE TRIGGER verify_comment
 CREATE FUNCTION group_owner() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NOT EXISTS ( SELECT  * FROM belongs_ WHERE NEW.userID = belongs_.userID AND NEW.groupID = belongs_.groupID) 
+    IF NOT EXISTS ( SELECT  * FROM belongs_ WHERE NEW.id = belongs_.id AND NEW.groupID = belongs_.groupID) 
         THEN RAISE EXCEPTION 'A group owner must also be a member of the group';
     END IF;
 
@@ -727,7 +727,7 @@ INSERT INTO message_(description_, time_, sender, receiver, sent_to, message_rep
             ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 5, NULL, NULL),
             ('Por acaso até estou :)', '2023-10-25 08:35:00', 67, 1, NULL, 10);
 
-INSERT INTO comment_(description_, likes_, time_, userID, postID, comment_replies) VALUES
+INSERT INTO comment_(description_, likes_, time_, id, postID, comment_replies) VALUES
             ('Ganda post chavalo!', 0, '2023-10-25 08:31:00', 34, 1, NULL),
             ('Brigadão sócio.', 0, '2023-10-25 08:32:00', 1, 1, 1),
             ('Nunca vi nada assim!', 0, '2023-10-25 07:31:00', 67, 2, NULL),
@@ -775,10 +775,10 @@ INSERT INTO notification_(notificationID, description_, time_, notifies, sends_n
             (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', 4, 5),
             (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', 2, 9);
 
-INSERT INTO admin_(userID) VALUES
+INSERT INTO admin_(id) VALUES
             (1);
 
-INSERT INTO belongs_(userID, groupID) VALUES 
+INSERT INTO belongs_(id, groupID) VALUES 
             (23, 1),
             (7,2),
             (1,3),
@@ -854,7 +854,7 @@ INSERT INTO belongs_(userID, groupID) VALUES
             (82, 6), 
             (83, 1);
 
-INSERT INTO owner_(userID, groupID) VALUES
+INSERT INTO owner_(id, groupID) VALUES
             (23, 1),
             (7,2),
             (1,3),
@@ -862,7 +862,7 @@ INSERT INTO owner_(userID, groupID) VALUES
             (31,5),
             (9,6);
 
-INSERT INTO user_notification(notificationID, userID, notification_type) VALUES
+INSERT INTO user_notification(notificationID, id, notification_type) VALUES
             (1, 3, 'request_follow'),
             (2, 5, 'accepted_follow'),
             (3, 8, 'started_following'),
@@ -1201,7 +1201,7 @@ INSERT INTO follows_(followerID, followedID) VALUES
             (5, 4),
             (2, 1);
 
-INSERT INTO post_likes(userID, postID) VALUES
+INSERT INTO post_likes(id, postID) VALUES
             (2, 1), 
             (3, 2), 
             (4, 3), 
@@ -1227,14 +1227,14 @@ INSERT INTO post_likes(userID, postID) VALUES
             (24, 2), 
             (25, 3);
 
-INSERT INTO comment_likes(userID, commentID) VALUES
+INSERT INTO comment_likes(id, commentID) VALUES
             (18, 2),
             (12, 2), 
             (13, 2),
             (93, 2),
             (94, 2);
 
-INSERT INTO saved_post(userID, postID) VALUES
+INSERT INTO saved_post(id, postID) VALUES
             (3, 1),
             (56, 1),
             (38, 1),

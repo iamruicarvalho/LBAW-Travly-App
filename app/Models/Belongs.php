@@ -16,13 +16,13 @@ class Belongs extends Model
     public $incrementing = false; 
 
     protected $fillable = [
-        'userID',
+        'id',
         'groupID',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function group()

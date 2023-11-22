@@ -20,7 +20,7 @@ class GroupPolicy
 
     public function edit(Group $group)
     {
-        $owner = Owner::where('groupID', $group->id)->where('userID', Auth::id())->first();
+        $owner = Owner::where('groupID', $group->id)->where('id', Auth::id())->first();
 
         return !is_null($owner);
     }
@@ -39,7 +39,7 @@ class GroupPolicy
 
     public function delete(Group $group)
     {
-        $owner = Owner::where('groupID', $group->id)->where('userID', Auth::id())->first();
+        $owner = Owner::where('groupID', $group->id)->where('id', Auth::id())->first();
 
         return !is_null($owner) || Auth::user()->admin;
     }

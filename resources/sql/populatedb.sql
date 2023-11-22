@@ -133,7 +133,7 @@ INSERT INTO message_(description_, time_, sender, receiver, sent_to, message_rep
             ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 5, NULL, NULL),
             ('Por acaso até estou :)', '2023-10-25 08:35:00', 67, 1, NULL, 10);
 
-INSERT INTO comment_(description_, likes_, time_, userID, postID, comment_replies) VALUES
+INSERT INTO comment_(description_, likes_, time_, id, postID, comment_replies) VALUES
             ('Ganda post chavalo!', 0, '2023-10-25 08:31:00', 34, 1, NULL),
             ('Brigadão sócio.', 0, '2023-10-25 08:32:00', 1, 1, 1),
             ('Nunca vi nada assim!', 0, '2023-10-25 07:31:00', 67, 2, NULL),
@@ -181,10 +181,10 @@ INSERT INTO notification_(notificationID, description_, time_, notifies, sends_n
             (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', 4, 5),
             (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', 2, 9);
 
-INSERT INTO admin_(userID) VALUES
+INSERT INTO admin_(id) VALUES
             (1);
 
-INSERT INTO belongs_(userID, groupID) VALUES 
+INSERT INTO belongs_(id, groupID) VALUES 
             (23, 1),
             (7,2),
             (1,3),
@@ -260,7 +260,7 @@ INSERT INTO belongs_(userID, groupID) VALUES
             (82, 6), 
             (83, 1);
 
-INSERT INTO owner_(userID, groupID) VALUES
+INSERT INTO owner_(id, groupID) VALUES
             (23, 1),
             (7,2),
             (1,3),
@@ -268,7 +268,7 @@ INSERT INTO owner_(userID, groupID) VALUES
             (31,5),
             (9,6);
 
-INSERT INTO user_notification(notificationID, userID, notification_type) VALUES
+INSERT INTO user_notification(notificationID, id, notification_type) VALUES
             (1, 3, 'request_follow'),
             (2, 5, 'accepted_follow'),
             (3, 8, 'started_following'),
@@ -607,7 +607,7 @@ INSERT INTO follows_(followerID, followedID) VALUES
             (5, 4),
             (2, 1);
 
-INSERT INTO post_likes(userID, postID) VALUES
+INSERT INTO post_likes(id, postID) VALUES
             (2, 1), 
             (3, 2), 
             (4, 3), 
@@ -633,14 +633,14 @@ INSERT INTO post_likes(userID, postID) VALUES
             (24, 2), 
             (25, 3);
 
-INSERT INTO comment_likes(userID, commentID) VALUES
+INSERT INTO comment_likes(id, commentID) VALUES
             (18, 2),
             (12, 2), 
             (13, 2),
             (93, 2),
             (94, 2);
 
-INSERT INTO saved_post(userID, postID) VALUES
+INSERT INTO saved_post(id, postID) VALUES
             (3, 1),
             (56, 1),
             (38, 1),

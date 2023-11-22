@@ -12,9 +12,9 @@ class UserController extends Controller
     public function showProfile(){
         return view('pages.profile');
     }
-    /*public function showProfile($userId)
+    /*public function showProfile($id)
     {
-        $user = User::find($userId);
+        $user = User::find($id);
 
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
@@ -27,9 +27,9 @@ class UserController extends Controller
     public function editProfile(){
         return view('partials.ProfileEdit');
     }
-    /*public function editProfile($userId)
+    /*public function editProfile($id)
     {
-        $user = User::find($userId);
+        $user = User::find($id);
 
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
@@ -42,9 +42,9 @@ class UserController extends Controller
     public function updateProfile(){
         return redirect()->route('profile.show');
     }
-    /*public function updateProfile(Request $request, $userId)
+    /*public function updateProfile(Request $request, $id)
     {
-        $user = User::find($userId);
+        $user = User::find($id);
 
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
@@ -52,13 +52,13 @@ class UserController extends Controller
 
         $request->validate([
             'name_' => 'required|string|max:255',
-            'email' => 'required|email|unique:user_,email,' . $userId,
+            'email' => 'required|email|unique:user_,email,' . $id,
         ]);
 
         $user->name_ = $request->input('name_');
         $user->email = $request->input('email');
         $user->save();
 
-        return redirect()->route('user.profile', $userId)->with('success', 'Perfil atualizado com sucesso');
+        return redirect()->route('user.profile', $id)->with('success', 'Perfil atualizado com sucesso');
     }*/
 }

@@ -35,9 +35,9 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/profile/show', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
-    /*Route::get('/profile/{userId}', [UserController::class, 'showProfile'])->name('profile.show');
-    Route::get('/profile/{userId}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile/{userId}/update', [UserController::class, 'updateProfile'])->name('profile.update');*/
+    /*Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/{id}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/{id}/update', [UserController::class, 'updateProfile'])->name('profile.update');*/
 });
 
 // Cards
@@ -123,7 +123,7 @@ Route::post('/posts/like', [PostController::class, 'like'])->name('posts.like');
 // MessageController
 Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('sendMessage');
 
-Route::get('/getMessages/{userId}', [MessageController::class, 'getMessages'])->name('getMessages');
+Route::get('/getMessages/{id}', [MessageController::class, 'getMessages'])->name('getMessages');
 
 Route::get('/getConversations', [MessageController::class, 'getConversations'])->name('getConversations');
 
@@ -137,10 +137,10 @@ Route::get('/privacy', [StaticPageController::class, 'privacy'])->name('static.p
 
 // UserController
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile/{userId}', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('profile.show');
 
-    Route::get('/profile/{userId}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::get('/profile/{id}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
 
-    Route::put('/profile/{userId}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 */
