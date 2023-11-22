@@ -1,7 +1,7 @@
 body {
-  background-color: #EAE5DF; /* Alterei a cor de fundo para um cinza claro */
-  color: #13472E; /* Cor do texto principal */
-  font-family: 'Arial', sans-serif; /* Adicionei uma fonte padrão */
+  background-color: #EAE5DF;
+  color: #13472E;
+  font-family: 'Arial', sans-serif;
   margin: 0;
 }
 
@@ -9,14 +9,21 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #BE959F; /* Alterei a cor do cabeçalho para um azul escuro */
+  background-color: #BE959F;
   padding: 1em;
   margin-bottom: 20px;
 }
 
 .logo h1 {
   margin: 0;
-  font-size: 1.5em; /* Ajustei o tamanho da fonte */
+  font-size: 1.5em;
+}
+
+.nav-links {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 750px;
 }
 
 .nav-links ul {
@@ -27,19 +34,19 @@ header {
 }
 
 .nav-links li {
-  margin-right: 20px;
+  margin-left: 20px; /* Mudei para margin-left para criar espaço à esquerda */
 }
 
 .nav-links a {
   text-decoration: none;
-  color: #ecf0f1; /* Cor dos links no cabeçalho */
+  color: #ecf0f1;
   font-weight: bold;
   font-size: 1em;
-  transition: color 0.3s ease; /* Transição suave da cor ao passar o mouse */
+  transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
-  color: #13472E; /* Cor ao passar o mouse */
+  color: #13472E;
 }
 
 .user-info {
@@ -48,8 +55,7 @@ header {
 }
 
 .user-info .button {
-  margin-right: 10px;
-  background-color: #e74c3c; /* Cor do botão de logout */
+  background-color: #13472E;
   color: #fff;
   padding: 0.5em 1em;
   text-decoration: none;
@@ -60,6 +66,7 @@ header {
   color: rgb(2, 27, 33);
   font-weight: bold;
 }
+
 
 #content label {
   font-weight: normal;

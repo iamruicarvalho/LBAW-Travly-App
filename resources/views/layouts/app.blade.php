@@ -22,9 +22,9 @@
     </head>
     <body>
         <main>
-        <header>
+        <header style="display: flex; justify-content: space-between; align-items: center;">
             <div class="logo">
-                <h1><a href="{{ url('/cards') }}">Travly ✈︎</a></h1>
+                <h1><a href="{{ url('/cards') }}">Travly ✈</a></h1>
             </div>
             <nav class="nav-links">
                 <ul>
@@ -37,11 +37,11 @@
             @if (Auth::check())
                 <div class="user-info">
                     <a class="button" href="{{ url('/logout') }}"> Logout </a>
-                    <a class="button" href="{{ route('profile.show', Auth::user()->username) }}"> {{ Auth::user()->username }} </a>
-                    <!-- <div>{{ Auth::user()->username }}</div> -->
+                    <!-- <a class="button" href="{{ route('profile.show') }}"> {{ Auth::user()->username }} </a> -->
                 </div>
             @endif
         </header>
+
 
             <section id="content">
                 @yield('content')

@@ -8,7 +8,7 @@
     <div class="profile-sidebar-container">
     <div class="left-sidebar">
         <ul class="sidebar-menu">
-            <li><a href="#">🏠 Home</a></li>
+            <li><a href="{{ route('home') }}">🏠 Home</a></li>
             <li><a href="#">🔍 Explore</a></li>
             <li><a href="#">🔔 Notifications</a></li>
             <li><a href="#">📨 Messages</a></li>
@@ -31,8 +31,8 @@
             <div class="user-info">
                 <div>
                     <h3>{{ auth()->user()->username }}</h3>
-                    <p>user description</p>
-                    <p>user location</p>
+                    <p>{{ auth()->user()->description_ }}</p>
+                    <p>{{ auth()->user()->location }}</p>
                 </div>
                 <div>
                     <p>{{ optional(auth()->user()->follows)->count() ?? 0 }} Followers {{ optional(auth()->user()->following)->count() ?? 0 }} Following</p>
@@ -52,7 +52,7 @@
             <div class="right-sidebar">
             <div class="countries-visited">
                 <h3>Countries visited</h3>
-                <p> 3/195 </p>
+                <p> {{ auth()->user()->countries_visited }}/195 </p>
             </div>
             </div>
             {{-- Right Sidebar --}}
