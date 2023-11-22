@@ -6,7 +6,7 @@
         {{-- Left Sidebar --}}
         <div class="left-sidebar">
             <ul class="sidebar-menu">
-                <li><a href="#">🏠 Home</a></li>
+                <li><a href="{{ route('home') }}">🏠 Home</a></li>
                 <li><a href="#">🔍 Explore</a></li>
                 <li><a href="#">🔔 Notifications</a></li>
                 <li><a href="#">📨 Messages</a></li>

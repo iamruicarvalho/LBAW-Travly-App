@@ -48,13 +48,16 @@ CREATE TABLE user_ (
     name_ TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password_ TEXT NOT NULL,
-    private_ BOOLEAN NOT NULL DEFAULT TRUE
+    private_ BOOLEAN NOT NULL DEFAULT TRUE,
+    description_ TEXT DEFAULT 'no description',
+    location TEXT DEFAULT 'not provided',
+    countries_visited INT DEFAULT 0
 );
 
 CREATE TABLE post_ (
     postID SERIAL PRIMARY KEY,
-    content_ TEXT NOT NULL, 
-    description_ TEXT,
+    content_ VARCHAR(256), 
+    description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0,
     comments_ INTEGER DEFAULT 0, 
     time_ TIMESTAMP NOT NULL,
