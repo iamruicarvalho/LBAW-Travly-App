@@ -30,7 +30,7 @@
             <a href="{{ route('profile.edit') }}" class="edit-profile-link">Edit Profile</a>
             <div class="user-info">
                 <div>
-                    <h3>user_name</h3>
+                    <h3>{{ $user->name }}</h3>
                     <p>user description</p>
                     <p>user location</p>
                 </div>
