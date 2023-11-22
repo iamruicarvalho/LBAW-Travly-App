@@ -24,9 +24,16 @@ class User extends Model implements Authenticatable # <-----
         'username', 'name_', 'email', 'password_', 'private_'
     ];
 
+
+
     protected $hidden = [
         'password_', 
     ];
+
+    public function getAuthPassword()
+    {
+        return $this->password_;
+    }
 
     public function posts()
     {
