@@ -12,13 +12,14 @@ use Illuminate\View\View;
 
 class LoginController extends Controller
 {
+
     /**
      * Display a login form.
      */
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('register');
+            return redirect('home');
         } else {
             return view('auth.login');
         }
@@ -31,7 +32,7 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password_' => ['required'],
+            'password' => ['required', 'string'],
         ]);
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
