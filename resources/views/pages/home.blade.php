@@ -58,56 +58,50 @@
                     <!-- Cada comentário pode ter um autor e o texto do comentário -->
                 </div>
             </div>
-
-
-
         </div>
 
         {{-- Right Sidebar --}}
         <div class="right-sidebar">
-    <div class="search-bar">
-        {{-- Your search bar HTML goes here --}}
-        <input type="text" placeholder="🔍 Search...">
-    </div>
-    <div class="suggested-groups">
-        {{-- Your suggested groups content goes here --}}
-        <h3>Suggested Groups</h3>
-        <!-- Display suggested groups -->
-        <ul>
-            <li>Italia Lovers</li>
-            <li>I heart Japan</li>
-            <li>Budget travel</li>
-            <!-- Add more suggested groups as needed -->
-        </ul>
-    </div>
+            <div class="search-bar">
+                {{-- Your search bar HTML goes here --}}
+                <input type="text" placeholder="🔍 Search...">
+            </div>
+            <div class="suggested-groups">
+                {{-- Your suggested groups content goes here --}}
+                <h3>Suggested Groups</h3>
+                <!-- Display suggested groups -->
+                <ul>
+                    <li>Italia Lovers</li>
+                    <li>I heart Japan</li>
+                    <li>Budget travel</li>
+                    <!-- Add more suggested groups as needed -->
+                </ul>
+            </div>
 
-    <div class="people-near-you">
-        {{-- Your people near you content goes here --}}
-        <h3>People Near You</h3>
-        <!-- Display people near you -->
-        <ul>
-            <li>Bessie Cooper</li>
-            <li>Olivia Silva</li>
-            <li>Joseph Martini</li>
-            <!-- Add more people as needed -->
-        </ul>
+            <div class="people-near-you">
+                {{-- Your people near you content goes here --}}
+                <h3>People Near You</h3>
+                <!-- Display people near you -->
+                <ul>
+                    <li>Bessie Cooper</li>
+                    <li>Olivia Silva</li>
+                    <li>Joseph Martini</li>
+                    <!-- Add more people as needed -->
+                </ul>
+            </div>
+
+            <div class="trending-hashtags">
+                {{-- Your trending hashtags content goes here --}}
+                <h3>Trending Hashtags</h3>
+                <!-- Display trending hashtags -->
+                <ul>
+                    <li>#Travel</li>
+                    <li>#Adventure</li>
+                    <li>#Explore</li>
+                    <!-- Add more hashtags as needed -->
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <div class="trending-hashtags">
-        {{-- Your trending hashtags content goes here --}}
-        <h3>Trending Hashtags</h3>
-        <!-- Display trending hashtags -->
-        <ul>
-            <li>#Travel</li>
-            <li>#Adventure</li>
-            <li>#Explore</li>
-            <!-- Add more hashtags as needed -->
-        </ul>
-    </div>
-</div>
-
-    </div>
-
-
 @endsection
 
