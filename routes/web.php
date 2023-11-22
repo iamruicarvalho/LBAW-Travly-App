@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -19,9 +22,23 @@ use App\Http\Controllers\Auth\RegisterController;
 |
 
 */
+
+Route::redirect('/', '/login');
+
 // Home
-Route::get('/home', 'HomeController@index')->name('home');
-//Route::redirect('/', '/login');
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+});
+
+// User
+Route::controller(UserController::class)->group(function () {
+    Route::get('/profile/show', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    /*Route::get('/profile/{userId}', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/{userId}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/{userId}/update', [UserController::class, 'updateProfile'])->name('profile.update');*/
+});
 
 // Cards
 Route::controller(CardController::class)->group(function () {
@@ -55,7 +72,7 @@ Route::middleware('web')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
 });
 
-
+Route::post('/post', [PostController::class, 'store']);
 
 /*
 use Illuminate\Support\Facades\Route;

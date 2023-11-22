@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     // Exibe o perfil do usuário
-    public function showProfile($userId)
+    public function showProfile(){
+        return view('pages.profile');
+    }
+    /*public function showProfile($userId)
     {
         $user = User::find($userId);
 
@@ -18,10 +21,13 @@ class UserController extends Controller
         }
 
         return view('user.profile', compact('user'));
-    }
+    }*/
 
     // Exibe edição do perfil do usuário
-    public function editProfile($userId)
+    public function editProfile(){
+        return view('partials.ProfileEdit');
+    }
+    /*public function editProfile($userId)
     {
         $user = User::find($userId);
 
@@ -30,10 +36,13 @@ class UserController extends Controller
         }
 
         return view('user.edit', compact('user'));
-    }
+    }*/
 
     // Atualiza o perfil do usuário
-    public function updateProfile(Request $request, $userId)
+    public function updateProfile(){
+        return redirect()->route('profile.show');
+    }
+    /*public function updateProfile(Request $request, $userId)
     {
         $user = User::find($userId);
 
@@ -50,6 +59,6 @@ class UserController extends Controller
         $user->email = $request->input('email');
         $user->save();
 
-        return redirect()->route('profile.show', $userId)->with('success', 'Perfil atualizado com sucesso');
-    }
+        return redirect()->route('user.profile', $userId)->with('success', 'Perfil atualizado com sucesso');
+    }*/
 }
