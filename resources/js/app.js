@@ -7,5 +7,5 @@ function redirectToHome() {
     window.location.href = '/home'; // Update the path as needed
 
     // Cancel the form submission to prevent it from being submitted normally
-    return false;
+    return true;
 }

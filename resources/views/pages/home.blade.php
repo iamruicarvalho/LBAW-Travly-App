@@ -16,7 +16,7 @@
             </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
-                <a href="{{ route('profile.show', ['id' => $user->id]) }}">👤 Profile</a>
+                <a href="{{ route('profile.show') }}">👤 {{ auth()->user()->username }}</a>
                 <!-- <a href="{{ route('profile.show', auth()->id()) }}">User Name</a> -->
             </div>
         </div>

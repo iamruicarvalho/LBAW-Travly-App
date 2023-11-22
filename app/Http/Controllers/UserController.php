@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     // Exibe o perfil do usuário
-    /*public function showProfile(){
+    public function showProfile(){
         return view('pages.profile');
-    }*/
+    }
+    /*
     public function showProfile($id)
     {
         $user = User::find($id);
@@ -21,12 +22,13 @@ class UserController extends Controller
         }
 
         return view('pages.profile', compact('user'));
-    }
+    }*/
 
     // Exibe edição do perfil do usuário
     public function editProfile(){
         return view('partials.ProfileEdit');
     }
+    
     /*public function editProfile($id)
     {
         $user = User::find($id);

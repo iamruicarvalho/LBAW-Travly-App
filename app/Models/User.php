@@ -58,6 +58,11 @@ class User extends Model implements Authenticatable # <-----
         return $this->hasMany(Follow::class, 'followerID');
     }
 
+    public function following()
+    {
+        return $this->hasMany(Follow::class, 'followedID');
+    }
+
     public function notifications()
     {
         return $this->hasMany(UserNotification::class, 'id');

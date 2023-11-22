@@ -18,8 +18,8 @@
         </ul>
         <div class="profile-section">
             <!-- Profile information here -->
-            <a href="{{ route('profile.show') }}">👤 Profile</a>
-            <!-- <a href="{{ route('profile.show', auth()->id()) }}">User Name</a> -->
+            <!-- <a href="{{ route('profile.show') }}">👤 Profile</a> -->
+            <a href="{{ route('profile.show', auth()->user()->username) }}">{{ auth()->user()->username }}</a>
         </div>
     </div>
     </div>
@@ -30,12 +30,12 @@
             <a href="{{ route('profile.edit') }}" class="edit-profile-link">Edit Profile</a>
             <div class="user-info">
                 <div>
-                    <h3>{{ $user->name }}</h3>
+                    <h3>{{ auth()->user()->username }}</h3>
                     <p>user description</p>
                     <p>user location</p>
                 </div>
                 <div>
-                    <p>number following number followers</p>
+                    <p>{{ optional(auth()->user()->follows)->count() ?? 0 }} Followers {{ optional(auth()->user()->following)->count() ?? 0 }} Following</p>
                 </div>
             </div>
         </div>
