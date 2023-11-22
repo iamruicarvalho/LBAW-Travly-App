@@ -1,0 +1,43 @@
+/* Add a specific identifier to increase specificity */
+body .profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1000px;
+}
+
+body .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 1000px;
+}
+
+body .profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+body .header-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+body .profile-body {
+    margin-top: 20px;
+}
+
+body .profile-body .post {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+body .edit-profile-link {
+    display: block;
+    margin-top: 10px;
+    color: #3490dc;
+    text-decoration: none;
+}
