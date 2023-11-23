@@ -12,7 +12,8 @@ class UserController extends Controller
     public function showProfile(){
         return view('pages.profile');
     }
-    /*public function showProfile($id)
+    /*
+    public function showProfile($id)
     {
         $user = User::find($id);
 
@@ -20,13 +21,14 @@ class UserController extends Controller
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
         }
 
-        return view('user.profile', compact('user'));
+        return view('pages.profile', compact('user'));
     }*/
 
     // Exibe edição do perfil do usuário
     public function editProfile(){
         return view('partials.profileEdit');
     }
+
     /*public function editProfile($id)
     {
         $user = User::find($id);
@@ -39,10 +41,7 @@ class UserController extends Controller
     }*/
 
     // Atualiza o perfil do usuário
-    public function updateProfile(){
-        return redirect()->route('profile.show');
-    }
-    /*public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request, $id)
     {
         $user = User::find($id);
 
@@ -51,14 +50,14 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'name_' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user_,email,' . $id,
         ]);
 
-        $user->name_ = $request->input('name_');
+        $user->name_ = $request->input('name');
         $user->email = $request->input('email');
         $user->save();
 
-        return redirect()->route('user.profile', $id)->with('success', 'Perfil atualizado com sucesso');
-    }*/
+        return redirect()->route('profile.show', $id)->with('success', 'Perfil atualizado com sucesso');
+    }
 }

@@ -9,3 +9,4 @@ function redirectToHome() {
     // Cancel the form submission to prevent it from being submitted normally
     return true;
 }
+

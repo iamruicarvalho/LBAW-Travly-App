@@ -493,3 +493,17 @@ body .profile-right-sidebars{
   flex-direction: column;
   gap: 20px;
 }
+
+body .profile-editable-fields{
+  margin-top: 100px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+body .profile-save-changes{
+  margin-left: 40%;
+}
+
+body .user-info{
+  margin: 20px;
+}

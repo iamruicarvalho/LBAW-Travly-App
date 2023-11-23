@@ -27,7 +27,7 @@
         <div class="profile-header">
         <img src="https://64.media.tumblr.com/bcb1405628a8b4a3c157295ed2b76902/tumblr_inline_p7garrvPza1rzz0uv_500.png" alt="Header Picture" class="profile-header-picture">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
-            <a href="{{ route('profile.edit') }}" class="edit-profile-link">Edit Profile</a>
+            <a href="{{ route('profile.edit', auth()->user()->username) }}" class="edit-profile-link">Edit Profile</a>
             <div class="user-info">
                 <div>
                     <h3>{{ auth()->user()->username }}</h3>
@@ -35,7 +35,7 @@
                     <p>{{ auth()->user()->location }}</p>
                 </div>
                 <div>
-                    <p>number following number followers</p>
+                    <p>0 Followers 0 Following</p>
                 </div>
             </div>
         </div>
