@@ -9,16 +9,16 @@ use App\Models\Group;
 
 class Belongs extends Model
 {
+    public $timestamps = false;
     protected $table = 'belongs_';
-
-    protected $primaryKey = null; 
+    protected $primaryKey = ['id', 'groupID'];   
 
     public $incrementing = false; 
 
-    protected $fillable = [
-        'id',
-        'groupID',
-    ];
+    // protected $fillable = [
+    //     'id',
+    //     'groupID',
+    // ];
 
     public function user()
     {

@@ -9,8 +9,9 @@ use App\Models\Notification;
 
 class PostNotification extends Model
 {
+    public $timestamps = false;
     protected $table = 'post_notification';
-
+    protected $primaryKey = 'notificationID';
     protected $fillable = [
         'notificationID', 'postID', 'notification_type'
     ];

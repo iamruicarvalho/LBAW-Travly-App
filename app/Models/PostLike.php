@@ -9,8 +9,9 @@ use App\Models\Post;
 
 class PostLike extends Model
 {
+    public $timestamps = false;
     protected $table = 'post_likes';
-
+    protected $primaryKey = ['id', 'postID'];
     protected $fillable = [
         'id', 'postID'
     ];

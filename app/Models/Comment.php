@@ -10,8 +10,9 @@ use App\Models\CommentLike;
 
 class Comment extends Model
 {
+    public $timestamps = false;
     protected $table = 'comment_';
-
+    protected $primaryKey = 'commentID'; 
     protected $fillable = [
         'description_', 'likes_', 'time_', 'id', 'postID', 'comment_replies'
     ];

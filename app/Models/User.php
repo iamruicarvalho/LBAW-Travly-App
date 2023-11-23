@@ -21,11 +21,16 @@ class User extends Model implements Authenticatable # <-----
     protected $table = 'user_';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'username', 'name_', 'email', 'password_', 'private_'
+        'username', 
+        'name_', 
+        'email', 
+        'password_', 
+        'private_', 
+        'description_', 
+        'location', 
+        'countries_visited'
     ];
-
-
-
+    
     protected $hidden = [
         'password_', 
     ];

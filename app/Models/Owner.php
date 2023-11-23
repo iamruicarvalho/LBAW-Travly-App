@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Owner extends Model
 {
+    public $timestamps = false;
     protected $table = 'owner_';
-
-    protected $primaryKey = null; 
+    protected $primaryKey = ['id', 'groupID'];
 
     public $incrementing = false; 
 
     protected $fillable = [
-        'id',
-        'groupID',
+        'id', 'groupID'
     ];
 
     public function user()

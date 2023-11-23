@@ -1,5 +1,6 @@
 @section('feed')
   <section id="posts" class="feed-posts">
+    
     @forelse ($posts as $post)
       @include('partials.post', ['post' => $post])
     @empty

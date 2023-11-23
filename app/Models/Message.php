@@ -9,8 +9,9 @@ use App\Models\Group;
 
 class Message extends Model
 {
+    public $timestamps = false;
     protected $table = 'message_';
-
+    protected $primaryKey = 'messageID';
     protected $fillable = [
         'description_', 'time_', 'sender', 'receiver', 'sent_to', 'message_replies'
     ];

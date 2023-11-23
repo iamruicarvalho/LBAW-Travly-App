@@ -12,10 +12,11 @@ use App\Models\Comment;
 
 class Post extends Model
 {
+    public $timestamps = false;
     protected $table = 'post_';
-
+    protected $primaryKey = 'postID';
     protected $fillable = [
-        'content', 'description_', 'likes_', 'comments', 'time_', 'created_by', 'content_type'
+        'content_', 'description_', 'likes_', 'comments_', 'time_', 'created_by', 'content_type'
     ];
 
     public function owner()

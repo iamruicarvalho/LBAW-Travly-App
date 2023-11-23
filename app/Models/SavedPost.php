@@ -9,15 +9,14 @@ use App\Models\Post;
 
 class SavedPost extends Model
 {
+    public $timestamps = false;
     protected $table = 'saved_post';
-
-    protected $primaryKey = null; 
+    protected $primaryKey = ['id', 'postID'];
 
     public $incrementing = false; 
 
     protected $fillable = [
-        'id',
-        'postID',
+        'id', 'postID'
     ];
 
     public function user()

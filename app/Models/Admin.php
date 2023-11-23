@@ -8,11 +8,13 @@ use App\Models\User;
 
 class Admin extends Model
 {
+    public $timestamps = false;
     protected $table = 'admin_';
+    protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'id'
-    ];
+    // protected $fillable = [
+    //     'id'
+    // ];
 
     public function user()
     {

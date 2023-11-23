@@ -8,8 +8,9 @@ use App\Models\User;
 
 class Request extends Model
 {
+    public $timestamps = false;
     protected $table = 'request_';
-
+    protected $primaryKey = ['senderID', 'receiverID'];
     protected $fillable = [
         'senderID', 'receiverID'
     ];
