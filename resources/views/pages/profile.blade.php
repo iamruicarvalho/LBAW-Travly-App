@@ -19,7 +19,7 @@
         <div class="profile-section">
             <!-- Profile information here -->
             <!-- <a href="{{ route('profile.show') }}">👤 Profile</a> -->
-            <a href="{{ route('profile.show', auth()->user()->username) }}">{{ auth()->user()->username }}</a>
+            <a href="{{ route('profile.show', auth()->user()->username) }}">👤 {{ auth()->user()->username }}</a>
         </div>
     </div>
     </div>
@@ -44,7 +44,7 @@
         <div class="profile-body">
             <div class="post">
                 <!-- Add user posts or a timeline here -->
-                <p>user posts</p>
+                <p>{{ Auth()->user()->posts()->get() }}</p>
                 <!-- Add more details about the post if needed -->
             </div>
             {{-- Right Sidebar --}}
