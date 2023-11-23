@@ -28,7 +28,7 @@ class UserController extends Controller
     public function editProfile(){
         return view('partials.ProfileEdit');
     }
-    
+
     /*public function editProfile($id)
     {
         $user = User::find($id);
@@ -41,9 +41,19 @@ class UserController extends Controller
     }*/
 
     // Atualiza o perfil do usuário
-    public function updateProfile(){
-        return redirect()->route('profile.show');
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user(); // Retrieve the authenticated user
+
+        $user->name_ = $request->input('name');
+        $user->description = $request->input('description');
+        $user->location = $request->input('location');
+
+        //$user->save(); // Save the changes to the database
+
+        return redirect()->route('profile.show'); // Redirect to the profile page after updating
     }
+
     /*public function updateProfile(Request $request, $id)
     {
         $user = User::find($id);
