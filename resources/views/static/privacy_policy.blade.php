@@ -30,42 +30,44 @@
                 </div>
             </div>
             <div class="privacy-policy">
-                Privacy Policy for Travly
+                <pre>
+                    Privacy Policy for Travly
 
-                At Travly, we are committed to safeguarding the privacy of our users. This Privacy Policy outlines how we collect, use, disclose, and store the information provided by users when they access or use our website.
+                    At Travly, we are committed to safeguarding the privacy of our users. This Privacy Policy outlines how we collect, use, disclose, and store the information provided by users when they access or use our website.
 
-                Information Collection
+                    Information Collection
 
-                When you visit Travly, we may collect personal information such as your name and email address when voluntarily provided by you, for example, when you subscribe to our newsletter, create an account, or use our contact form.
+                    When you visit Travly, we may collect personal information such as your name and email address when voluntarily provided by you, for example, when you subscribe to our newsletter, create an account, or use our contact form.
 
-                Use of Information
+                    Use of Information
 
-                The information collected is used for the following purposes:
+                    The information collected is used for the following purposes:
 
-                To personalize user experience and deliver content and features based on user interests.
-                To improve our website and services based on the feedback we receive.
-                To send periodic emails regarding updates, promotions, or other information related to Travly.
-                Protection of Information
+                    To personalize user experience and deliver content and features based on user interests.
+                    To improve our website and services based on the feedback we receive.
+                    To send periodic emails regarding updates, promotions, or other information related to Travly.
+                    Protection of Information
 
-                We implement a variety of security measures to maintain the safety of your personal information. However, please note that no method of transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.
+                    We implement a variety of security measures to maintain the safety of your personal information. However, please note that no method of transmission over the internet or electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your personal information, we cannot guarantee its absolute security.
 
-                Disclosure of Information
+                    Disclosure of Information
 
-                We do not sell, trade, or otherwise transfer your personally identifiable information to outside parties. This does not include trusted third parties who assist us in operating our website, conducting our business, or servicing you, as long as those parties agree to keep this information confidential.
+                    We do not sell, trade, or otherwise transfer your personally identifiable information to outside parties. This does not include trusted third parties who assist us in operating our website, conducting our business, or servicing you, as long as those parties agree to keep this information confidential.
 
-                Third-Party Links
+                    Third-Party Links
 
-                Occasionally, at our discretion, we may include or offer third-party products or services on our website. These third-party sites have separate and independent privacy policies. Therefore, we have no responsibility or liability for the content and activities of these linked sites.
+                    Occasionally, at our discretion, we may include or offer third-party products or services on our website. These third-party sites have separate and independent privacy policies. Therefore, we have no responsibility or liability for the content and activities of these linked sites.
 
-                Consent
+                    Consent
 
-                By using our website, you consent to our Privacy Policy.
+                    By using our website, you consent to our Privacy Policy.
 
-                Changes to Privacy Policy
+                    Changes to Privacy Policy
 
-                Travly reserves the right to update this Privacy Policy at any time. We encourage users to frequently check this page for any changes to stay informed about how we are helping to protect the personal information we collect.
+                    Travly reserves the right to update this Privacy Policy at any time. We encourage users to frequently check this page for any changes to stay informed about how we are helping to protect the personal information we collect.
 
-                If you have any questions regarding this Privacy Policy, you may contact us at contact@travly.com.
+                    If you have any questions regarding this Privacy Policy, you may contact us at contact@travly.com.
+                </pre>
             </div>
         </div>
 
