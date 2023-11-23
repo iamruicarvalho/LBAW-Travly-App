@@ -136,6 +136,17 @@ Route::get('/getMessages/{id}', [MessageController::class, 'getMessages'])->name
 
 Route::get('/getConversations', [MessageController::class, 'getConversations'])->name('getConversations');
 
+
+*/
+Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
+
+Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
+
+Route::get('/privacyPolicy', [StaticPageController::class, 'privacy'])->name('static.privacy_policy');
+
+Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
+
+/*
 // UserController
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('profile.show');
