@@ -34,7 +34,7 @@ Route::controller(HomeController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/profile/show', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 
 // Cards

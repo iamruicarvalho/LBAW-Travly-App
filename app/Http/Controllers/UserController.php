@@ -41,20 +41,7 @@ class UserController extends Controller
     }*/
 
     // Atualiza o perfil do usuário
-    public function updateProfile(Request $request)
-    {
-        $user = Auth::user(); // Retrieve the authenticated user
-
-        $user->name_ = $request->input('name');
-        $user->description = $request->input('description');
-        $user->location = $request->input('location');
-
-        //$user->save(); // Save the changes to the database
-
-        return redirect()->route('profile.show'); // Redirect to the profile page after updating
-    }
-
-    /*public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request, $id)
     {
         $user = User::find($id);
 
@@ -63,14 +50,14 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'name_' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:user_,email,' . $id,
         ]);
 
-        $user->name_ = $request->input('name_');
+        $user->name_ = $request->input('name');
         $user->email = $request->input('email');
         $user->save();
 
-        return redirect()->route('user.profile', $id)->with('success', 'Perfil atualizado com sucesso');
-    }*/
+        return redirect()->route('profile.show', $id)->with('success', 'Perfil atualizado com sucesso');
+    }
 }
