@@ -72,7 +72,11 @@ Route::middleware('web')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
 });
 
-Route::post('/post', [PostController::class, 'store']);
+Route::middleware(PostController::class)->group(function () {
+    Route::post('/post', [PostController::class, 'createPost'])->name('post.create');
+    Route::post('/post', [PostController::class, 'editPost'])->name('post.edit');
+    Route::post('/post', [PostController::class, 'deletePost'])->name('post.delete');
+});
 
 /*
 use Illuminate\Support\Facades\Route;

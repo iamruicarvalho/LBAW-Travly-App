@@ -31,7 +31,7 @@ class Post extends Model
 
     public function likes()
     {
-        return $this->hasMany(PostLike::class)->count();
+        return $this->hasMany(PostLike::class)->get()->count();
     }
 
     public function comments()
@@ -47,10 +47,11 @@ class Post extends Model
 
     public static function publicPosts()
     {
-        return static::select('post.*')
-            ->join('users', 'users.id', '=', 'post.created_by')
-            ->where('users.is_public', true)
-            ->where('post.is_public', true)
+        // returns all the posts from the public users (not necessarily users I follow)
+        return Post::select('post.*')
+            ->join('user_', 'user_.id', '=', 'post.created_by')
+            ->where('user_.is_private', false)
             ->orderBy('time_', 'desc');
     }
+    
 }

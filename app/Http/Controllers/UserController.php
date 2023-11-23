@@ -25,7 +25,7 @@ class UserController extends Controller
 
     // Exibe edição do perfil do usuário
     public function editProfile(){
-        return view('partials.ProfileEdit');
+        return view('partials.profileEdit');
     }
     /*public function editProfile($id)
     {

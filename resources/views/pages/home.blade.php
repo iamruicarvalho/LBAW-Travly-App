@@ -33,7 +33,11 @@
                 @csrf
                 <div class="upload-post-section">
                     {{-- Seu HTML de upload de post vai aqui --}}
-                    <input type="text" name="content" placeholder="Write your post...">
+                    <input type="text" name="description" placeholder="Write your post...">
+                    <label for="media" class="media-icon">
+                        🖼️
+                    </label>
+                    <input type="file" name="content" accept="image/*,video/*" style="display:none;">
                     <button type="submit" class="post-button">Post</button>
                 </div>
             </form>
