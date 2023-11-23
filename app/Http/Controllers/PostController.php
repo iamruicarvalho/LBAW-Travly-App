@@ -19,6 +19,7 @@ class PostController extends Controller
             $posts = Auth::user()->visiblePosts()->get();
             return view('pages.home', ['posts' => $posts]);
         }
+
         $posts = Post::publicPosts()->get();
         return view('pages.home', ['posts' => $posts]);
     }
@@ -48,7 +49,6 @@ class PostController extends Controller
             'description_'=> $description,
         ]);
 
-        // Redirecione para a página principal
         return redirect()->route('home')
             ->with('success', 'Post created successfully!');
     }

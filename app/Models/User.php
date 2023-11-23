@@ -21,7 +21,6 @@ class User extends Model implements Authenticatable # <-----
     protected $table = 'user_';
     protected $primaryKey = 'id';
     protected $fillable = [
-<<<<<<< HEAD
         'username', 
         'name_', 
         'email', 
@@ -30,9 +29,6 @@ class User extends Model implements Authenticatable # <-----
         'description_', 
         'location', 
         'countries_visited'
-=======
-        'username', 'name_', 'email', 'password_', 'private_', 'description', 'location'
->>>>>>> cc9c9729f9c74ba68464cae6401f64d505903e13
     ];
     
     protected $hidden = [
