@@ -75,6 +75,14 @@ Route::middleware(PostController::class)->group(function () {
     Route::post('/post', [PostController::class, 'deletePost'])->name('post.delete');
 });
 
+Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
+
+Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
+
+Route::get('/privacyPolicy', [StaticPageController::class, 'privacy'])->name('static.privacy_policy');
+
+Route::get('/help', [StaticPageController::class, 'privacy'])->name('static.help');
+
 /*
 use Illuminate\Support\Facades\Route;
 
@@ -127,14 +135,6 @@ Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('se
 Route::get('/getMessages/{id}', [MessageController::class, 'getMessages'])->name('getMessages');
 
 Route::get('/getConversations', [MessageController::class, 'getConversations'])->name('getConversations');
-
-
-// StaticPageController
-Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
-
-Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
-
-Route::get('/privacy', [StaticPageController::class, 'privacy'])->name('static.privacy');
 
 // UserController
 Route::middleware(['auth'])->group(function () {

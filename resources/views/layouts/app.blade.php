@@ -31,7 +31,7 @@
                     <li><a href="{{ url('/about') }}">About</a></li>
                     <li><a href="{{ url('/services') }}">Help</a></li>
                     <li><a href="{{ url('/faq') }}">FAQ</a></li>
-                    <li><a href="{{ url('/contact') }}">Privacy Policy</a></li>
+                    <li><a href="{{ url('/privacyPolicy') }}">Privacy Policy</a></li>
                 </ul>
             </nav>
             @if (Auth::check())
