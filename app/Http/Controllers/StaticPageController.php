@@ -14,7 +14,7 @@ class StaticPageController extends Controller
         return view('static.about');
     }
 
-    public function privacy()
+    public function privacy_policy()
     {
         return view('static.privacy_policy');
     }

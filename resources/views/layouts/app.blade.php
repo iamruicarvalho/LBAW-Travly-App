@@ -24,14 +24,14 @@
         <main>
         <header style="display: flex; justify-content: space-between; align-items: center;">
             <div class="logo">
-                <h1><a href="{{ url('/cards') }}">Travly ✈</a></h1>
+                <h1><a href="{{ route('home') }}">Travly ✈</a></h1>
             </div>
             <nav class="nav-links">
                 <ul>
                     <li><a href="{{ url('/about') }}">About</a></li>
-                    <li><a href="{{ url('/services') }}">Help</a></li>
+                    <li><a href="{{ url('/help') }}">Help</a></li>
                     <li><a href="{{ url('/faq') }}">FAQ</a></li>
-                    <li><a href="{{ url('/privacyPolicy') }}">Privacy Policy</a></li>
+                    <li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
                 </ul>
             </nav>
             @if (Auth::check())

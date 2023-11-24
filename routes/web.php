@@ -65,9 +65,9 @@ Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
 
 Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
 
-Route::get('/privacyPolicy', [StaticPageController::class, 'privacy'])->name('static.privacy_policy');
+Route::get('/privacy-policy', [StaticPageController::class, 'privacy_policy'])->name('static.privacy_policy');
 
-Route::get('/help', [StaticPageController::class, 'privacy'])->name('static.help');
+Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
 
 /*
 use Illuminate\Support\Facades\Route;
@@ -121,16 +121,7 @@ Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('se
 Route::get('/getMessages/{id}', [MessageController::class, 'getMessages'])->name('getMessages');
 
 Route::get('/getConversations', [MessageController::class, 'getConversations'])->name('getConversations');
-
-
 */
-Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
-
-Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
-
-Route::get('/privacyPolicy', [StaticPageController::class, 'privacy'])->name('static.privacy_policy');
-
-Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
 
 /*
 // UserController
