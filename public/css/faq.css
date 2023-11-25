@@ -27,13 +27,10 @@ body {
 }
 
 .faq-container h2{
-    font-size: 30px;
     color: white;
-    margin-top: 50px;
-    font-weight: bold;
 }
 
 
 .faq-container p {
-    color: white;
+    color: black;
 }
