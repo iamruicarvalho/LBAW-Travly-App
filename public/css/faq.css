@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;1,300&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: black;
+}
+
+.faq-container{
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #BE959F;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.faq-container h2 {
+    color: #13472E;
+    text-align: center;
+}
+
+.faq-container p {
+    color: white;
+}
