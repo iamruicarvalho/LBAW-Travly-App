@@ -17,6 +17,10 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
+.faq-container a{
+    font-weight: bold;
+}
+
 .faq-container h1 {
     color: #13472E;
     text-align: center;

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <a href="{{ route('home') }}"> < Go back home</a>
     <div class="faq-container">
+        <a href="{{ route('home') }}"> < Go back home</a>
         <h1>FAQ - Travly</h1>
 
         <h2>What is Travly?</h2>
