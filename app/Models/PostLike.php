@@ -9,15 +9,16 @@ use App\Models\Post;
 
 class PostLike extends Model
 {
+    public $timestamps = false;
     protected $table = 'post_likes';
-
+    protected $primaryKey = ['id', 'postID'];
     protected $fillable = [
-        'userID', 'postID'
+        'id', 'postID'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function post()

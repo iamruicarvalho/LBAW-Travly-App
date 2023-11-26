@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\Authenticatable; # <-----
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 
 use App\Models\Post;
 use App\Models\Admin;
@@ -11,17 +13,32 @@ use App\Models\Follow;
 use App\Models\Request;
 use App\Models\UserNotification;
 
-class User extends Model
-{
+class User extends Model implements Authenticatable # <-----
+{   
+    use AuthenticatableTrait; # <-----
+
+    public $timestamps = false;
     protected $table = 'user_';
-
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'username', 'name_', 'email', 'password_', 'private_'
+        'username', 
+        'name_', 
+        'email', 
+        'password_', 
+        'private_', 
+        'description_', 
+        'location', 
+        'countries_visited'
     ];
-
+    
     protected $hidden = [
         'password_', 
     ];
+
+    public function getAuthPassword()
+    {
+        return $this->password_;
+    }
 
     public function posts()
     {
@@ -30,12 +47,12 @@ class User extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'userID');
+        return $this->hasMany(Comment::class, 'id');
     }
 
     public function admin()
     {
-        return $this->hasOne(Admin::class, 'userID');
+        return $this->hasOne(Admin::class, 'id');
     }
 
     public function requestsSent()
@@ -53,8 +70,23 @@ class User extends Model
         return $this->hasMany(Follow::class, 'followerID');
     }
 
+    public function following()
+    {
+        return $this->hasMany(Follow::class, 'followedID');
+    }
+
     public function notifications()
     {
-        return $this->hasMany(UserNotification::class, 'userID');
+        return $this->hasMany(UserNotification::class, 'id');
     }
+
+    public function visiblePosts()
+    {
+        // returns all the posts from the users I follow
+        return Post::select('post_.*')
+            ->fromRaw('post_', 'follows_')
+            ->where('follows_.followerID', '=', $this->id)
+            ->where('follows_.followedID', '=', 'post_.created_by');
+    }
+
 }

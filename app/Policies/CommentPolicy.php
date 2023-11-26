@@ -12,7 +12,7 @@ class CommentPolicy
     use HandlesAuthorization;
 
     public function delete(User $user, Comment $comment) {
-        return Auth::check() && (Auth::user()->admin || Auth::user()->id == $comment->userID);
+        return Auth::check() && (Auth::user()->admin || Auth::user()->id == $comment->id);
     }
 
     public function create() {

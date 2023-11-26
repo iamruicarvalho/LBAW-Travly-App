@@ -10,15 +10,16 @@ use App\Models\CommentLike;
 
 class Comment extends Model
 {
+    public $timestamps = false;
     protected $table = 'comment_';
-
+    protected $primaryKey = 'commentID'; 
     protected $fillable = [
-        'description_', 'likes_', 'time_', 'userID', 'postID', 'comment_replies'
+        'description_', 'likes_', 'time_', 'id', 'postID', 'comment_replies'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function post()

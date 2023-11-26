@@ -594,7 +594,7 @@ paths:
         - 'M04: Posts'
       parameters:
         - in: query
-          name: userId
+          name: id
           description: 'Filter posts by user ID.'
           schema:
             type: integer
@@ -647,7 +647,7 @@ paths:
                 media:
                   type: string
                   format: binary
-                userId:
+                id:
                   type: integer
                   description: 'ID of the user creating the post.'
               required:

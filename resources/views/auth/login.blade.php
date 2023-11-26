@@ -34,4 +34,5 @@
         </p>
     @endif
 </form>
+<link href="{{ url('css/login.css') }}" rel="stylesheet">
 @endsection

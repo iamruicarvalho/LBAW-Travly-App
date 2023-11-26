@@ -9,10 +9,11 @@ use App\Models\Notification;
 
 class UserNotification extends Model
 {
+    public $timestamps = false;
     protected $table = 'user_notification';
-
+    protected $primaryKey = 'notificationID';
     protected $fillable = [
-        'notificationID', 'userID', 'notification_type'
+        'notificationID', 'id', 'notification_type'
     ];
 
     public function notification()
@@ -22,6 +23,6 @@ class UserNotification extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 }

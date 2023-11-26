@@ -9,20 +9,20 @@ use App\Models\Group;
 
 class Belongs extends Model
 {
+    public $timestamps = false;
     protected $table = 'belongs_';
-
-    protected $primaryKey = null; 
+    protected $primaryKey = ['id', 'groupID'];   
 
     public $incrementing = false; 
 
-    protected $fillable = [
-        'userID',
-        'groupID',
-    ];
+    // protected $fillable = [
+    //     'id',
+    //     'groupID',
+    // ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function group()

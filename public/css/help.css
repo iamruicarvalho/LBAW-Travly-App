@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;1,300&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: black;
+}
+
+.help-container a{
+    font-weight: bold;
+}
+
+.help-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #BE959F;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.help-container h1 {
+    color: #13472E;
+    text-align: center;
+}
+
+.help-container h2{
+    font-size: 30px;
+    color: white;
+    margin-top: 50px;
+    font-weight: bold;
+}
+
+.help-container h3 {
+    color: white;
+}
+
+.help-container p {
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.help-container ol,
+.help-container ul {
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.help-container strong {
+    color: #13472E;
+    font-weight: 2000;
+}
+
+.help-container em {
+    color: #13472E;
+    font-weight: 2000;
+    text-align: center;
+}
+
+/* Add some spacing to the Join Us section */
+.help-container h3:last-child {
+    margin-bottom: 30px;
+}

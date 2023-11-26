@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
-
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -19,41 +20,48 @@ use App\Http\Controllers\Auth\RegisterController;
 |
 
 */
-// Home
+
 Route::redirect('/', '/login');
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+// Home
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 });
 
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
+// User
+Route::controller(UserController::class)->group(function () {
+    Route::get('/profile/show/{id}', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/edit/{id}', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
 });
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
 
 // Authentication
-Route::controller(LoginController::class)->group(function () {
-    Route::get('/login', 'showLoginForm')->name('login');
-    Route::post('/login', 'authenticate');
-    Route::get('/logout', 'logout')->name('logout');
+Route::middleware('web')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'authenticate']);
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
-Route::controller(RegisterController::class)->group(function () {
-    Route::get('/register', 'showRegistrationForm')->name('register');
-    Route::post('/register', 'register');
+Route::middleware('web')->group(function () {
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
 });
 
+Route::middleware(PostController::class)->group(function () {
+    Route::post('/post', [PostController::class, 'createPost'])->name('post.create');
+    Route::post('/post', [PostController::class, 'editPost'])->name('post.edit');
+    Route::post('/post', [PostController::class, 'deletePost'])->name('post.delete');
+});
+
+Route::get('/post/{post}/likes', [PostController::class, 'showLikes'])->name('post.likes');
+
+Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
+
+Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
+
+Route::get('/privacy-policy', [StaticPageController::class, 'privacy_policy'])->name('static.privacy_policy');
+
+Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
 
 /*
 use Illuminate\Support\Facades\Route;
@@ -104,24 +112,18 @@ Route::post('/posts/like', [PostController::class, 'like'])->name('posts.like');
 // MessageController
 Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('sendMessage');
 
-Route::get('/getMessages/{userId}', [MessageController::class, 'getMessages'])->name('getMessages');
+Route::get('/getMessages/{id}', [MessageController::class, 'getMessages'])->name('getMessages');
 
 Route::get('/getConversations', [MessageController::class, 'getConversations'])->name('getConversations');
+*/
 
-
-// StaticPageController
-Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
-
-Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
-
-Route::get('/privacy', [StaticPageController::class, 'privacy'])->name('static.privacy');
-
+/*
 // UserController
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile/{userId}', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('profile.show');
 
-    Route::get('/profile/{userId}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::get('/profile/{id}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
 
-    Route::put('/profile/{userId}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 */

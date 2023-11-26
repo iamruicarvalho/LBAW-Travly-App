@@ -8,14 +8,16 @@ use App\Models\User;
 
 class Admin extends Model
 {
+    public $timestamps = false;
     protected $table = 'admin_';
+    protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'userID'
-    ];
+    // protected $fillable = [
+    //     'id'
+    // ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 }

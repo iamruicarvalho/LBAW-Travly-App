@@ -1,5 +1,6 @@
-create schema if not exists lbaw2334;
-
+DROP SCHEMA IF EXISTS lbaw2334 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw2334;
+SET search_path TO lbaw2334;
 SET DateStyle TO European;
 
 --====================================--
@@ -42,22 +43,25 @@ CREATE TYPE post_notification_types AS ENUM ('liked_post', 'commented_post');
 --====================================--
 
 CREATE TABLE user_ (
-    userID SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     username TEXT UNIQUE NOT NULL,
     name_ TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password_ TEXT NOT NULL,
-    private_ BOOLEAN NOT NULL DEFAULT TRUE
+    private_ BOOLEAN NOT NULL DEFAULT TRUE,
+    description_ TEXT DEFAULT 'no description',
+    location TEXT DEFAULT 'not provided',
+    countries_visited INT DEFAULT 0
 );
 
 CREATE TABLE post_ (
     postID SERIAL PRIMARY KEY,
-    content TEXT NOT NULL, 
-    description_ TEXT,
+    content_ VARCHAR(256), 
+    description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0,
-    comments INTEGER DEFAULT 0, 
-    time_ INTEGER NOT NULL,
-    created_by INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE,
+    comments_ INTEGER DEFAULT 0, 
+    time_ TIMESTAMP NOT NULL,
+    created_by INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
     content_type post_content_types
 );
 
@@ -70,9 +74,9 @@ CREATE TABLE group_ (
 CREATE TABLE message_ (
     messageID SERIAL PRIMARY KEY, 
     description_ TEXT NOT NULL, 
-    time_ INTEGER NOT NULL, 
-    sender INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE, 
-    receiver INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE, 
+    time_ TIMESTAMP NOT NULL, 
+    sender INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE, 
+    receiver INTEGER REFERENCES user_ (id) ON UPDATE CASCADE, 
     sent_to INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE, 
     message_replies INTEGER DEFAULT NULL REFERENCES message_ (messageID) ON UPDATE CASCADE          -- tirar default null
 );
@@ -81,8 +85,8 @@ CREATE TABLE comment_ (
     commentID SERIAL PRIMARY KEY, 
     description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0, 
-    time_ INTEGER NOT NULL,
-    userID INTEGER NOT NULL REFERENCES user_ (userID) ON UPDATE CASCADE,
+    time_ TIMESTAMP NOT NULL,
+    id INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE,
     comment_replies INTEGER DEFAULT NULL REFERENCES comment_ (commentID) ON UPDATE CASCADE          -- tirar default null
 );
@@ -90,30 +94,30 @@ CREATE TABLE comment_ (
 CREATE TABLE notification_ (
     notificationID SERIAL PRIMARY KEY,
     description_ TEXT NOT NULL, 
-    time_ INTEGER NOT NULL,
-    notifies INTEGER NOT NULL REFERENCES user_ (userID),
-    sends_notif INTEGER NOT NULL REFERENCES user_ (userID)
+    time_ TIMESTAMP NOT NULL,
+    notifies INTEGER NOT NULL REFERENCES user_ (id),
+    sends_notif INTEGER NOT NULL REFERENCES user_ (id)
 );
 
 CREATE TABLE admin_ (
-    userID SERIAL PRIMARY KEY REFERENCES user_ (userID) ON UPDATE CASCADE
+    id SERIAL PRIMARY KEY REFERENCES user_ (id) ON UPDATE CASCADE
 );
 
 CREATE TABLE owner_ (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     groupID INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, groupID)
+    PRIMARY KEY (id, groupID)
 );
 
 CREATE TABLE belongs_ (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     groupID INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, groupID)
+    PRIMARY KEY (id, groupID)
 );
 
 CREATE TABLE user_notification (
     notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
-    userID INTEGER NOT NULL REFERENCES user_ (userID), 
+    id INTEGER NOT NULL REFERENCES user_ (id), 
     notification_type user_notification_types NOT NULL
 );
 
@@ -124,33 +128,33 @@ CREATE TABLE post_notification (
 );
 
 CREATE TABLE request_ (
-    senderID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
-    receiverID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    senderID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    receiverID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     PRIMARY KEY (senderID, receiverID)
 );
 
 CREATE TABLE follows_ (
-    followerID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
-    followedID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    followerID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    followedID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     PRIMARY KEY (followerID, followedID)
 );
 
 CREATE TABLE post_likes (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     postID INTEGER REFERENCES post_ (postID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, postID)
+    PRIMARY KEY (id, postID)
 );
 
 CREATE TABLE comment_likes (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     commentID INTEGER REFERENCES comment_ (commentID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, commentID)
+    PRIMARY KEY (id, commentID)
 );
 
 CREATE TABLE saved_post (
-    userID INTEGER REFERENCES user_ (userID) ON UPDATE CASCADE,
+    id INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
     postID INTEGER REFERENCES post_ (postID) ON UPDATE CASCADE,
-    PRIMARY KEY (userID, postID)
+    PRIMARY KEY (id, postID)
 );
 
 --====================================--
@@ -188,14 +192,14 @@ BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.user_tsvectors = (
          setweight(to_tsvector('english', NEW.username), 'A') ||
-         setweight(to_tsvector('english', NEW.name), 'B')
+         setweight(to_tsvector('english', NEW.name_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.username <> OLD.username OR NEW.name <> OLD.name) THEN
+         IF (NEW.username <> OLD.username OR NEW.name_ <> OLD.name_) THEN
            NEW.user_tsvectors = (
              setweight(to_tsvector('english', NEW.username), 'A') ||
-             setweight(to_tsvector('english', NEW.name), 'B')
+             setweight(to_tsvector('english', NEW.name_), 'B')
            );
          END IF;
  END IF;
@@ -226,15 +230,15 @@ CREATE OR REPLACE FUNCTION group_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.group_tsvectors = (
-         setweight(to_tsvector('english', NEW.name), 'A') ||
-         setweight(to_tsvector('english', NEW.description), 'B')
+         setweight(to_tsvector('english', NEW.name_), 'A') ||
+         setweight(to_tsvector('english', NEW.description_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.name <> OLD.name OR NEW.description <> OLD.description) THEN
+         IF (NEW.name_ <> OLD.name_ OR NEW.description_ <> OLD.description_) THEN
            NEW.group_tsvectors = (
-             setweight(to_tsvector('english', NEW.name), 'A') ||
-             setweight(to_tsvector('english', NEW.description), 'B')
+             setweight(to_tsvector('english', NEW.name_), 'A') ||
+             setweight(to_tsvector('english', NEW.description_), 'B')
            );
          END IF;
  END IF;
@@ -249,7 +253,6 @@ CREATE TRIGGER group_search_update
     EXECUTE FUNCTION group_search_update();
 
 CREATE INDEX group_search_idx ON "group_" USING GIN (group_tsvectors);
-
 
 -- ### Index IDX07 for "Post"
 
@@ -266,15 +269,15 @@ CREATE OR REPLACE FUNCTION post_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
         NEW.post_tsvectors = (
-         setweight(to_tsvector('english', NEW.content), 'A') ||
-         setweight(to_tsvector('english', NEW.description), 'B')
+         setweight(to_tsvector('english', NEW.content_), 'A') ||
+         setweight(to_tsvector('english', NEW.description_), 'B')
         );
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.content <> OLD.content OR NEW.description <> OLD.description) THEN
+         IF (NEW.content_ <> OLD.content_ OR NEW.description_ <> OLD.description_) THEN
            NEW.post_tsvectors = (
-             setweight(to_tsvector('english', NEW.content), 'A') ||
-             setweight(to_tsvector('english', NEW.description), 'B')
+             setweight(to_tsvector('english', NEW.content_), 'A') ||
+             setweight(to_tsvector('english', NEW.description_), 'B')
            );
          END IF;
  END IF;
@@ -287,7 +290,7 @@ CREATE TRIGGER post_search_update
     FOR EACH ROW
     EXECUTE FUNCTION post_search_update();
 
-CREATE INDEX post_search_idx ON "post_" USING GIN (post_tsvectors);
+CREATE INDEX post_search_idx ON "post_" USING GIN (post_tsvectors); 
 
 
 -- ### Index IDX08 for "Message"
@@ -304,11 +307,11 @@ ADD COLUMN message_tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION message_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
-        NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+        NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.description <> OLD.description) THEN
-           NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+         IF (NEW.description_ <> OLD.description_) THEN
+           NEW.message_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
          END IF;
  END IF;
  RETURN NEW;
@@ -337,11 +340,11 @@ ADD COLUMN comment_tsvectors TSVECTOR;
 CREATE OR REPLACE FUNCTION comment_search_update() RETURNS TRIGGER AS $$
 BEGIN
  IF TG_OP = 'INSERT' THEN
-        NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+        NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
  END IF;
  IF TG_OP = 'UPDATE' THEN
-         IF (NEW.description <> OLD.description) THEN
-           NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description), 'A');
+         IF (NEW.description_ <> OLD.description_) THEN
+           NEW.comment_tsvectors = setweight(to_tsvector('english', NEW.description_), 'A');
          END IF;
  END IF;
  RETURN NEW;
@@ -367,7 +370,7 @@ CREATE INDEX comment_search_idx ON "comment_" USING GIN (comment_tsvectors);
 CREATE FUNCTION verify_self_liking_post() RETURNS TRIGGER AS 
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM post_ WHERE NEW.postID = post_.postID AND NEW.userID = post_.created_by) 
+    IF EXISTS (SELECT * FROM post_ WHERE NEW.postID = post_.postID AND NEW.id = post_.created_by) 
         THEN RAISE EXCEPTION 'A user cannot like their own posts';
     END IF;
 
@@ -388,7 +391,7 @@ CREATE TRIGGER verify_self_liking_post
 CREATE FUNCTION verify_self_liking_comment() RETURNS TRIGGER AS 
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM comment_ WHERE NEW.commentID = comment_.commentID AND NEW.userID = comment_.userID) 
+    IF EXISTS (SELECT * FROM comment_ WHERE NEW.commentID = comment_.commentID AND NEW.id = comment_.id) 
         THEN RAISE EXCEPTION 'A user cannot like their own comments';
     END IF;
 
@@ -409,7 +412,7 @@ CREATE TRIGGER verify_self_liking_comment
 CREATE FUNCTION verify_post_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM post_likes WHERE NEW.userID = post_likes.userID AND NEW.postID = post_likes.postID) 
+    IF EXISTS (SELECT * FROM post_likes WHERE NEW.id = post_likes.id AND NEW.postID = post_likes.postID) 
         THEN RAISE EXCEPTION 'A user can only like a post once';
     END IF;
 
@@ -430,7 +433,7 @@ CREATE TRIGGER verify_post_likes
 CREATE FUNCTION verify_comment_likes() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM comment_likes WHERE NEW.userID = userID AND NEW.commentID = commentID) 
+    IF EXISTS (SELECT * FROM comment_likes WHERE NEW.id = id AND NEW.commentID = commentID) 
         THEN RAISE EXCEPTION 'A user can only like a comment once';
     END IF;
 
@@ -472,8 +475,8 @@ CREATE TRIGGER verify_self_follow
 CREATE FUNCTION verify_comment() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_userID AND user_.private_ )
-        AND NOT EXISTS (SELECT * FROM post_,follows_ WHERE NEW.postID = post_.postID AND NEW.userID = follows_.followerID AND follows_.followedID = post_.created_by) 
+    IF EXISTS (SELECT * FROM user_, post_ WHERE NEW.postID = post_.postID AND post_.created_by = user_.id AND user_.private_ )
+        AND NOT EXISTS (SELECT * FROM post_,follows_ WHERE NEW.postID = post_.postID AND NEW.id = follows_.followerID AND follows_.followedID = post_.created_by) 
         THEN RAISE EXCEPTION 'A user can only comment on posts from public users or users they follow';
     END IF;
 
@@ -494,7 +497,7 @@ CREATE TRIGGER verify_comment
 CREATE FUNCTION group_owner() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NOT EXISTS ( SELECT  * FROM belongs_ WHERE NEW.userID = belongs_.userID AND NEW.groupID = belongs_.groupID) 
+    IF NOT EXISTS ( SELECT  * FROM belongs_ WHERE NEW.id = belongs_.id AND NEW.groupID = belongs_.groupID) 
         THEN RAISE EXCEPTION 'A group owner must also be a member of the group';
     END IF;
 
@@ -515,7 +518,7 @@ CREATE TRIGGER group_owner
 CREATE FUNCTION check_follow_request() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM follows_ WHERE NEW.senderID = follows_.followerID AND NEW.receiverID = follows_.followedID)
+    IF EXISTS (SELECT * FROM follows_ WHERE NEW.followerID = follows_.followerID AND NEW.followedID = follows_.followedID)
         THEN RAISE EXCEPTION 'Can not make a follow request to someone you already follow';
     END IF;
     
@@ -536,7 +539,7 @@ CREATE TRIGGER check_follow_request
 CREATE FUNCTION verify_self_follow_req() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF NEW.senderID = NEW.receiverID 
+    IF NEW.followerID = NEW.followedID 
         THEN RAISE EXCEPTION 'A user can not request to follow themselves';
     END IF;
 
@@ -567,7 +570,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_post_action
-    BEFORE INSERT ON post_
+    BEFORE DELETE ON post_
     FOR EACH ROW
     EXECUTE PROCEDURE delete_post_action();
 
@@ -579,7 +582,7 @@ CREATE FUNCTION delete_comment_action() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     DELETE FROM comment_likes WHERE OLD.commentID = comment_likes.commentID;
-    DELETE FROM post_notification WHERE OLD.commentID = post_notification.commentID;
+    DELETE FROM post_notification WHERE OLD.commentID = post_notification.postID;
     DELETE FROM comment_ WHERE OLD.commentID = comment_.commentID;
 
     RETURN OLD;
@@ -588,7 +591,7 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER delete_comment_action
-    BEFORE INSERT ON comment_
+    BEFORE DELETE ON comment_
     FOR EACH ROW
     EXECUTE PROCEDURE delete_comment_action();
 
@@ -597,10 +600,10 @@ CREATE TRIGGER delete_comment_action
 --====================================--
 
 INSERT INTO user_(username, name_, email, password_, private_) VALUES
-            ('andrdr28', 'Andre', 'andr28@gmail.com', '$2y$10$WKYx7hG2PyC9rnadSKUAD.oMISWkBGWW32DKtayWxjWjQy8ltelRC', True),
+            ('andrdr28', 'Andre', 'andr28@gmail.com', '$2y$10$WKYx7hG2PyC9rnadSKUAD.oMISWkBGWW32DKtayWxjWjQy8ltelRC', False),
             ('georgekatie', 'George', 'georgekatie350@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
             ('hannahquinn', 'Hannah', 'hannahquinn842@hotmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
-            ('yarasam', 'Yara', 'yarasam976@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
+            ('yarasam', 'Yara', 'yarasam976@yahoo.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', False),
             ('meganwendy', 'Megan', 'meganwendy463@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
             ('nathanxander', 'Nathan', 'nathanxander785@gmail.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
             ('quinnsam', 'Quinn', 'quinnsam18@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
@@ -692,17 +695,17 @@ INSERT INTO user_(username, name_, email, password_, private_) VALUES
             ('katiejack', 'Katie', 'katiejack723@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
             ('victoralice', 'Victor', 'victoralice298@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True);
 
-INSERT INTO post_(content, description_, likes_, comments, time_, created_by, content_type) VALUES
-            ('imagina uma imagem aqui', 'linda paisagem', 3, 0, 0, 1,'image'),
-            ('imagina um video aqui', 'boa jogada', 4, 0, 0, 1,'video'),
-            ('imagina um video aqui', 'dia de folga', 4, 0, 0, 1,'video'),
-            ('imagina uma imagem aqui', 'a próxima tentativa será melhor', 4, 0, 0, 1,'image'),
-            ('imagina uma imagem aqui', 'boa escolha', 4, 0, 0, 1,'video'),
-            ('imagina uma imagem aqui', 'experiência única', 4, 0, 0, 1,'video'),
-            ('imagina um video aqui', 'vou repetir', 4, 0, 0, 1,'image'),
-            ('imagina um video aqui', 'não gostei', 4, 0, 0, 1,'image'),
-            ('imagina uma imagem aqui', 'adorei este passeio', 4, 0, 0, 1,'video'),
-            ('imagina uma imagem aqui', 'recomendo muito este restaurante', 4, 0, 0, 1,'image');
+INSERT INTO post_(content_, description_, likes_, comments_, time_, created_by, content_type) VALUES
+            ('imagina uma imagem aqui', 'linda paisagem', 3, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina um video aqui', 'boa jogada', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina um video aqui', 'dia de folga', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina uma imagem aqui', 'a próxima tentativa será melhor', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina uma imagem aqui', 'boa escolha', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina uma imagem aqui', 'experiência única', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina um video aqui', 'vou repetir', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina um video aqui', 'não gostei', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina uma imagem aqui', 'adorei este passeio', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina uma imagem aqui', 'recomendo muito este restaurante', 4, 0, '2023-10-25 08:30:15', 1,'image');
 
 INSERT INTO group_(name_, description_) VALUES
             ('Mundo Fora do Mapa', ''),
@@ -713,27 +716,27 @@ INSERT INTO group_(name_, description_) VALUES
             ('Roteiro Aventura', '');
 
 INSERT INTO message_(description_, time_, sender, receiver, sent_to, message_replies) VALUES
-            ('ADORO VIAJAR!!!!', 0, 1, NULL, 3),
-            ('ADORO VIAJAR!!!!', 1, 5, NULL, 3, NULL),
-            ('ADORO VIAJAR!!!!', 2, 48, NULL, 3, NULL),
-            ('ADORO VIAJAR!!!!', 3, 31, NULL, 3, NULL),
-            ('ADORO VIAJAR!!!!', 4, 22, NULL, 3, NULL),
-            ('ADORO VIAJAR!!!!', 5, 23, NULL, 3, NULL),
-            ('ADORO VIAJAR!!!!', 6, 67, NULL, 3, NULL),
-            ('Olá, espero que gostes do Travly!', 0, 1, 48, NULL, NULL),
-            ('Olá, espero que gostes do Travly!', 0, 1, 23, NULL, NULL),
-            ('Olá, espero que gostes do Travly!', 0, 1, 67, NULL, NULL),
-            ('Olá, espero que gostes do Travly!', 0, 1, 31, NULL, NULL),
-            ('Olá, espero que gostes do Travly!', 0, 1, 5, NULL, NULL),
-            ('Por acaso até estou :)', 0, 67, 1, NULL, 10);
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:30:15', 1, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:31:00', 5, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:32:00', 48, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:33:00', 31, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:34:00', 22, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:35:00', 23, NULL, 3, NULL),
+            ('ADORO VIAJAR!!!!', '2023-10-25 08:36:00', 67, NULL, 3, NULL),
+            ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 48, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 23, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 67, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 31, NULL, NULL),
+            ('Olá, espero que gostes do Travly!', '2023-10-25 08:31:00', 1, 5, NULL, NULL),
+            ('Por acaso até estou :)', '2023-10-25 08:35:00', 67, 1, NULL, 10);
 
-INSERT INTO comment_(description_, likes_, time_, userID, postID, comment_replies) VALUES
-            ('Ganda post chavalo!', 0, 0, 34, 1, NULL),
-            ('Brigadão sócio.', 0, 0, 1, 1, 1),
-            ('Nunca vi nada assim!', 0, 0, 67, 2, NULL),
-            ('Uau!!!', 0, 0, 45, 2, NULL);
+INSERT INTO comment_(description_, likes_, time_, id, postID, comment_replies) VALUES
+            ('Ganda post chavalo!', 0, '2023-10-25 08:31:00', 34, 1, NULL),
+            ('Brigadão sócio.', 0, '2023-10-25 08:32:00', 1, 1, 1),
+            ('Nunca vi nada assim!', 0, '2023-10-25 07:31:00', 67, 2, NULL),
+            ('Uau!!!', 0, '2023-10-25 08:31:00', 45, 2, NULL);
 
-INSERT INTO notification_(notificationID, description_, time, notifies, sends_notif) VALUES
+INSERT INTO notification_(notificationID, description_, time_, notifies, sends_notif) VALUES
             (1, 'JohnDoe started following you', '2023-10-25 08:30:15', 5, 3),
             (2, 'AliceSmith liked your recent post', '2023-10-25 10:15:40', 2, 4),
             (3, 'RobertJohnson requested to follow you', '2023-10-25 12:20:55', 8, 6),
@@ -775,18 +778,10 @@ INSERT INTO notification_(notificationID, description_, time, notifies, sends_no
             (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', 4, 5),
             (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', 2, 9);
 
-INSERT INTO admin_(userID) VALUES
+INSERT INTO admin_(id) VALUES
             (1);
 
-INSERT INTO owner_(userID, groupID) VALUES
-            (23, 1),
-            (7,2),
-            (1,3),
-            (15,4),
-            (31,5),
-            (9,6);
-
-INSERT INTO belongs_(userID, groupID) VALUES 
+INSERT INTO belongs_(id, groupID) VALUES 
             (23, 1),
             (7,2),
             (1,3),
@@ -862,89 +857,97 @@ INSERT INTO belongs_(userID, groupID) VALUES
             (82, 6), 
             (83, 1);
 
-INSERT INTO user_notification(notificationID, userID, notification_type) VALUES
-            (1, 3, 'request follow'),
-            (2, 5, 'accepted follow'),
-            (3, 8, 'started following'),
-            (4, 2, 'request follow'),
-            (5, 6, 'accepted follow'),
-            (6, 1, 'started following'),
-            (7, 7, 'accepted follow'),
-            (8, 4, 'request follow'),
-            (9, 10, 'accepted follow'),
-            (10, 9, 'started following'),
-            (11, 5, 'request follow'),
-            (12, 2, 'accepted follow'),
-            (13, 3, 'started following'),
-            (14, 6, 'request follow'),
-            (15, 8, 'started following'),
-            (16, 7, 'accepted follow'),
-            (17, 1, 'started following'),
-            (18, 4, 'request follow'),
-            (19, 10, 'accepted follow'),
-            (20, 9, 'started following'),
-            (21, 5, 'request follow'),
-            (22, 2, 'accepted follow'),
-            (23, 3, 'started following'),
-            (24, 6, 'request follow'),
-            (25, 8, 'started following'),
-            (26, 1, 'accepted follow'),
-            (27, 4, 'request follow'),
-            (28, 10, 'started following'),
-            (29, 9, 'request follow'),
-            (30, 5, 'accepted follow'),
-            (31, 2, 'started following'),
-            (32, 6, 'request follow'),
-            (33, 1, 'accepted follow'),
-            (34, 8, 'started following'),
-            (35, 3, 'request follow'),
-            (36, 7, 'accepted follow'),
-            (37, 4, 'started following'),
-            (38, 10, 'request follow'),
-            (39, 9, 'accepted follow'),
-            (40, 5, 'started following');
+INSERT INTO owner_(id, groupID) VALUES
+            (23, 1),
+            (7,2),
+            (1,3),
+            (15,4),
+            (31,5),
+            (9,6);
+
+INSERT INTO user_notification(notificationID, id, notification_type) VALUES
+            (1, 3, 'request_follow'),
+            (2, 5, 'accepted_follow'),
+            (3, 8, 'started_following'),
+            (4, 2, 'request_follow'),
+            (5, 6, 'accepted_follow'),
+            (6, 1, 'started_following'),
+            (7, 7, 'accepted_follow'),
+            (8, 4, 'request_follow'),
+            (9, 10, 'accepted_follow'),
+            (10, 9, 'started_following'),
+            (11, 5, 'request_follow'),
+            (12, 2, 'accepted_follow'),
+            (13, 3, 'started_following'),
+            (14, 6, 'request_follow'),
+            (15, 8, 'started_following'),
+            (16, 7, 'accepted_follow'),
+            (17, 1, 'started_following'),
+            (18, 4, 'request_follow'),
+            (19, 10, 'accepted_follow'),
+            (20, 9, 'started_following'),
+            (21, 5, 'request_follow'),
+            (22, 2, 'accepted_follow'),
+            (23, 3, 'started_following'),
+            (24, 6, 'request_follow'),
+            (25, 8, 'started_following'),
+            (26, 1, 'accepted_follow'),
+            (27, 4, 'request_follow'),
+            (28, 10, 'started_following'),
+            (29, 9, 'request_follow'),
+            (30, 5, 'accepted_follow'),
+            (31, 2, 'started_following'),
+            (32, 6, 'request_follow'),
+            (33, 1, 'accepted_follow'),
+            (34, 8, 'started_following'),
+            (35, 3, 'request_follow'),
+            (36, 7, 'accepted_follow'),
+            (37, 4, 'started_following'),
+            (38, 10, 'request_follow'),
+            (39, 9, 'accepted_follow'),
+            (40, 5, 'started_following');
 
 INSERT INTO post_notification(notificationID, postID, notification_type) VALUES
-            (1, 3, 'liked post'),
-            (2, 5, 'liked post'),
-            (3, 8, 'commented post'),
-            (4, 2, 'liked post'),
-            (5, 6, 'commented post'),
-            (6, 1, 'liked post'),
-            (7, 7, 'commented post'),
-            (8, 4, 'liked post'),
-            (9, 10, 'commented post'),
-            (10, 9, 'liked post'),
-            (11, 5, 'liked post'),
-            (12, 2, 'commented post'),
-            (13, 3, 'liked post'),
-            (14, 6, 'commented post'),
-            (15, 8, 'liked post'),
-            (16, 7, 'commented post'),
-            (17, 1, 'liked post'),
-            (18, 4, 'commented post'),
-            (19, 10, 'liked post'),
-            (20, 9, 'commented post'),
-            (21, 5, 'liked post'),
-            (22, 2, 'liked post'),
-            (23, 3, 'commented post'),
-            (24, 6, 'liked post'),
-            (25, 8, 'commented post'),
-            (26, 1, 'liked post'),
-            (27, 4, 'liked post'),
-            (28, 10, 'commented post'),
-            (29, 9, 'liked post'),
-            (30, 5, 'commented post'),
-            (31, 2, 'liked post'),
-            (32, 6, 'liked post'),
-            (33, 1, 'commented post'),
-            (34, 8, 'liked post'),
-            (35, 3, 'commented post'),
-            (36, 7, 'liked post'),
-            (37, 4, 'commented post'),
-            (38, 10, 'liked post'),
-            (39, 9, 'commented post'),
-            (40, 5, 'liked post');
+            (1, 3, 'liked_post'),
+            (2, 5, 'liked_post'),
+            (3, 8, 'commented_post'),
+            (4, 2, 'liked_post'),
+            (5, 6, 'commented_post'),
+            (6, 1, 'liked_post'),
+            (7, 7, 'commented_post'),
+            (8, 4, 'liked_post'),
+            (9, 10, 'commented_post'),
+            (10, 9, 'liked_post'),
+            (11, 5, 'liked_post'),
+            (12, 2, 'commented_post'),
+            (13, 3, 'liked_post'),
+            (14, 6, 'commented_post'),
+            (15, 8, 'liked_post'),
+            (16, 7, 'commented_post'),
+            (17, 1, 'liked_post'),
+            (18, 4, 'commented_post'),
+            (19, 10, 'liked_post'),
+            (20, 9, 'commented_post'),
+            (21, 5, 'liked_post'),
+            (22, 2, 'liked_post'),
+            (23, 3, 'commented_post'),
+            (24, 6, 'liked_post'),
+            (25, 8, 'commented_post'),
+            (26, 1, 'liked_post'),
+            (27, 4, 'liked_post'),
+            (28, 10, 'commented_post'),
+            (29, 9, 'liked_post'),
+            (30, 5, 'commented_post'),
+            (31, 2, 'liked_post'),
+            (32, 6, 'liked_post'),
+            (33, 1, 'commented_post'),
+            (34, 8, 'liked_post'),
+            (35, 3, 'commented_post'),
+            (36, 7, 'liked_post'),
+            (37, 4, 'commented_post'),
+            (38, 10, 'liked_post'),
+            (39, 9, 'commented_post'),
+            (40, 5, 'liked_post');
 
 INSERT INTO request_(senderID, receiverID) VALUES
             (6, 17),
@@ -952,7 +955,7 @@ INSERT INTO request_(senderID, receiverID) VALUES
             (71, 32),
             (54, 19),
             (81, 2),
-            (4, 97),
+            (4, 90),
             (12, 85),
             (63, 25),
             (93, 7),
@@ -986,7 +989,7 @@ INSERT INTO request_(senderID, receiverID) VALUES
             (88, 76),
             (24, 74),
             (62, 70),
-            (45, 98),
+            (45, 94),
             (40, 69),
             (43, 49),
             (39, 57),
@@ -1033,7 +1036,7 @@ INSERT INTO request_(senderID, receiverID) VALUES
             (1, 84),
             (74, 28),
             (5, 69),
-            (36, 98);
+            (36, 94);
 
 INSERT INTO follows_(followerID, followedID) VALUES
             (23, 67),
@@ -1201,107 +1204,40 @@ INSERT INTO follows_(followerID, followedID) VALUES
             (5, 4),
             (2, 1);
 
-INSERT INTO post_likes(userID, postID) VALUES
-            (4, 36),
-            (19, 65),
-            (52, 9),
-            (27, 81),
-            (70, 22),
-            (14, 47),
-            (33, 73),
-            (85, 15),
-            (6, 11),
-            (43, 29),
-            (66, 53),
-            (3, 28),
-            (95, 50),
-            (76, 60),
-            (18, 1),
-            (80, 84),
-            (58, 17),
-            (2, 92),
-            (41, 39),
-            (24, 78),
-            (68, 13),
-            (7, 49),
-            (56, 64),
-            (37, 97),
-            (16, 20),
-            (46, 42),
-            (77, 5),
-            (89, 76),
-            (9, 88),
-            (91, 31),
-            (63, 32),
-            (21, 23),
-            (45, 96),
-            (74, 30),
-            (40, 87),
-            (48, 51),
-            (25, 67),
-            (10, 62),
-            (71, 74),
-            (54, 98),
-            (34, 79),
-            (1, 35),
-            (83, 57),
-            (26, 38),
-            (55, 75),
-            (72, 61),
-            (12, 94);
+INSERT INTO post_likes(id, postID) VALUES
+            (2, 1), 
+            (3, 2), 
+            (4, 3), 
+            (5, 1), 
+            (6, 2), 
+            (7, 3), 
+            (8, 1), 
+            (9, 2),
+            (10, 3), 
+            (11, 1), 
+            (12, 2), 
+            (13, 3), 
+            (14, 1), 
+            (15, 2), 
+            (16, 3), 
+            (17, 1),
+            (18, 2), 
+            (19, 3), 
+            (20, 1), 
+            (21, 2), 
+            (22, 3), 
+            (23, 1), 
+            (24, 2), 
+            (25, 3);
 
-INSERT INTO comment_likes(userID, commentID) VALUES
-            (12, 47),
-            (89, 5),
-            (28, 34),
-            (67, 68),
-            (33, 15),
-            (54, 79),
-            (10, 29),
-            (25, 71),
-            (57, 8),
-            (41, 62),
-            (72, 24),
-            (1, 38),
-            (49, 84),
-            (45, 92),
-            (66, 19),
-            (78, 55),
-            (22, 74),
-            (88, 21),
-            (76, 9),
-            (60, 58),
-            (18, 35),
-            (2, 95),
-            (36, 85),
-            (98, 32),
-            (14, 44),
-            (13, 48),
-            (77, 81),
-            (40, 63),
-            (23, 42),
-            (46, 53),
-            (6, 7),
-            (69, 61),
-            (99, 27),
-            (31, 64),
-            (73, 43),
-            (16, 80),
-            (37, 70),
-            (30, 86),
-            (91, 56),
-            (75, 3),
-            (87, 17),
-            (50, 20),
-            (51, 4),
-            (26, 90),
-            (59, 66),
-            (64, 37),
-            (82, 31),
-            (52, 2),
-            (94, 50);
+INSERT INTO comment_likes(id, commentID) VALUES
+            (18, 2),
+            (12, 2), 
+            (13, 2),
+            (93, 2),
+            (94, 2);
 
-INSERT INTO saved_post(userID, postID) VALUES
+INSERT INTO saved_post(id, postID) VALUES
             (3, 1),
             (56, 1),
             (38, 1),

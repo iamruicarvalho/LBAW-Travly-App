@@ -6,20 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Owner extends Model
 {
+    public $timestamps = false;
     protected $table = 'owner_';
-
-    protected $primaryKey = null; 
+    protected $primaryKey = ['id', 'groupID'];
 
     public $incrementing = false; 
 
     protected $fillable = [
-        'userID',
-        'groupID',
+        'id', 'groupID'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function group()

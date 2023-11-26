@@ -1,132 +1,86 @@
 <?php
 
+// app/Http/Controllers/PostController.php
+
+// app/Http/Controllers/PostController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use App\Models\Post; 
-use App\Models\PostLike;
-use App\Models\Notification; 
-use App\Models\PostNotification; 
 
 class PostController extends Controller
 {
-    public function list()
+    public function listPosts()
     {
-        $posts = [];
-
         if (Auth::check()) {
-            $this->authorize('list', Post::class);
             $posts = Auth::user()->visiblePosts()->get();
-        } else {
-            $posts = Post::publicPosts()->get();
+            return view('pages.home', ['posts' => $posts]);
         }
 
+        $posts = Post::publicPosts()->get();
         return view('pages.home', ['posts' => $posts]);
     }
 
-    public function create(Request $request)
+    public function createPost(Request $request)
     {
-        $this->authorize('create', Post::class);
-
+        // error handling
         $content = $request->input('content');
-        $imageFile = $request->file('image');
+        $description = $request->input('description');
 
-        if (empty($content) && !$imageFile) {
-            return redirect()->back()->with('error', 'You cannot create an empty post');
+        if (!isset($content) && $_FILES["image"]["error"] && !isset($description)) {
+          return redirect()->back()->with('error', 'You can not create an empty post');
+        }
+        if(!isset($content) && !in_array(pathinfo($_FILES["image"]["name"],PATHINFO_EXTENSION),['jpg','jpeg','png','gif','mp4','mov'])) {
+          return redirect()->back()->with('error', 'File format not supported');
         }
 
-        if ($imageFile && in_array($imageFile->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov'])) {
-            // Processar a imagem
-        } else {
-            return redirect()->back()->with('error', 'File format not supported');
-        }
-        
-
-        $post = new Post();
-        $post->content = $content;
-        $post->description_ = $request->input('description');
-        $post->time_ = time();
-        $post->created_by = Auth::user()->userID; 
-        $post->content_type = $imageFile ? 'image' : null; /
-        $post->save();
-
-        ImageController::create($post->postID, 'post', $request);
-
-        return redirect()->back()->with('success', 'Post successfully created');
-    }
-
-    public function delete(Request $request)
-    {
-        $post = Post::find($request->input('id'));
-    
-        $this->authorize('delete', $post);
-    
-        $post->comments()->delete();
-    
-        ImageController::delete($post->id, 'post');
-    
-        // Excluir o post
-        $post->delete();
-    
-        return redirect()->route('pagina_de_redirecionamento_apos_exclusao');
-    }
-
-    public function edit(Request $request, $id)
-    {
-    $post = Post::find($id);
-
-    $this->authorize('edit', $post);
-
-    $post->content = $request->input('content');
-    $post->description_ = $request->input('description');
-
-    $post->save();
-
-    return redirect()->route('nomedarota')->with('success', 'Post successfully edited');
-    }
-
-
-    public function like(Request $request)
-    {
-        $post = Post::find($request->id);
-
-        $this->authorize('like', Post::class);
-
-        if (PostLike::where([
-            'userID' => Auth::user()->userID,
-            'postID' => $post->postID,
-        ])->exists()) {
-            return;
-        }
-
-        PostLike::insert([
-            'userID' => Auth::user()->userID,
-            'postID' => $post->postID,
+        // Validate data
+        $request->validate([
+            'description' => 'required|max:1500',
+            'content' => 'nullable|file|mimes:jpeg,png,gif,mp4,avi,wmv|max:2048'
         ]);
 
-        if (Auth::user()->userID == $post->created_by) {
-            return;
+        $user = Auth()->user();
+        $user->posts()->create([
+            'content_'=> $content,
+            'description_'=> $description,
+        ]);
+
+        return redirect()->route('home')
+            ->with('success', 'Post created successfully!');
+    }
+
+    public function show($postID)
+    {
+        $post = Post::find($postID);
+        return view('partials.showPost', ['post'=> $post]);
+    }
+
+    public function editPost(Request $request)
+    {
+        # code...
+    }
+
+    public function deletePost(Request $request)
+    {
+        # code...
+    }
+
+    public function showLikes($postId, $id)
+    {
+        $post = Post::find($postId);
+
+        if (!$post) {
+            return redirect()->route('profile.show', $id);
         }
 
-        DB::beginTransaction();
+        $likes = $post->likes; // Still have to change this
 
-        Notification::insert([
-            'description_' => 'User liked your post',
-            'time_' => now(),
-            'notifies' => $post->created_by,
-            'sends_notif' => Auth::user()->userID,
-        ]);
-
-        $newNotification = Notification::latest()->first();
-
-        PostNotification::insert([
-            'notificationID' => $newNotification->notificationID,
-            'postID' => $post->postID,
-            'notification_type' => 'liked_post',
-        ]);
-
-        DB::commit();
+        return view('posts.likes', compact('post', 'likes'));
     }
 }
+
+

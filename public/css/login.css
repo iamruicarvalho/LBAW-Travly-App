@@ -1,0 +1,44 @@
+  #content label {
+    font-weight: normal;
+  }
+  #content > form {
+    margin: 0 auto;
+    padding: 1em;
+    max-width: 20em;
+    color: white;
+    background-color: #BE959F;
+    border: 1px solid  #13472E;
+  }
+  #content > form .error {
+    font-weight: bold;
+    color: #13472E;
+  }
+  
+  #content > form .success {
+    font-weight: bold;
+    color: white;
+  }
+  #content > form input {
+    background-color: white;
+  }
+
+  button {
+    background-color: #13472E;
+    border-color: #13472E;
+  }
+  a.button {
+    background-color: #13472E;
+    border-color: #13472E;
+  }
+  a.button.button-outline {
+    color: #13472E;
+  }
+  a {
+    color: #13472E;
+  }
+  input[type=text]:focus,
+  input[type=email]:focus,
+  input[type=password]:focus {
+    border-color: #13472E;
+  }
+  

@@ -22,12 +22,26 @@
     </head>
     <body>
         <main>
-            <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-                @endif
-            </header>
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="logo">
+                <h1><a href="{{ route('home') }}">Travly ✈</a></h1>
+            </div>
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="{{ url('/about') }}">About</a></li>
+                    <li><a href="{{ url('/help') }}">Help</a></li>
+                    <li><a href="{{ url('/faq') }}">FAQ</a></li>
+                    <li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
+                </ul>
+            </nav>
+            @if (Auth::check())
+                <div class="user-info">
+                    <a class="button" href="{{ url('/logout') }}"> Logout </a>
+                </div>
+            @endif
+        </header>
+
+
             <section id="content">
                 @yield('content')
             </section>

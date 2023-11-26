@@ -1,4 +1,5 @@
 @extends('layouts.app')
+<script src="{{ asset('js/register.js') }}"></script>
 
 @section('content')
 <form method="POST" action="{{ route('register') }}">
@@ -9,6 +10,14 @@
     @if ($errors->has('name'))
       <span class="error">
           {{ $errors->first('name') }}
+      </span>
+    @endif
+
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+    @if ($errors->has('username'))
+      <span class="error">
+          {{ $errors->first('username') }}
       </span>
     @endif
 
@@ -36,4 +45,5 @@
     </button>
     <a class="button button-outline" href="{{ route('login') }}">Login</a>
 </form>
+<link href="{{ url('css/login.css') }}" rel="stylesheet">
 @endsection

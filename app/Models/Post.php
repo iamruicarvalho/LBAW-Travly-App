@@ -12,10 +12,11 @@ use App\Models\Comment;
 
 class Post extends Model
 {
+    public $timestamps = false;
     protected $table = 'post_';
-
+    protected $primaryKey = 'postID';
     protected $fillable = [
-        'content', 'description_', 'likes_', 'comments', 'time_', 'created_by', 'content_type'
+        'content_', 'description_', 'likes_', 'comments_', 'time_', 'created_by', 'content_type'
     ];
 
     public function owner()
@@ -30,7 +31,7 @@ class Post extends Model
 
     public function likes()
     {
-        return $this->hasMany(PostLike::class)->count();
+        return $this->hasMany(PostLike::class)->get()->count();
     }
 
     public function comments()
@@ -46,10 +47,11 @@ class Post extends Model
 
     public static function publicPosts()
     {
-        return static::select('post.*')
-            ->join('users', 'users.userID', '=', 'post.created_by')
-            ->where('users.is_public', true)
-            ->where('post.is_public', true)
+        // returns all the posts from the public users (not necessarily users I follow)
+        return Post::select('post.*')
+            ->join('user_', 'user_.id', '=', 'post.created_by')
+            ->where('user_.is_private', false)
             ->orderBy('time_', 'desc');
     }
+    
 }

@@ -8,8 +8,9 @@ use App\Models\Post;
 
 class Group extends Model
 {
+    public $timestamps = false;
     protected $table = 'group_';
-
+    protected $primaryKey = 'groupID';
     protected $fillable = [
         'name_', 'description_'
     ];

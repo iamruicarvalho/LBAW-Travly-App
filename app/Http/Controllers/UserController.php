@@ -9,47 +9,48 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     // Exibe o perfil do usuário
-    public function showProfile($userId)
-    {
-        $user = User::find($userId);
+    public function showProfile(Request $request, $id)
+    {   
+        $user = User::find($id);
 
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
         }
 
-        return view('user.profile', compact('user'));
+        return view('pages.profile', compact('user'));
     }
 
     // Exibe edição do perfil do usuário
-    public function editProfile($userId)
+    public function editProfile(Request $request, $id)
     {
-        $user = User::find($userId);
+
+        $user = User::find($id);
 
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
         }
 
-        return view('user.edit', compact('user'));
+        return view('partials.profileEdit', compact('user'));
     }
 
     // Atualiza o perfil do usuário
-    public function updateProfile(Request $request, $userId)
+    public function updateProfile(Request $request, $id)
     {
-        $user = User::find($userId);
+        $user = User::find($id);
 
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
         }
 
         $request->validate([
-            'name_' => 'required|string|max:255',
-            'email' => 'required|email|unique:user_,email,' . $userId,
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:user_,email,' . $user->id,
         ]);
 
-        $user->name_ = $request->input('name_');
+        $user->name_ = $request->input('name');
         $user->email = $request->input('email');
         $user->save();
 
-        return redirect()->route('profile.show', $userId)->with('success', 'Perfil atualizado com sucesso');
+        return redirect()->route('profile.show', $id)->with('success', 'Perfil atualizado com sucesso');
     }
 }

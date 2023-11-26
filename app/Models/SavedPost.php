@@ -9,20 +9,19 @@ use App\Models\Post;
 
 class SavedPost extends Model
 {
+    public $timestamps = false;
     protected $table = 'saved_post';
-
-    protected $primaryKey = null; 
+    protected $primaryKey = ['id', 'postID'];
 
     public $incrementing = false; 
 
     protected $fillable = [
-        'userID',
-        'postID',
+        'id', 'postID'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'userID');
+        return $this->belongsTo(User::class, 'id');
     }
 
     public function post()

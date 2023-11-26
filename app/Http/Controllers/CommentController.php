@@ -25,7 +25,7 @@ class CommentController extends Controller
         $comment = new Comment();
         $comment->description_ = $request->input('description');
         $comment->time_ = now();
-        $comment->userID = auth()->user()->userID;
+        $comment->id = auth()->user()->id;
         $comment->postID = $postId;
         $comment->save();
 
@@ -75,7 +75,7 @@ class CommentController extends Controller
 
     $post = Post::find($comment->postID);
 
-    if ($post->created_by == Auth::user()->userID) {
+    if ($post->created_by == Auth::user()->id) {
         DB::commit();
         return redirect()->back()->with('success', 'Comment successfully created');
     }
@@ -85,7 +85,7 @@ class CommentController extends Controller
         'description_' => 'User commented on your post',
         'time_' => now(),
         'notifies' => $post->created_by,
-        'sends_notif' => Auth::user()->userID,
+        'sends_notif' => Auth::user()->id,
     ]);
 
     $newNotification = Notification::latest()->first();
@@ -98,13 +98,13 @@ class CommentController extends Controller
 
     $previous = Comment::find($comment->comment_replies);
 
-    if ($previous && $previous->created_by != Auth::user()->userID) {
+    if ($previous && $previous->created_by != Auth::user()->id) {
         // Notificação para o dono do comentário 
         Notification::insert([
             'description_' => 'User replied to your comment',
             'time_' => now(),
             'notifies' => $previous->created_by,
-            'sends_notif' => Auth::user()->userID,
+            'sends_notif' => Auth::user()->id,
         ]);
 
         $newNotification = Notification::latest()->first();
