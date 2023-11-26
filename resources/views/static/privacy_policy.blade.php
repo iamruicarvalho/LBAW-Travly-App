@@ -3,7 +3,7 @@
 @section('content')
             <div class="privacy-container">
                 <a href="{{ route('home') }}"> < Go back home</a>
-                <h2>Privacy Policy for Travly</h2>
+                <h2>Privacy Policy</h2>
 
                 <p>At Travly, we are committed to safeguarding the privacy of our users. This Privacy Policy outlines how we collect, use, disclose, and store the information provided by users when they access or use our website.</p>
 

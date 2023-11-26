@@ -16,8 +16,7 @@
             </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
-                <a href="{{ route('profile.show') }}">👤 {{ auth()->user()->username }}</a>
-                <!-- <a href="{{ route('profile.show', auth()->id()) }}">User Name</a> -->
+                <a href="{{ route('profile.show', auth()->id())  }}">👤 {{ auth()->user()->username }}</a>
             </div>
         </div>
 
@@ -107,5 +106,6 @@
             </div>
         </div>
     </div>
+    <link href="{{ url('css/home.css') }}" rel="stylesheet">
 @endsection
 

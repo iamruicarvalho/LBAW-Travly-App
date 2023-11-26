@@ -1,8 +1,7 @@
 @extends('layouts.app')
-<script src="{{ asset('js/register.js') }}"></script>
 
 @section('content')
-<form method="POST" action="{{ route('login') }}" onsubmit="return redirectToHome()">
+<form method="POST" action="{{ route('login') }}">
     {{ csrf_field() }}
 
     <label for="email">E-mail</label>
@@ -35,4 +34,5 @@
         </p>
     @endif
 </form>
+<link href="{{ url('css/login.css') }}" rel="stylesheet">
 @endsection

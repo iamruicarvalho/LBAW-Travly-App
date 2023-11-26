@@ -24,10 +24,12 @@ body {
 .faq-container h1 {
     color: #13472E;
     text-align: center;
+    margin-bottom: 50px;
 }
 
 .faq-container h2{
     color: white;
+    font-size: x-large;
 }
 
 
