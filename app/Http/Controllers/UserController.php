@@ -44,11 +44,13 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:user_,email,' . $user->id,
+            'description' => 'required|string',
+            'location' => 'required|string',
         ]);
 
         $user->name_ = $request->input('name');
-        $user->email = $request->input('email');
+        $user->description_ = $request->input('description');
+        $user->location = $request->input('location');
         $user->save();
 
         return redirect()->route('profile.show', $id)->with('success', 'Perfil atualizado com sucesso');
