@@ -51,7 +51,8 @@ CREATE TABLE user_ (
     private_ BOOLEAN NOT NULL DEFAULT TRUE,
     description_ TEXT DEFAULT 'no description',
     location TEXT DEFAULT 'not provided',
-    countries_visited INT DEFAULT 0
+    countries_visited INT DEFAULT 0,
+    remember_token VARCHAR(100) NULL 
 );
 
 CREATE TABLE post_ (
