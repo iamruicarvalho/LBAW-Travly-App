@@ -17,7 +17,7 @@
                     <li><a href="#">➕ More</a></li>
                 </ul>
                 <div class="profile-section">
-                    <a href="{{ route('profile.show') }}">👤 Profile</a>
+                    <a href="{{ route('profile.show', auth()->id()) }}">👤 Profile</a>
                 </div>
             </div>
         </div>
@@ -29,19 +29,19 @@
 
             <div class="profile-editable-fields">
             {{-- Editable fields --}}
-            <form method="POST" action="{{ route('profile.update') }}">
+            <form method="POST" action="{{ route('profile.update', auth()->id()) }}">
                 @csrf
                 <label for="name">Name</label>
-                <input id="name" type="text" name="name" value="{{ auth()->user()->username }}" required>
+                <input id="name" type="text" name="name" value="{{ auth()->user()->username }}" required autocomplete="name">
 
                 <label for="description">Description</label>
-                <input id="description" placeholder="write a description" name="description" value="{{ auth()->user()->description }}" required>
+                <input id="description" placeholder="Write a description" name="description" value="{{ auth()->user()->description }}" required autocomplete="description">
 
                 <label for="location">Location</label>
-                <input id="location" type="text" name="location" value="{{ auth()->user()->location }}" required>
+                <input id="location" type="text" name="location" value="{{ auth()->user()->location }}" required autocomplete="location">
 
                 <div class="profile-save-changes">
-                <button type="submit">Save Changes</button>
+                    <button type="submit">Save Changes</button>
                 </div>
             </form>
             {{-- End Editable fields --}}
@@ -56,7 +56,20 @@
         {{-- Profile Body --}}
         <div class="profile-body">
             <div class="post">
-                <p>user posts</p>
+                <!-- Add user posts or a timeline here -->
+                @foreach(Auth()->user()->posts()->get() as $post)
+                    <div class="post-item">
+                        <div class="post-content">
+                            <p>{{ $post->content_ }}</p>
+                            <p>{{ $post->description_ }}</p>
+                        </div>
+                        <div class="post-details">
+                            <a href="post.likes" class="show-details"> {{ $post->likes_ }} likes</a>
+                            <a href="post.comments" class="show-details"> {{ $post->comments_ }} comments</a>
+                            <a> {{ $post->time_ }}</a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
 
             {{-- Right Sidebar --}}
@@ -81,5 +94,6 @@
             </div>
         </div>
     </div>
+    <link href="{{ url('css/profile.css') }}" rel="stylesheet">
 
 @endsection

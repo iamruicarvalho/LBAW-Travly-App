@@ -9,7 +9,7 @@ body {
     color: black;
 }
 
-.privacy-container {
+.faq-container{
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
@@ -17,12 +17,22 @@ body {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-.privacy-container h2 {
+.faq-container a{
+    font-weight: bold;
+}
+
+.faq-container h1 {
     color: #13472E;
     text-align: center;
     margin-bottom: 50px;
 }
 
-.privacy-container h3 {
+.faq-container h2{
     color: white;
+    font-size: x-large;
+}
+
+
+.faq-container p {
+    color: black;
 }

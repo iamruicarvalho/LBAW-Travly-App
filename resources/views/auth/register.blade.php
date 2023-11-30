@@ -2,7 +2,7 @@
 <script src="{{ asset('js/register.js') }}"></script>
 
 @section('content')
-<form method="POST" action="{{ route('register') }}" onsubmit="return redirectToHome()">
+<form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
 
     <label for="name">Name</label>
@@ -45,4 +45,5 @@
     </button>
     <a class="button button-outline" href="{{ route('login') }}">Login</a>
 </form>
+<link href="{{ url('css/login.css') }}" rel="stylesheet">
 @endsection

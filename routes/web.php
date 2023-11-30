@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaticPageController;
@@ -31,17 +30,10 @@ Route::controller(HomeController::class)->group(function () {
 
 // User
 Route::controller(UserController::class)->group(function () {
-    Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('profile.show');
-    Route::get('/profile/{id}/edit', [UserController::class, 'editProfile'])->name('profile.edit');
-    Route::post('/profile/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/show/{id}', [UserController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/edit/{id}', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
 });
-
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});
-
 
 // Authentication
 Route::middleware('web')->group(function () {
@@ -60,6 +52,8 @@ Route::middleware(PostController::class)->group(function () {
     Route::post('/post', [PostController::class, 'editPost'])->name('post.edit');
     Route::post('/post', [PostController::class, 'deletePost'])->name('post.delete');
 });
+
+Route::get('/post/{post}/likes', [PostController::class, 'showLikes'])->name('post.likes');
 
 Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
 

@@ -68,6 +68,19 @@ class PostController extends Controller
     {
         # code...
     }
+
+    public function showLikes($postId, $id)
+    {
+        $post = Post::find($postId);
+
+        if (!$post) {
+            return redirect()->route('profile.show', $id);
+        }
+
+        $likes = $post->likes; // Still have to change this
+
+        return view('posts.likes', compact('post', 'likes'));
+    }
 }
 
 
