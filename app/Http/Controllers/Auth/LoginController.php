@@ -4,14 +4,19 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 use Illuminate\View\View;
 
 class LoginController extends Controller
 {
+    public function username()
+    {
+        $user = User::find($this->id());
+        return $user->username;
+    }
 
     /**
      * Display a login form.
