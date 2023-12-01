@@ -43,12 +43,12 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string',
         ]);
 
-        $user->name_ = $request->input('name');
+        $user->username = $request->input('username');
         $user->description_ = $request->input('description');
         $user->location = $request->input('location');
         $user->save();

@@ -27,7 +27,7 @@ class PostController extends Controller
     public function createPost(Request $request)
     {
         // error handling
-        $content = $request->input('content');
+        $content = $request->input('media');
         $description = $request->input('description');
 
         if (!isset($content) && $_FILES["image"]["error"] && !isset($description)) {

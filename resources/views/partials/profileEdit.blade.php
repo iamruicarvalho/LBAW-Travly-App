@@ -31,8 +31,8 @@
             {{-- Editable fields --}}
             <form method="POST" action="{{ route('profile.update', auth()->id()) }}">
                 @csrf
-                <label for="name">Name</label>
-                <input id="name" type="text" name="name" value="{{ auth()->user()->username }}" required autocomplete="name">
+                <label for="username">Name</label>
+                <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
 
                 <label for="description">Description</label>
                 <input id="description" placeholder="Write a description" name="description" value="{{ auth()->user()->description }}" required autocomplete="description">
