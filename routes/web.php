@@ -53,7 +53,7 @@ Route::middleware(PostController::class)->group(function () {
     Route::post('/post', [PostController::class, 'deletePost'])->name('post.delete');
 });
 
-Route::get('/post/{post}/likes', [PostController::class, 'showLikes'])->name('post.likes');
+// Route::get('/post/{post}/likes', [PostController::class, 'showLikes'])->name('post.likes');
 
 Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
 
@@ -62,6 +62,15 @@ Route::get('/about', [StaticPageController::class, 'about'])->name('static.about
 Route::get('/privacy-policy', [StaticPageController::class, 'privacy_policy'])->name('static.privacy_policy');
 
 Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
+
+// PostController
+Route::controller(PostController::class)->group(function () {
+    Route::get('/posts', [PostController::class, 'listPosts'])->name('posts.list');
+    Route::post('/posts/create', [PostController::class, 'createPost'])->name('posts.create');
+    Route::post('/posts/delete', [PostController::class, 'deletePost'])->name('posts.delete');
+    Route::post('/posts/edit/{id}', [PostController::class, 'editPost'])->name('posts.edit');
+    Route::post('/posts/like', [PostController::class, 'likePost'])->name('posts.like');
+});
 
 /*
 use Illuminate\Support\Facades\Route;
@@ -97,18 +106,10 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
 
 Route::get('/explore', [HomeController::class, 'explore'])->name('explore');
+*/
 
-// PostController
-Route::get('/posts', [PostController::class, 'list'])->name('posts.list');
 
-Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
-
-Route::post('/posts/delete', [PostController::class, 'delete'])->name('posts.delete');
-
-Route::post('/posts/edit/{id}', [PostController::class, 'edit'])->name('posts.edit');
-
-Route::post('/posts/like', [PostController::class, 'like'])->name('posts.like');
-
+/*
 // MessageController
 Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('sendMessage');
 
