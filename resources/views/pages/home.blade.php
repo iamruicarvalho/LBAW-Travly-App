@@ -28,7 +28,7 @@
                     <h2>🏠 Home</h2>
                 </div>
             </div>
-            <form action="{{ url('postsd.create') }}" method="post">
+            <form action="{{ url('posts.create') }}" method="post">
                 @csrf
                 <div class="upload-post-section">
                     {{-- Seu HTML de upload de post vai aqui --}}
