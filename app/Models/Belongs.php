@@ -15,10 +15,10 @@ class Belongs extends Model
 
     public $incrementing = false; 
 
-    // protected $fillable = [
-    //     'id',
-    //     'groupID',
-    // ];
+    protected $fillable = [
+        'id',
+        'groupID',
+    ];
 
     public function user()
     {

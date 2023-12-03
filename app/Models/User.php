@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\Authenticatable; # <-----
+use Illuminate\Contracts\Auth\Authenticatable; 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 
 use App\Models\Post;
+use App\Models\Belongs;
+use App\Models\Group;
 use App\Models\Admin;
 use App\Models\Comment;
 use App\Models\Follow;
 use App\Models\Request;
 use App\Models\UserNotification;
 
-class User extends Model implements Authenticatable # <-----
+class User extends Model implements Authenticatable 
 {   
-    use AuthenticatableTrait; # <-----
+    use AuthenticatableTrait; 
 
     public $timestamps = false;
     protected $table = 'user_';
@@ -48,6 +50,11 @@ class User extends Model implements Authenticatable # <-----
     public function comments()
     {
         return $this->hasMany(Comment::class, 'id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'belongs_', 'id', 'groupID');
     }
 
     public function admin()

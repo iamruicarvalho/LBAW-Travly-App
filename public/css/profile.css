@@ -1,16 +1,15 @@
     /* Barra Lateral Esquerda */
     .left-sidebar {
-        width: 200px;
-        background-color: #BE959F; /* Cinza claro */
-        color: #13472E; /* Cor do texto preto */
+        width: 300px;
+        height: 100vh;
+        min-height: 100%;
+        background: url(background.jpg); 
+        color: black; 
         padding: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-radius: 15px;
-        margin-left: 10px; /* Adiciona espaço inferior */
     }
-    
     
     .left-sidebar .logo img {
         max-width: 80%; /* Ajustado para 80% para evitar overflow */
@@ -23,14 +22,21 @@
         margin: 20px 0;
         width: 100%;
     }
-    
+
     .left-sidebar .sidebar-menu li {
-        margin-bottom: 10px;
-    }
-    
-    .left-sidebar .profile-section {
         text-align: center;
-    }
+        margin-bottom: 45px;
+      }
+      
+      .left-sidebar .sidebar-menu li a{
+        color:  rgb(41, 41, 93);
+        font-size: larger;
+      }
+    
+      .left-sidebar .profile-section a{
+        color:  rgb(41, 41, 93);
+        font-size: larger;
+      } 
     
     .left-sidebar .profile-section img {
         width: 80px;
@@ -52,7 +58,7 @@
     .right-sidebar {
         width: 200px;
         padding: 20px;
-        background-color: #BE959F;
+        background-color: #D4E4F2;
         color: #13472E;
         display: flex;
         flex-direction: column;
@@ -73,7 +79,7 @@
     
     .right-sidebar .sidebar-box {
         margin-bottom: 20px;
-        border: 1px solid #BE959F;
+        border: 1px solid #D4E4F2;
         padding: 10px;
         border-radius: 5px;
     }
@@ -95,7 +101,7 @@
         display: flex;
         flex-direction: column;
         font-size: small;
-        background-color: #BE959F;
+        background-color: #D4E4F2;
     }
     
     body .profile-header-picture {
@@ -136,7 +142,7 @@
         margin-bottom: 10px;
         text-align: center;
         padding: 20px;
-        background-color: #BE959F;
+        background-color: #D4E4F2;
     }
     
     body .profile-body .post-item {
@@ -167,13 +173,14 @@
         margin-top: 40px;
         margin-left: auto; 
         margin-right: 50px;
-        color: white;
+        color: rgb(41, 41, 93);
         padding-top: 10px;
         padding-bottom: 10px;
         padding-left: 20px;
         padding-right: 20px;
         border-radius: 30px;
-        background-color: #13472E;
+        border-color:  rgb(41, 41, 93);
+        background-color: white;
         text-decoration: none;
         text-align: center;
         width: fit-content;

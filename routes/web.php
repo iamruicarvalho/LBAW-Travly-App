@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -42,6 +43,13 @@ Route::controller(PostController::class)->group(function () {
     Route::post('/posts/delete', [PostController::class, 'deletePost'])->name('posts.delete');
     Route::post('/posts/edit/{id}', [PostController::class, 'editPost'])->name('posts.edit');
     Route::post('/posts/like', [PostController::class, 'likePost'])->name('posts.like');
+});
+
+// Groups
+Route::controller(GroupController::class)->group(function () {
+    Route::get('/groups', [GroupController::class, 'list'])->name('groups');
+    Route::get('/groups/{groupName}', [GroupController::class, 'showGroup'])->name('groups.show');
+
 });
 
 // Authentication

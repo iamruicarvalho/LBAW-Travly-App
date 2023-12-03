@@ -1,44 +1,45 @@
-  #content label {
-    font-weight: normal;
-  }
-  #content > form {
-    margin: 0 auto;
-    padding: 1em;
-    max-width: 20em;
-    color: white;
-    background-color: #BE959F;
-    border: 1px solid  #13472E;
-  }
-  #content > form .error {
-    font-weight: bold;
-    color: #13472E;
-  }
-  
-  #content > form .success {
-    font-weight: bold;
-    color: white;
-  }
-  #content > form input {
-    background-color: white;
-  }
+#content label {
+  font-weight: normal;
+}
+#content > form {
+  margin: 0 auto;
+  margin-top: 100px;
+  padding: 1em;
+  max-width: 20em;
+  color: white;
+  background-color: #BAD1E6;
+  border: 1px solid  #BAD1E6;
+}
+#content > form .error {
+  font-weight: bold;
+  color: rgb(41, 41, 93);
+}
 
-  button {
-    background-color: #13472E;
-    border-color: #13472E;
-  }
-  a.button {
-    background-color: #13472E;
-    border-color: #13472E;
-  }
-  a.button.button-outline {
-    color: #13472E;
-  }
-  a {
-    color: #13472E;
-  }
-  input[type=text]:focus,
-  input[type=email]:focus,
-  input[type=password]:focus {
-    border-color: #13472E;
-  }
+#content > form .success {
+  font-weight: bold;
+  color: white;
+}
+#content > form input {
+  background-color: white;
+}
+
+button {
+  background-color: rgb(196, 196, 196);
+  border-color: rgb(41, 41, 93);
+}
+a.button {
+  background-color: rgb(196, 196, 196);
+  border-color: rgb(41, 41, 93);
+}
+a.button.button-outline {
+  color: rgb(41, 41, 93);
+}
+a {
+  color: white;
+}
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus {
+  border-color: rgb(41, 41, 93);
+}
   

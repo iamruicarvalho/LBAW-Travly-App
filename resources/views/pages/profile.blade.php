@@ -13,8 +13,7 @@
             <li><a href="#">🔔 Notifications</a></li>
             <li><a href="#">📨 Messages</a></li>
             <li><a href="#">🌎 Wish List</a></li>
-            <li><a href="#">👥 Groups</a></li>
-            <li><a href="#">➕ More</a></li>
+            <li><a href="{{ route('groups') }}">👥 Groups</a></li>
         </ul>
         <div class="profile-section">
             <!-- Profile information here -->
@@ -24,7 +23,7 @@
     </div>
 
         <div class="profile-header">
-        <img src="https://64.media.tumblr.com/bcb1405628a8b4a3c157295ed2b76902/tumblr_inline_p7garrvPza1rzz0uv_500.png" alt="Header Picture" class="profile-header-picture">
+        <img src="https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg" alt="Header Picture" class="profile-header-picture">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
             <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
             <div class="user-info">

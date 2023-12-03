@@ -24,7 +24,7 @@
 
         {{-- Profile Header --}}
         <div class="profile-header">
-            <img src="https://64.media.tumblr.com/bcb1405628a8b4a3c157295ed2b76902/tumblr_inline_p7garrvPza1rzz0uv_500.png" alt="Header Picture" class="profile-header-picture">
+            <img src="https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg" alt="Header Picture" class="profile-header-picture">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
 
             <div class="profile-editable-fields">
