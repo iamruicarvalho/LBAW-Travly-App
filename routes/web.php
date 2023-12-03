@@ -106,18 +106,10 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
 
 Route::get('/explore', [HomeController::class, 'explore'])->name('explore');
+*/
 
-// PostController
-Route::get('/posts', [PostController::class, 'list'])->name('posts.list');
 
-Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
-
-Route::post('/posts/delete', [PostController::class, 'delete'])->name('posts.delete');
-
-Route::post('/posts/edit/{id}', [PostController::class, 'edit'])->name('posts.edit');
-
-Route::post('/posts/like', [PostController::class, 'like'])->name('posts.like');
-
+/*
 // MessageController
 Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('sendMessage');
 

@@ -49,8 +49,9 @@ class PostController extends Controller
             'description_'=> $description,
         ]);
 
-        return redirect()->route('home')
-            ->with('success', 'Post created successfully!');
+        // return redirect()->route('home')
+        //     ->with('success', 'Post created successfully!');
+        return view('pages.home');
     }
 
     public function show($postID)
