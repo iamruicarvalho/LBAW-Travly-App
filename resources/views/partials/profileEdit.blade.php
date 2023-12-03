@@ -35,7 +35,7 @@
                 <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
 
                 <label for="description">Description</label>
-                <input id="description" placeholder="Write a description" name="description" value="{{ auth()->user()->description }}" required autocomplete="description">
+                <input id="description" name="description" value="{{ auth()->user()->description_ }}" required autocomplete="description">
 
                 <label for="location">Location</label>
                 <input id="location" type="text" name="location" value="{{ auth()->user()->location }}" required autocomplete="location">
