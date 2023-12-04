@@ -39,12 +39,12 @@
             </form>
             @foreach($data as $data)
 
-            <div class="post_deg">
+            <div class="welcome-post">
                 <div class="post-header">
                     @php
                         $user = App\Models\User::find($data->created_by);
                     @endphp
-                    <p class="post-description">{{ $user->name_ }}</p>
+                    <p class="user-name">{{ $user->name_ }}</p>
                 </div>
                 <div class="post-content">
                     <p class="post-description">{{ $data->description_ }}</p>
