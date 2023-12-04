@@ -25,6 +25,7 @@
         <div class="profile-header">
         <img src="https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg" alt="Header Picture" class="profile-header-picture">
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
+            <a href="{{ route('notifications', auth()->id()) }}" class="edit-profile-link">Notifications</a>
             <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
             <div class="user-info">
                 <div>

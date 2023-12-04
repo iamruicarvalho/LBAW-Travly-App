@@ -96,4 +96,12 @@ class User extends Model implements Authenticatable
             ->where('follows_.followedID', '=', 'post_.created_by');
     }
 
+    public function allNotifications()
+    {
+        // returns all notifications
+        return Notification::select('notification_.*')
+            ->fromRaw('notification_')
+            ->where('notification_.notifies', '=', $this->id);
+    }
+    
 }

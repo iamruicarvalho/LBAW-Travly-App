@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -50,6 +51,11 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', [GroupController::class, 'list'])->name('groups');
     Route::get('/groups/{groupName}', [GroupController::class, 'showGroup'])->name('groups.show');
 
+});
+
+// Notifications
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'getAll'])->name('notifications');
 });
 
 // Authentication
