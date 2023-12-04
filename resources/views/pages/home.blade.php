@@ -27,22 +27,46 @@
                     <h2>🏠 Home</h2>
                 </div>
             </div>
-            <li><a href="{{url('create_post') }}">Create Post</a></li>
-            {{-- Your posts go here --}}
-            <form action="{{ route('posts.create') }}" method="post">
+
+        <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="upload-post-section">
                     {{-- Seu HTML de upload de post vai aqui --}}
-                    <input type="text" name="description" placeholder="Write your post...">
-                    <label for="media" class="media-icon">
-                        🖼️
-                    </label>
-                    <input type="file" name="media" id="media" accept="image/*,video/*" style="display:none;">
-                    <button type="submit" class="post-button">Post</button>
+                    <textarea name="description" placeholder="Write your post..."></textarea>
+                    <input type="file" name="image">
+                    <input type="submit" value="Add Post" class="btn btn-outline-secondary">
                 </div>
             </form>
+            @foreach($data as $data)
 
-            <li><a href="{{url('my_post') }}">My Post</a></li>
+            <div class="post_deg">
+                <div class="post-header">
+                    @php
+                        $user = App\Models\User::find($data->created_by);
+                    @endphp
+                    <p class="post-description">{{ $user->name_ }}</p>
+                </div>
+                <div class="post-content">
+                    <p class="post-description">{{ $data->description_ }}</p>
+                </div>
+                <div class="post-image">
+                    <img src="{{$data->content_}}">
+                </div>
+                <div class="post-actions">
+                    <button class="like-button" onclick="toggleLike()"> 
+                        <span class="heart-icon">❤️</span>
+                        <span class="like-count">0</span>
+                    </button>
+                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
+                    <button class="comment-button" onclick="addComment()">Comment</button>
+                </div>
+                <div class="comments-section">
+                    <!-- Lista de comentários aqui -->
+                    <!-- Cada comentário pode ter um autor e o texto do comentário -->
+                </div>
+            </div>
+
+            @endforeach
 
             <div class="welcome-post">
                 <div class="post-header">

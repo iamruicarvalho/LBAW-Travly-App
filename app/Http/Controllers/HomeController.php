@@ -17,8 +17,12 @@ class HomeController extends Controller
     public function index()
     {
         $this->middleware('auth');
+        $user = Auth()->user();
+        $userid = $user->id;
+        $data = Post::where('created_by', '=', $userid)->get();
 
-        return view('pages.home');
+
+        return view('pages.home', compact('data'));
     }
 
     public function settings()
@@ -46,14 +50,14 @@ class HomeController extends Controller
         return view('home.create_post');
     }
 
-    public function my_post()
+    /*public function my_post()
     {
         $user = Auth()->user();
         $userid = $user->id;
         $data = Post::where('created_by', '=', $userid)->get();
 
         return view('home.my_post', compact('data'));
-    }
+    }*/
 
     public function user_post(Request $request)
     {
