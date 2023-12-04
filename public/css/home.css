@@ -37,15 +37,22 @@
   }
   
   .left-sidebar .sidebar-menu li a{
-    color:  rgb(41, 41, 93);
+    color:  black;
     font-size: larger;
   }
 
+  .left-sidebar .sidebar-menu li a:hover{
+    color: rgb(191, 191, 191);
+  }
+
   .left-sidebar .profile-section a{
-    color:  rgb(41, 41, 93);
+    color:  black;
     font-size: larger;
   } 
 
+  .left-sidebar .profile-section a:hover{
+    color: rgb(191, 191, 191);
+  } 
 
   .left-sidebar .profile-section {
     text-align: center;
@@ -169,16 +176,24 @@
     align-items: center;
     margin-right: 20px;
   }
+
+  .like-button:hover {
+    background-color: #D4E4F2;
+    margin-right: 10px;
+    border-radius: 30px;
+    font-size: 24px; /* Tamanho do coração aumentado */
+  }
   
   .heart-icon {
     margin-right: 10px;
     font-size: 24px; /* Tamanho do coração aumentado */
   }
-  
+
   .like-count {
     font-weight: bold;
     font-size: 18px; /* Tamanho do contador de likes ajustado */
     margin-right: 5px;
+    color:black;
   }
   
   .comment-input {

@@ -18,6 +18,10 @@
     font-size: 2em;
   }
 
+  .logo h1 a:hover {
+    color:rgb(41, 41, 93);
+  }
+
   .nav-links {
     flex-grow: 1;
     display: flex;
