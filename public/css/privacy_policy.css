@@ -13,16 +13,24 @@ body {
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #BE959F;
+    background-color: #D4E4F2;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .privacy-container h2 {
-    color: #13472E;
+    color: rgb(41, 41, 93);
     text-align: center;
     margin-bottom: 50px;
 }
 
 .privacy-container h3 {
     color: white;
+}
+
+.privacy-container a{
+    font-weight: bold;
+}
+
+.privacy-container a:hover{
+    color: rgb(41, 41, 93);
 }

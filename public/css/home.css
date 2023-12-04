@@ -1,22 +1,21 @@
-/* Container Geral */
-.container {
+  /* Container Geral */
+  .container {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    margin: 20px 0; /* Adiciona espaço superior e inferior */
   }
   
   /* Barra Lateral Esquerda */
   .left-sidebar {
-    width: 200px;
-    background-color: #BE959F; /* Cinza claro */
-    color: #13472E; /* Cor do texto preto */
+    width: 300px;
+    height: 100vh;
+    min-height: 100%;
+    background: url(background.jpg); 
+    color: black; 
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 15px;
-    margin-left: 10px; /* Adiciona espaço inferior */
   }
   
   
@@ -33,9 +32,21 @@
   }
   
   .left-sidebar .sidebar-menu li {
-    margin-bottom: 10px;
+    text-align: center;
+    margin-bottom: 45px;
   }
   
+  .left-sidebar .sidebar-menu li a{
+    color:  rgb(41, 41, 93);
+    font-size: larger;
+  }
+
+  .left-sidebar .profile-section a{
+    color:  rgb(41, 41, 93);
+    font-size: larger;
+  } 
+
+
   .left-sidebar .profile-section {
     text-align: center;
   }
@@ -97,36 +108,36 @@
   .upload-post-section input {
     width: 80%; /* Reduzi a largura para 60% */
     padding: 30px; /* Aumentei o padding para dar mais destaque */
-    border: 2px solid #BE959F; /* Cor da borda */
-    border-radius: 5px;
-    background-color: #f2dede; /* Cor de fundo */
+    border: 2px solid #BAD1E6; /* Cor da borda */
+    border-radius: 30px;
+    background-color: white; /* Cor de fundo */
     color: #13472E; /* Cor do texto */
     transition: all 0.3s ease; /* Transição suave para hover */
   
     /* Adiciona sombra suave */
-    box-shadow: 0 0 10px solid #BE959F;
+    box-shadow: 0 0 10px solid #D4E4F2;
   }
   
   .upload-post-section input:hover {
-    border-color: #BE959F; /* Cor da borda ao passar o mouse */
-    background-color: #f2dede; /* Cor de fundo ao passar o mouse */
-    color: #13472E; /* Cor do texto ao passar o mouse */
+    border-color: #D4E4F2; /* Cor da borda ao passar o mouse */
+    background-color: #D4E4F2; /* Cor de fundo ao passar o mouse */
+    color: rgb(41, 41, 93); /* Cor do texto ao passar o mouse */
   }
   
   
   .post-button {
-    padding: 5px 10px;
-    background-color: #13472E;
+    padding: 5px 20px;
+    background-color: rgb(41, 41, 93);
     color: #fff;
     border: none;
-    border-radius:5px;
+    border-radius:30px;
     cursor: pointer;
   }
   
   .welcome-post {
-    background-color: #BE959F;
+    background-color: white;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 30px;
     margin-bottom: 20px;
   }
   
@@ -173,22 +184,22 @@
   .comment-input {
     width: 70%; /* Reduzi a largura para 60% */
     padding: 18px; /* Aumentei o padding para dar mais destaque */
-    border: 2px solid #BE959F; /* Cor da borda */
-    border-radius: 5px;
-    background-color: #f2dede; /* Cor de fundo */
-    color: #13472E; /* Cor do texto */
+    border: 2px solid #D4E4F2; /* Cor da borda */
+    border-radius: 30px;
+    background-color: white; /* Cor de fundo */
+    color: rgb(41, 41, 93); /* Cor do texto */
     transition: all 0.3s ease; /* Transição suave para hover */
   
     /* Adiciona sombra suave */
-    box-shadow: 0 0 10px solid #BE959F;
+    box-shadow: 0 0 10px solid #D4E4F2;
   }
   
   .comment-button {
     padding: 5px 10px;
-    background-color: #13472E;
+    background-color: rgb(41, 41, 93);
     color: #fff;
     border: none;
-    border-radius: 3px;
+    border-radius: 30px;
     cursor: pointer;
   }
   
@@ -199,14 +210,14 @@
   .comment {
     width: 80%; /* Reduzi a largura para 60% */
     padding: 30px; /* Aumentei o padding para dar mais destaque */
-    border: 2px solid #BE959F; /* Cor da borda */
+    border: 2px solid #D4E4F2; /* Cor da borda */
     border-radius: 5px;
-    background-color: #f2dede; /* Cor de fundo */
+    background-color: #D4E4F2; /* Cor de fundo */
     color: #13472E; /* Cor do texto */
     transition: all 0.3s ease; /* Transição suave para hover */
   
     /* Adiciona sombra suave */
-    box-shadow: 0 0 10px solid #BE959F;
+    box-shadow: 0 0 10px solid #D4E4F2;
   }
   
   
@@ -214,13 +225,11 @@
   .right-sidebar {
     width: 200px;
     padding: 20px;
-    background-color: #BE959F;
-    color: #13472E;
+    background-color: rgb(205, 205, 205);
+    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 15px;
-    margin-right: 10px;
   }
   
   .search-bar {
@@ -252,7 +261,7 @@
   
   .right-sidebar .sidebar-box {
     margin-bottom: 20px;
-    border: 1px solid #BE959F;
+    border: 1px solid #D4E4F2;
     padding: 10px;
     border-radius: 5px;
   }

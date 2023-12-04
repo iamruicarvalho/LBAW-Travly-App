@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Group;
-use App\Models\User;
 
 class GroupController extends Controller
 {
@@ -39,15 +38,15 @@ class GroupController extends Controller
     }
 
     // Exibe a página de um grupo específico
-    public function showGroup($groupId)
+    public function showGroup($groupName)
     {
-        $group = Group::find($groupId);
+        $group = Group::where('name_', $groupName)->first();
 
         if (!$group) {
             return redirect()->route('home')->with('error', 'Group not found');
         }
 
-        return view('group.show', compact('group'));
+        return view('partials.showGroup', compact('group'));
     }
 
     // Mostra a lista de grupos
@@ -55,7 +54,7 @@ class GroupController extends Controller
     {
         $groups = Group::all();
 
-        return view('group.list', compact('groups'));
+        return view('pages.groups', compact('groups'));
     }
 
     // Permite que um usuário solicite ingresso em um grupo

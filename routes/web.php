@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -35,6 +36,22 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 
+// Post
+Route::controller(PostController::class)->group(function () {
+    Route::get('/posts', [PostController::class, 'listPosts'])->name('posts.list');
+    Route::post('/posts/create', [PostController::class, 'createPost'])->name('posts.create');
+    Route::post('/posts/delete', [PostController::class, 'deletePost'])->name('posts.delete');
+    Route::post('/posts/edit/{id}', [PostController::class, 'editPost'])->name('posts.edit');
+    Route::post('/posts/like', [PostController::class, 'likePost'])->name('posts.like');
+});
+
+// Groups
+Route::controller(GroupController::class)->group(function () {
+    Route::get('/groups', [GroupController::class, 'list'])->name('groups');
+    Route::get('/groups/{groupName}', [GroupController::class, 'showGroup'])->name('groups.show');
+
+});
+
 // Authentication
 Route::middleware('web')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -47,21 +64,13 @@ Route::middleware('web')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
 });
 
-Route::middleware(PostController::class)->group(function () {
-    Route::post('/post', [PostController::class, 'createPost'])->name('post.create');
-    Route::post('/post', [PostController::class, 'editPost'])->name('post.edit');
-    Route::post('/post', [PostController::class, 'deletePost'])->name('post.delete');
+// Static Pages
+Route::controller(StaticPageController::class)->group(function () {
+    Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
+    Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
+    Route::get('/privacy-policy', [StaticPageController::class, 'privacy_policy'])->name('static.privacy_policy');
+    Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
 });
-
-Route::get('/post/{post}/likes', [PostController::class, 'showLikes'])->name('post.likes');
-
-Route::get('/faq', [StaticPageController::class, 'faq'])->name('static.faq');
-
-Route::get('/about', [StaticPageController::class, 'about'])->name('static.about');
-
-Route::get('/privacy-policy', [StaticPageController::class, 'privacy_policy'])->name('static.privacy_policy');
-
-Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
 
 /*
 use Illuminate\Support\Facades\Route;
@@ -97,18 +106,10 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/settings', [HomeController::class, 'settings'])->name('settings');
 
 Route::get('/explore', [HomeController::class, 'explore'])->name('explore');
+*/
 
-// PostController
-Route::get('/posts', [PostController::class, 'list'])->name('posts.list');
 
-Route::post('/posts/create', [PostController::class, 'create'])->name('posts.create');
-
-Route::post('/posts/delete', [PostController::class, 'delete'])->name('posts.delete');
-
-Route::post('/posts/edit/{id}', [PostController::class, 'edit'])->name('posts.edit');
-
-Route::post('/posts/like', [PostController::class, 'like'])->name('posts.like');
-
+/*
 // MessageController
 Route::post('/sendMessage', [MessageController::class, 'sendMessage'])->name('sendMessage');
 

@@ -11,8 +11,7 @@
                 <li><a href="#">🔔 Notifications</a></li>
                 <li><a href="#">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
-                <li><a href="#">👥 Groups</a></li>
-                <li><a href="#">➕ More</a></li>
+                <li><a href="{{ route('groups') }}">👥 Groups</a></li>
             </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
@@ -28,7 +27,7 @@
                     <h2>🏠 Home</h2>
                 </div>
             </div>
-            <form action="{{ url('post.create') }}" method="post">
+            <form action="{{ route('posts.create') }}" method="post">
                 @csrf
                 <div class="upload-post-section">
                     {{-- Seu HTML de upload de post vai aqui --}}
@@ -36,7 +35,7 @@
                     <label for="media" class="media-icon">
                         🖼️
                     </label>
-                    <input type="file" name="content" id="media" accept="image/*,video/*" style="display:none;">
+                    <input type="file" name="media" id="media" accept="image/*,video/*" style="display:none;">
                     <button type="submit" class="post-button">Post</button>
                 </div>
             </form>

@@ -27,7 +27,7 @@ class PostController extends Controller
     public function createPost(Request $request)
     {
         // error handling
-        $content = $request->input('content');
+        $content = $request->input('media');
         $description = $request->input('description');
 
         if (!isset($content) && $_FILES["image"]["error"] && !isset($description)) {
@@ -49,8 +49,9 @@ class PostController extends Controller
             'description_'=> $description,
         ]);
 
-        return redirect()->route('home')
-            ->with('success', 'Post created successfully!');
+        // return redirect()->route('home')
+        //     ->with('success', 'Post created successfully!');
+        return view('pages.home');
     }
 
     public function show($postID)

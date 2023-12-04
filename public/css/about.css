@@ -17,12 +17,12 @@ body {
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
-    background-color: #BE959F;
+    background-color: #D4E4F2;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .about-container h1 {
-    color: #13472E;
+    color: rgb(41, 41, 93);
     text-align: center;
 }
 
@@ -49,12 +49,12 @@ body {
 }
 
 .about-container strong {
-    color: #13472E;
+    color: rgb(41, 41, 93);
     font-weight: 2000;
 }
 
 .about-container em{
-    color: #13472E;
+    color: rgb(41, 41, 93);
     font-weight: 2000;
     text-align: center;
 }
@@ -62,4 +62,8 @@ body {
 /* Add some spacing to the Join Us section */
 .about-container h3:last-child {
     margin-bottom: 30px;
+}
+
+.about-container a:hover{
+    color: rgb(41, 41, 93);
 }
