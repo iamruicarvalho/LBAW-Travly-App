@@ -20,50 +20,24 @@
         </div>
 
         {{-- Main Content --}}
-        <div class="main-content">
-            {{-- Top Section --}}
-            <div class="top-section">
-                <div class="user-info">
-                    <h2>🏠 Home</h2>
-                </div>
-            </div>
-            <li><a href="{{url('create_post') }}">Create Post</a></li>
-            {{-- Your posts go here --}}
-            <form action="{{ route('posts.create') }}" method="post">
+        <div class="div_deg">
+            <h2>Add Post</h2>
+
+            <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="upload-post-section">
-                    {{-- Seu HTML de upload de post vai aqui --}}
-                    <input type="text" name="description" placeholder="Write your post...">
-                    <label for="media" class="media-icon">
-                        🖼️
-                    </label>
-                    <input type="file" name="media" id="media" accept="image/*,video/*" style="display:none;">
-                    <button type="submit" class="post-button">Post</button>
-                </div>
-            </form>
 
-            <li><a href="{{url('my_post') }}">My Post</a></li>
+            <div>
+                <label>Description</label>
+                <textarea name="description"></textarea>
+            </div>
 
-            <div class="welcome-post">
-                <div class="post-header">
-                    <span class="user-name">Travly</span>
-                </div>
-                <div class="post-content">
-                    <p>Welcome to Travly! Start exploring and sharing your travel experiences.</p>
-                </div>
-                <div class="post-actions">
-                    <button class="like-button" onclick="toggleLike()"> 
-                        <span class="heart-icon">❤️</span>
-                        <span class="like-count">0</span>
-                    </button>
-                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                    <button class="comment-button" onclick="addComment()">Comment</button>
-                </div>
-                <div class="comments-section">
-                    <p>John Doe: I love this!</p>
-                    <!-- Lista de comentários aqui -->
-                    <!-- Cada comentário pode ter um autor e o texto do comentário -->
-                </div>
+            <div>
+                <label>Add Image</label>
+                <input type="file" name="image">
+            </div>
+            
+            <div>
+                <input type="submit" value="Add Post" class="btn btn-outline-secondary">
             </div>
         </div>
 

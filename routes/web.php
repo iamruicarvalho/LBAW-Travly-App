@@ -45,6 +45,12 @@ Route::controller(PostController::class)->group(function () {
     Route::post('/posts/like', [PostController::class, 'likePost'])->name('posts.like');
 });
 
+Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');
+
+Route::get('/my_post', [HomeController::class, 'my_post'])->middleware('auth');
+
+Route::post('/user_post', [HomeController::class, 'user_post']);
+
 // Groups
 Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', [GroupController::class, 'list'])->name('groups');

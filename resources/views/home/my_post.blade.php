@@ -27,22 +27,16 @@
                     <h2>🏠 Home</h2>
                 </div>
             </div>
-            <li><a href="{{url('create_post') }}">Create Post</a></li>
-            {{-- Your posts go here --}}
-            <form action="{{ route('posts.create') }}" method="post">
-                @csrf
-                <div class="upload-post-section">
-                    {{-- Seu HTML de upload de post vai aqui --}}
-                    <input type="text" name="description" placeholder="Write your post...">
-                    <label for="media" class="media-icon">
-                        🖼️
-                    </label>
-                    <input type="file" name="media" id="media" accept="image/*,video/*" style="display:none;">
-                    <button type="submit" class="post-button">Post</button>
-                </div>
-            </form>
 
-            <li><a href="{{url('my_post') }}">My Post</a></li>
+            @foreach($data as $data)
+
+            <div class="post_deg">
+                <img src="{{$data->content_}}">
+                <p class="post-description">{{$data->description_}}</p>
+            </div>
+
+            @endforeach
+
 
             <div class="welcome-post">
                 <div class="post-header">

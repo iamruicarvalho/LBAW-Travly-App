@@ -12,12 +12,13 @@ use App\Models\Comment;
 
 class Post extends Model
 {
-    public $timestamps = false;
     protected $table = 'post_';
-    protected $primaryKey = 'postID';
+    protected $primaryKey = 'postid';
+    public $timestamps = false; 
     protected $fillable = [
         'content_', 'description_', 'likes_', 'comments_', 'time_', 'created_by', 'content_type'
     ];
+    
 
     public function owner()
     {
@@ -41,7 +42,7 @@ class Post extends Model
 
     public function media()
     {
-        $files = DB::files("images/post/{$this->postID}.{png,jpg,jpeg,gif,mp4}");
+        $files = DB::files("images/post/{$this->postid}.{png,jpg,jpeg,gif,mp4}");
         return count($files) > 0 ? $files[0] : null;
     }
 
