@@ -49,6 +49,20 @@ class GroupController extends Controller
         return view('partials.showGroup', compact('group'));
     }
 
+    // Exibir detalhes de um grupo específico
+    public function groupDetails($groupName)
+    {
+        $group = Group::where('name_', $groupName)->first();
+
+        if (!$group) {
+            return redirect()->route('home')->with('error', 'Group not found');
+        }
+
+        $members = $group->users;
+
+        return view('partials.groupDetails', compact('group', 'members'));
+    }
+
     // Mostra a lista de grupos
     public function list()
     {

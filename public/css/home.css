@@ -37,15 +37,22 @@
   }
   
   .left-sidebar .sidebar-menu li a{
-    color:  rgb(41, 41, 93);
+    color:  black;
     font-size: larger;
   }
 
+  .left-sidebar .sidebar-menu li a:hover{
+    color: rgb(191, 191, 191);
+  }
+
   .left-sidebar .profile-section a{
-    color:  rgb(41, 41, 93);
+    color:  black;
     font-size: larger;
   } 
 
+  .left-sidebar .profile-section a:hover{
+    color: rgb(191, 191, 191);
+  } 
 
   .left-sidebar .profile-section {
     text-align: center;

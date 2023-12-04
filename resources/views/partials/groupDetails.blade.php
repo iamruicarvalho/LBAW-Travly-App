@@ -26,9 +26,15 @@
     <h2> {{ $group->name_ }}</h2>
     
             <p> Description: {{ $group->description_ }}</p>
-            <a href="{{ route('groups.details',  $group->name_) }}" class="view-details">View group details</a>
-    </div>
 
+            <h3>Members:</h3>
+            <ul>
+                @foreach ($group->users() as $user)
+                    <li>{{ $user->username }}</li>
+                @endforeach
+            </ul>
+            
+    </div>
     </div>
     <link href="{{ url('css/group.css') }}" rel="stylesheet">
 @endsection

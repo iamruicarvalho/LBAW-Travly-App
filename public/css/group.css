@@ -5,7 +5,7 @@
 }
 
 /* Barra Lateral Esquerda */
-.groups-container .left-sidebar {
+.group-container .left-sidebar {
     width: 300px;
     height: 100vh;
     min-height: 100%;
@@ -48,13 +48,13 @@
     font-size: larger;
 }
 
-.left-sidebar .profile-section {
-    text-align: center;
-}
-
 .left-sidebar .profile-section a:hover{
     color: rgb(191, 191, 191);
 } 
+
+.left-sidebar .profile-section {
+    text-align: center;
+}
 
 .left-sidebar .profile-section img {
     width: 80px;
@@ -72,42 +72,24 @@
     margin-bottom: 10px;
 }
 
-/* groups */
-.groups {
-    margin-top: 20px;
-    width: 50%; 
-}
-
 /* Style for each group container */
-.groups-container {
+.group-container {
     display: flex;
     justify-content: space-between;
     margin-right: 20px;
 }
 
-/* Style for each group item */
-.groups ul {
-    list-style: none;
-    padding: 0;
+.group-container .view-details {
+    color:white;
+    padding: 20px;
+    background-color: #BAD1E6;
+    border-radius: 10px;
 }
 
-.groups ul li {
-    background-color: white; /* Set background color */
-    border: 1px solid #BAD1E6;   /* Add border */
-    border-radius: 5px;
-    padding: 20px;            /* Add padding */
-    margin-bottom: 20px;      /* Add margin between groups */
+.group-container .view-details:hover {
+    background-color: rgb(191, 191, 191);
 }
 
-/* Additional styling for links inside group items */
-.groups ul li a {
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
+.Group-container{
+    margin-top: 50px;
 }
-
-/* Hover effect for better user experience */
-.groups ul li:hover {
-    background-color: #D4E4F2;
-}
-
