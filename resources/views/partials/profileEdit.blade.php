@@ -28,23 +28,34 @@
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
 
             <div class="profile-editable-fields">
-            {{-- Editable fields --}}
-            <form method="POST" action="{{ route('profile.update', auth()->id()) }}">
-                @csrf
-                <label for="username">Name</label>
-                <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
+                <script>
+                    let authUser = @json($user);
+                    let allUsers = @json($allUsers);
+                    let otherUsers = allUsers.filter(
+                        user => user.id !== authUser.id
+                    )
+                </script>
 
-                <label for="description">Description</label>
-                <input id="description" name="description" value="{{ auth()->user()->description_ }}" required autocomplete="description">
+                {{-- Editable fields --}}
+                <form method="POST" action="{{ route('profile.update', auth()->id()) }}" id="update-profile-form">
+                    @csrf
+                    <div class="username-input-control">
+                        <label for="username">Name</label>
+                        <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
+                        <p class="error"></p>
+                    </div>
 
-                <label for="location">Location</label>
-                <input id="location" type="text" name="location" value="{{ auth()->user()->location }}" required autocomplete="location">
+                    <label for="description">Description</label>
+                    <input id="description" name="description" value="{{ auth()->user()->description_ }}" required autocomplete="description">
 
-                <div class="profile-save-changes">
-                    <button type="submit">Save Changes</button>
-                </div>
-            </form>
-            {{-- End Editable fields --}}
+                    <label for="location">Location</label>
+                    <input id="location" type="text" name="location" value="{{ auth()->user()->location }}" required autocomplete="location">
+
+                    <div class="profile-save-changes">
+                        <button type="submit">Save Changes</button>
+                    </div>
+                </form>
+                {{-- End Editable fields --}}
             </div>
 
             <div class="user-info">
@@ -95,5 +106,5 @@
         </div>
     </div>
     <link href="{{ url('css/profile.css') }}" rel="stylesheet">
-
+    <script defer src="{{ asset('js/update_profile.js') }}"></script>
 @endsection

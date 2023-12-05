@@ -49,7 +49,6 @@ Route::controller(PostController::class)->group(function () {
 Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', [GroupController::class, 'list'])->name('groups');
     Route::get('/groups/{groupName}', [GroupController::class, 'showGroup'])->name('groups.show');
-
 });
 
 // Authentication
