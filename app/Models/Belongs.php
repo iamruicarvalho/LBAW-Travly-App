@@ -11,13 +11,13 @@ class Belongs extends Model
 {
     public $timestamps = false;
     protected $table = 'belongs_';
-    protected $primaryKey = ['id', 'groupID'];   
+    protected $primaryKey = ['id', 'groupid'];   
 
     public $incrementing = false; 
 
     protected $fillable = [
         'id',
-        'groupID',
+        'groupid',
     ];
 
     public function user()
@@ -27,6 +27,6 @@ class Belongs extends Model
 
     public function group()
     {
-        return $this->belongsTo(Group::class, 'groupID');
+        return $this->belongsTo(Group::class, 'groupid');
     }
 }

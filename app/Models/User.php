@@ -54,7 +54,7 @@ class User extends Model implements Authenticatable
 
     public function groups()
     {
-        return $this->belongsToMany(Group::class, 'belongs_', 'id', 'groupID');
+        return $this->belongsToMany(Group::class, 'belongs_', 'id', 'groupid');
     }
 
     public function admin()

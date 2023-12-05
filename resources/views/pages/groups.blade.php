@@ -26,7 +26,7 @@
     <h2> Your Groups </h2>
     <ul>
         @forelse ($groups as $group)
-            <li><a href="{{  route('groups.show', $group->name_) }}"> {{ $group->name_ }} </a></li>
+            <li><a href="{{  route('groups.show', $group->groupid) }}"> {{ $group->name_ }} </a></li>
         @empty
             <p>No groups found.</p>
         @endforelse

@@ -54,8 +54,11 @@ Route::post('/user_post', [HomeController::class, 'user_post']);
 // Groups
 Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', [GroupController::class, 'list'])->name('groups');
-    Route::get('/groups/{groupName}', [GroupController::class, 'showGroup'])->name('groups.show');
-    Route::get('/groups/{groupName}/details', [GroupController::class, 'groupDetails'])->name('groups.details');
+    Route::get('/groups/{groupid}', [GroupController::class, 'showGroup'])->name('groups.show');
+    Route::get('/groups/{groupid}/details', [GroupController::class, 'groupDetails'])->name('group.details');
+    Route::get('/groups/{groupid}/details/remove-user/{userid}', [GroupController::class, 'removeUser'])->name('group.removeuser');
+    Route::get('/user/search', [GroupController::class, 'searchUsers'])->name('user.search');
+
 });
 
 // Authentication

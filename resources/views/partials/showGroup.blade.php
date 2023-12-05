@@ -26,7 +26,7 @@
     <h2> {{ $group->name_ }}</h2>
     
             <p> Description: {{ $group->description_ }}</p>
-            <a href="{{ route('groups.details',  $group->name_) }}" class="view-details">View group details</a>
+            <a href="{{  route('group.details', $group->groupid) }}" class="view-details">View group details</a>
     </div>
 
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Group;
+use App\Models\User;
 
 class GroupController extends Controller
 {
@@ -38,9 +39,9 @@ class GroupController extends Controller
     }
 
     // Exibe a página de um grupo específico
-    public function showGroup($groupName)
+    public function showGroup($groupid)
     {
-        $group = Group::where('name_', $groupName)->first();
+        $group = Group::find($groupid);
 
         if (!$group) {
             return redirect()->route('home')->with('error', 'Group not found');
@@ -50,17 +51,15 @@ class GroupController extends Controller
     }
 
     // Exibir detalhes de um grupo específico
-    public function groupDetails($groupName)
+    public function groupDetails($groupid)
     {
-        $group = Group::where('name_', $groupName)->first();
+        $group = Group::find($groupid);
 
         if (!$group) {
             return redirect()->route('home')->with('error', 'Group not found');
         }
-
-        $members = $group->users;
-
-        return view('partials.groupDetails', compact('group', 'members'));
+    
+        return view('partials.groupDetails', compact('group'));
     }
 
     // Mostra a lista de grupos
@@ -69,6 +68,38 @@ class GroupController extends Controller
         $groups = Group::all();
 
         return view('pages.groups', compact('groups'));
+    }
+
+    // Remove a user from the group
+    public function removeUser($groupid, $userId)
+    {
+        // Find the group
+        $group = Group::find($groupid);
+
+        // Check if the group exists
+        if (!$group) {
+            return redirect()->route('home')->with('error', 'Group not found');
+        }
+
+        // Check if the authenticated user is the owner of the group
+        if (!$group->owners->contains(auth()->user())) {
+            return redirect()->route('home')->with('error', 'Permission denied');
+        }
+
+        // Detach the user from the group
+        $group->users()->detach($userId);
+
+        return redirect()->route('group.details', ['groupid' => $groupid])
+            ->with('success', 'User removed from the group successfully');
+    }
+
+    public function searchUsers(Request $request)
+    {
+        $term = $request->input('term');
+
+        $users = User::where('username', 'like', '%' . $term . '%')->select(['id', 'username'])->get();
+
+        return response()->json($users);
     }
 
     // Permite que um usuário solicite ingresso em um grupo
@@ -104,7 +135,7 @@ class GroupController extends Controller
 
         // Aceite a solicitação de entrada
         $group->joinRequests()->detach($id);
-        $group->members()->attach($id);
+        $group->users()->attach($id);
 
         return redirect()->route('group.show', ['groupId' => $groupId])
             ->with('success', 'User joined the group successfully');

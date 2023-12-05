@@ -93,3 +93,11 @@
 .Group-container{
     margin-top: 50px;
 }
+
+.Group-container a{
+    color: white;
+    padding: 10px;
+    background-color: #BAD1E6;
+    border-radius: 5px;
+    font-size: smaller;
+}

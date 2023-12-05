@@ -2,6 +2,16 @@
 
 @section('content')
 
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Include jQuery UI -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<!-- Include your custom JavaScript file -->
+<script src="{{ asset('js/group.js') }}"></script>
+
 <div class="group-container">
 
     {{-- Left Sidebar --}}
@@ -28,11 +38,26 @@
             <p> Description: {{ $group->description_ }}</p>
 
             <h3>Members:</h3>
-            <ul>
-                @foreach ($group->users() as $user)
-                    <li>{{ $user->username }}</li>
-                @endforeach
-            </ul>
+            @if ($group->users->isEmpty())
+                <p>No users found for this group.</p>
+            @else
+                <ul>
+                    @foreach ($group->users as $user)
+                        <li>{{ $user->username }}</li>
+                        @if($group->owners->contains(auth()->user()))
+                            <a href="{{ route('group.removeuser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}">Remove</a>
+                        @endif
+                    @endforeach
+                </ul>
+            @endif
+
+            @if($group->owners->contains(auth()->user()))
+            <div>
+                <input type="text" id="userSearch" placeholder="Search for a member">
+                <div id="autocompleteSuggestions"></div>
+                <button id="addUserBtn">Add Member</button>
+            </div>
+            @endif
             
     </div>
     </div>
