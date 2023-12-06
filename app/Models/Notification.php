@@ -41,4 +41,5 @@ class Notification extends Model
 
         return "error";
     }
+
 }

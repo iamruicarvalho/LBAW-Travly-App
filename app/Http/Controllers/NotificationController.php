@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PostNotification;
+use App\Models\UserNotification;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +22,17 @@ class NotificationController extends Controller
         return "User not found.";
     }
     
-    public function show($notificationID)
+    public function show_notif($notificationID)
     {
-        $notification = Notification::find("notificationID");
+        $notification = Notification::find("notificationid");
         return view('partials.showNotification', ['notification'=> $notification]);
+    }
+
+    public function removeNotif(Request $request)
+    {
+        PostNotification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        UserNotification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        Notification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        return $this->getAll();
     }
 }
