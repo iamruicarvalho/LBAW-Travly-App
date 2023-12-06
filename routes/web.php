@@ -48,6 +48,10 @@ Route::controller(PostController::class)->group(function () {
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');
 
 Route::get('/my_post', [HomeController::class, 'my_post'])->middleware('auth');
+Route::get('/my_posts_del/{postid}', [HomeController::class, 'my_posts_del'])->middleware('auth');
+Route::get('/post_update_page/{postid}', [HomeController::class, 'post_update_page'])->middleware('auth');
+Route::post('/update_post_data/{postid}', [HomeController::class, 'update_post_data'])->middleware('auth');
+
 
 Route::post('/user_post', [HomeController::class, 'user_post']);
 

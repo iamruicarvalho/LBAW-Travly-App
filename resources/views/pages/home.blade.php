@@ -37,6 +37,14 @@
                     <input type="submit" value="Add Post" class="btn btn-outline-secondary">
                 </div>
             </form>
+
+            @if(session()->has('message'))
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ session()->get('message') }}
+                </div>
+            @endif
+
             @foreach($data as $data)
 
             <div class="welcome-post">
@@ -60,6 +68,8 @@
                     <textarea class="comment-input" placeholder="Add a comment..."></textarea>
                     <button class="comment-button" onclick="addComment()">Comment</button>
                 </div>
+                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
+                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Update</a>
                 <div class="comments-section">
                     <!-- Lista de comentários aqui -->
                     <!-- Cada comentário pode ter um autor e o texto do comentário -->

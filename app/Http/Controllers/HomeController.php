@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -20,10 +22,43 @@ class HomeController extends Controller
         $user = Auth()->user();
         $userid = $user->id;
         $data = Post::where('created_by', '=', $userid)->get();
-
-
+        
         return view('pages.home', compact('data'));
     }
+
+    public function my_posts_del($postid)
+    {
+        $data = Post::find($postid);
+        $data->delete();
+        return redirect()->back()->with('message', 'Post deleted successfully');
+    }
+    
+
+    public function post_update_page($postid)
+    {
+        $data = Post::find($postid);
+        return view('home.post_page', compact('data'));
+    }
+
+    
+    public function update_post_data(Request $request, $postid)
+    {
+        $data = Post::find($postid);
+        $data->description_ = $request->description;
+    
+        $image = $request->image;
+        if ($image) {
+            $imagename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move('postimage', $imagename);
+            $data->content_ = $imagename;
+        }
+    
+        $data->time_ = now();
+        $data->save();
+    
+        return Redirect::route('home')->with('message', 'Post updated successfully');
+    }
+    
 
     public function settings()
     {
@@ -50,14 +85,14 @@ class HomeController extends Controller
         return view('home.create_post');
     }
 
-    /*public function my_post()
+    public function my_post()
     {
         $user = Auth()->user();
         $userid = $user->id;
         $data = Post::where('created_by', '=', $userid)->get();
 
         return view('home.my_post', compact('data'));
-    }*/
+    }
 
     public function user_post(Request $request)
     {
@@ -87,6 +122,6 @@ class HomeController extends Controller
 
         return redirect()->back();
     }
-    // Outros métodos relacionados à página inicial, se necessário
+
 
 }
