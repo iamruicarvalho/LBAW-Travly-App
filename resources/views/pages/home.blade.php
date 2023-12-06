@@ -8,7 +8,7 @@
             <ul class="sidebar-menu">
                 <li><a href="{{ route('home') }}">🏠 Home</a></li>
                 <li><a href="#">🔍 Explore</a></li>
-                <li><a href="#">🔔 Notifications</a></li>
+                <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
                 <li><a href="#">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
                 <li><a href="{{ route('groups') }}">👥 Groups</a></li>
