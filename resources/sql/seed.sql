@@ -93,7 +93,7 @@ CREATE TABLE comment_ (
 );
 
 CREATE TABLE notification_ (
-    notificationID SERIAL PRIMARY KEY,
+    notificationid SERIAL PRIMARY KEY,
     description_ TEXT NOT NULL, 
     time_ TIMESTAMP NOT NULL,
     notifies INTEGER NOT NULL REFERENCES user_ (id),
@@ -117,13 +117,13 @@ CREATE TABLE belongs_ (
 );
 
 CREATE TABLE user_notification (
-    notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
+    notificationid INTEGER PRIMARY KEY REFERENCES notification_ (notificationid) ON UPDATE CASCADE,
     id INTEGER NOT NULL REFERENCES user_ (id), 
     notification_type user_notification_types NOT NULL
 );
 
 CREATE TABLE post_notification (
-    notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
+    notificationid INTEGER PRIMARY KEY REFERENCES notification_ (notificationid) ON UPDATE CASCADE,
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE, 
     notification_type post_notification_types NOT NULL
 );
@@ -737,7 +737,7 @@ INSERT INTO comment_(description_, likes_, time_, id, postID, comment_replies) V
             ('Nunca vi nada assim!', 0, '2023-10-25 07:31:00', 67, 2, NULL),
             ('Uau!!!', 0, '2023-10-25 08:31:00', 45, 2, NULL);
 
-INSERT INTO notification_(notificationID, description_, time_, notifies, sends_notif) VALUES
+INSERT INTO notification_(notificationid, description_, time_, notifies, sends_notif) VALUES
             (1, 'JohnDoe started following you', '2023-10-25 08:30:15', 5, 3),
             (2, 'AliceSmith liked your recent post', '2023-10-25 10:15:40', 2, 4),
             (3, 'RobertJohnson requested to follow you', '2023-10-25 12:20:55', 8, 6),
@@ -866,7 +866,7 @@ INSERT INTO owner_(id, groupID) VALUES
             (31,5),
             (9,6);
 
-INSERT INTO user_notification(notificationID, id, notification_type) VALUES
+INSERT INTO user_notification(notificationid, id, notification_type) VALUES
             (1, 3, 'request_follow'),
             (2, 5, 'accepted_follow'),
             (3, 8, 'started_following'),
@@ -908,7 +908,7 @@ INSERT INTO user_notification(notificationID, id, notification_type) VALUES
             (39, 9, 'accepted_follow'),
             (40, 5, 'started_following');
 
-INSERT INTO post_notification(notificationID, postID, notification_type) VALUES
+INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
             (1, 3, 'liked_post'),
             (2, 5, 'liked_post'),
             (3, 8, 'commented_post'),
