@@ -98,7 +98,7 @@ class User extends Model implements Authenticatable
 
     public function allNotifications()
     {
-        // returns all notifications
+        // returns all of the user's notifications 
         return Notification::select('notification_.*')
             ->fromRaw('notification_')
             ->where('notification_.notifies', '=', $this->id);

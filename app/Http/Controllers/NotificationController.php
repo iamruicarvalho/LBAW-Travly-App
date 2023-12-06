@@ -22,7 +22,8 @@ class NotificationController extends Controller
         return "User not found.";
     }
     
-    public function show_notif($notificationID)
+    //ainda não usado
+    public function showNotif($notificationID)
     {
         $notification = Notification::find("notificationid");
         return view('partials.showNotification', ['notification'=> $notification]);
