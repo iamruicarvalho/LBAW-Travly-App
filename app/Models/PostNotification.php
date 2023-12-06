@@ -11,14 +11,14 @@ class PostNotification extends Model
 {
     public $timestamps = false;
     protected $table = 'post_notification';
-    protected $primaryKey = 'notificationID';
+    protected $primaryKey = 'notificationid';
     protected $fillable = [
-        'notificationID', 'postID', 'notification_type'
+        'notificationid', 'postID', 'notification_type'
     ];
 
     public function notification()
     {
-        return $this->belongsTo(Notification::class, 'notificationID');
+        return $this->belongsTo(Notification::class, 'notificationid');
     }
 
     public function post()
