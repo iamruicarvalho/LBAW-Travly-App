@@ -32,8 +32,10 @@ class Post extends Model
 
     public function likes()
     {
-        return $this->hasMany(PostLike::class)->get()->count();
+        return $this->hasMany(PostLike::class, 'postid');
     }
+
+
 
     public function comments()
     {

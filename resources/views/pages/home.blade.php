@@ -58,8 +58,9 @@
                     <p class="post-description">{{ $data->description_ }}</p>
                 </div>
                 <div class="post-image">
-                    <img src="{{$data->content_}}">
+                    <img src="{{ asset('postimage/' . $data->content_) }}">
                 </div>
+                <a href="{{ url('/posts/' . $data->postid . '/likes') }}">See Likes</a>
                 <div class="post-actions">
                     <button class="like-button" onclick="toggleLike()"> 
                         <span class="heart-icon">❤️</span>

@@ -118,9 +118,10 @@ class HomeController extends Controller
         $image = $request->image;
         if ($image) {
             $imagename = time() . '.' . $image->getClientOriginalExtension();
-            $request->image->move('postimage', $imagename);
+            $request->image->move(public_path('postimage'), $imagename);
             $post->content_ = $imagename;
         }
+
 
         $post->time_ = now(); 
 
