@@ -14,7 +14,7 @@ class Notification extends Model
     protected $table = 'notification_';
     protected $primaryKey = 'notificationid';
     protected $fillable = [
-        'description_', 'time_', 'notifies', 'sends_notif'
+        'description_', 'time_', 'seen', 'notifies', 'sends_notif'
     ];
 
     public function notifiedUser()
