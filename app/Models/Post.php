@@ -37,7 +37,7 @@ class Post extends Model
 
     public function comments()
     {
-        return $this->hasMany(Comment::class)->whereNull('previous')->get();
+        return $this->hasMany(Comment::class, 'postid');
     }
 
     public function media()

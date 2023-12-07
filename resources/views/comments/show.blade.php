@@ -1,3 +1,20 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @extends('layouts.app')
 
 
@@ -20,45 +37,18 @@
         </div>
 
         {{-- Main Content --}}
-        <div class="main-content">
-            {{-- Top Section --}}
-            <div class="top-section">
-                <div class="user-info">
-                    <h2>🏠 Home</h2>
-                </div>
-            </div>
-
-        <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="upload-post-section">
-                    {{-- Seu HTML de upload de post vai aqui --}}
-                    <textarea name="description" placeholder="Write your post..."></textarea>
-                    <input type="file" name="image">
-                    <input type="submit" value="Add Post" class="btn btn-outline-secondary">
-                </div>
-            </form>
-
-            @if(session()->has('message'))
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    {{ session()->get('message') }}
-                </div>
-            @endif
-
-            @foreach($data as $data)
-
             <div class="welcome-post">
                 <div class="post-header">
                     @php
-                        $user = App\Models\User::find($data->created_by);
+                        $user = App\Models\User::find($post->created_by);
                     @endphp
                     <p class="user-name">{{ $user->name_ }}</p>
                 </div>
                 <div class="post-content">
-                    <p class="post-description">{{ $data->description_ }}</p>
+                    <p class="post-description">{{ $post->description_ }}</p>
                 </div>
                 <div class="post-image">
-                    <img src="{{$data->content_}}">
+                    <img src="{{$post->content_}}">
                 </div>
                 <div class="post-actions">
                     <button class="like-button" onclick="toggleLike()"> 
@@ -69,53 +59,53 @@
                         @csrf
                         <div class="upload-post-section">
                             <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
-                            <input type="hidden" name="postid" value="{{ $data->postid }}">
+                            <input type="hidden" name="postid" value="{{ $post->postid }}">
                             <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
                         </div>
                     </form>
                 </div>
                 <div class="post-details">
-                            <a href="post.likes" class="show-details"> {{ $data->likes_ }} likes</a>
-                            <a href="post.comments" class="show-details"> {{ $data->comments_ }} comments</a>
-                            <div class="post-actions">
-                                <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details">Show Comments</a>
+                            <a href="post.likes" class="show-details"> {{ $post->likes_ }} likes</a>
+                            <a href="post.comments" class="show-details"> {{ $post->comments_ }} comments</a>
+
+                            <a class="show-details"> {{ $post->time_ }}</a>
+                </div>
+
+                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Update</a>
+                <div class="comments-section">
+                    <h3>Comments:</h3>
+
+                    @forelse($comments as $comment)
+                        <div class="comment-item">
+                            <div class="comment-details">
+                                <p class="comment-description">{{ $comment->description_ }}</p>
+                                <p class="comment-author">Comment by: {{ $comment->user->name_ }}</p>
+                                <p class="comment-time">Posted on: {{ $comment->time_ }}</p>
+                                <!-- Adicione mais detalhes do comentário conforme necessário -->
                             </div>
+                        </div>
+                    @empty
+                        <p>No comments yet.</p>
+                    @endforelse
 
-                            <a class="show-details"> {{ $data->time_ }}</a>
+                    <!-- Adicione um formulário para adicionar novos comentários -->
+                    @auth
+                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="upload-post-section">
+                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
+                            <input type="hidden" name="postid" value="{{ $post->postid }}">
+                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
+                        </div>
+                    </form>
+                    @else
+                        <p>Please log in to leave a comment.</p>
+                    @endauth
                 </div>
 
-                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Update</a>
-                <div class="comments-section">
-                    <!-- Lista de comentários aqui -->
-                    <!-- Cada comentário pode ter um autor e o texto do comentário -->
-                </div>
             </div>
 
-            @endforeach
-
-            <div class="welcome-post">
-                <div class="post-header">
-                    <span class="user-name">Travly</span>
-                </div>
-                <div class="post-content">
-                    <p>Welcome to Travly! Start exploring and sharing your travel experiences.</p>
-                </div>
-                <div class="post-actions">
-                    <button class="like-button" onclick="toggleLike()"> 
-                        <span class="heart-icon">❤️</span>
-                        <span class="like-count">0</span>
-                    </button>
-                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                    <button class="comment-button" onclick="addComment()">Comment</button>
-                </div>
-                <div class="comments-section">
-                    <p>John Doe: I love this!</p>
-                    <!-- Lista de comentários aqui -->
-                    <!-- Cada comentário pode ter um autor e o texto do comentário -->
-                </div>
-            </div>
-        </div>
 
         {{-- Right Sidebar --}}
         <div class="right-sidebar">

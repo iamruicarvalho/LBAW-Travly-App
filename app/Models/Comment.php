@@ -12,9 +12,9 @@ class Comment extends Model
 {
     public $timestamps = false;
     protected $table = 'comment_';
-    protected $primaryKey = 'commentID'; 
+    protected $primaryKey = 'commentid'; 
     protected $fillable = [
-        'description_', 'likes_', 'time_', 'id', 'postID', 'comment_replies'
+        'description_', 'likes_', 'time_', 'id', 'postid', 'comment_replies'
     ];
 
     public function user()
@@ -24,7 +24,7 @@ class Comment extends Model
 
     public function post()
     {
-        return $this->belongsTo(Post::class, 'postID');
+        return $this->belongsTo(Post::class, 'postid');
     }
 
     public function replies()
@@ -36,5 +36,6 @@ class Comment extends Model
     {
         return $this->hasMany(CommentLike::class)->count();
     }
+
 
 }

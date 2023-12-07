@@ -55,6 +55,10 @@ Route::post('/update_post_data/{postid}', [HomeController::class, 'update_post_d
 
 Route::post('/user_post', [HomeController::class, 'user_post']);
 
+Route::post('/user_comment', [HomeController::class, 'addComment'])->middleware('auth');
+
+Route::get('/posts/{postid}/comments', [HomeController::class, 'showPostComments']);
+
 // Groups
 Route::controller(GroupController::class)->group(function () {
     Route::get('/groups', [GroupController::class, 'list'])->name('groups');

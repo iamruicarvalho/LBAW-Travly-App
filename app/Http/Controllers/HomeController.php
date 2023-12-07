@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\Comment;
+
 
 class HomeController extends Controller
 {
@@ -21,10 +23,14 @@ class HomeController extends Controller
         $this->middleware('auth');
         $user = Auth()->user();
         $userid = $user->id;
-        $data = Post::where('created_by', '=', $userid)->get();
-        
+    
+        $data = Post::with(['comments' => function ($query) {
+            $query->orderBy('time_', 'desc')->take(50);
+        }])->where('created_by', '=', $userid)->get();
+    
         return view('pages.home', compact('data'));
     }
+    
 
     public function my_posts_del($postid)
     {
@@ -123,5 +129,32 @@ class HomeController extends Controller
         return redirect()->back();
     }
 
+    public function addComment(Request $request)
+    {
+        $user = Auth()->user();
+
+        $comment = new Comment();
+        $comment->description_ = $request->input('comment');
+        $comment->time_ = now();
+        $comment->id = $user->id; 
+        $comment->postid = $request->input('postid');
+
+        $comment->save();
+
+        return redirect()->back()->with('message', 'Comment added successfully!');
+    }
+
+    public function showPostComments($postid)
+    {
+        $post = Post::find($postid);
+
+        if (!$post) {
+            return redirect()->route('home')->with('error', 'Post not found');
+        }
+
+        $comments = Comment::where('postid', $postid)->get();
+
+        return view('comments.show', compact('post', 'comments'));
+    }
 
 }
