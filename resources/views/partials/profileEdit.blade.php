@@ -28,21 +28,18 @@
             <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
 
             <div class="profile-editable-fields">
-                <script>
-                    let authUser = @json($user);
-                    let allUsers = @json($allUsers);
-                    let otherUsers = allUsers.filter(
-                        user => user.id !== authUser.id
-                    )
-                </script>
-
                 {{-- Editable fields --}}
                 <form method="POST" action="{{ route('profile.update', auth()->id()) }}" id="update-profile-form">
                     @csrf
                     <div class="username-input-control">
                         <label for="username">Name</label>
                         <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
-                        <p class="error"></p>
+                        @if ($errors->has('username'))
+                            <span class="error">
+                                <!-- {{ $errors->first('username') }} -->
+                                This username has already been taken. Choose a different one. 
+                            </span>
+                        @endif
                     </div>
 
                     <label for="description">Description</label>
@@ -106,5 +103,5 @@
         </div>
     </div>
     <link href="{{ url('css/profile.css') }}" rel="stylesheet">
-    <script defer src="{{ asset('js/update_profile.js') }}"></script>
+    <!-- <script defer src="{{ asset('js/update_profile.js') }}"></script> -->
 @endsection

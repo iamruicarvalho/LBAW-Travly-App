@@ -203,6 +203,7 @@
         margin-left: 40%;
     }
     
+    /*----------------------------------------------------*/
     /* .repeated-username-error {
         color: #af4242;;
         background-color: #fde8ec;
@@ -214,9 +215,9 @@
         display: block;
         margin-bottom: 20px;
         transform: translate(-20px);
-    } */
+    } 
 
-    /* .username-input-control.success input {
+    .username-input-control.success input {
         border-color: #09c372;
     }
     
@@ -229,6 +230,17 @@
         font-size: 9px;
         height: 13px;
     } */
+    /*----------------------------------------------------*/
+
+    .error {
+        display: block;
+        background-color: rgb(244, 193, 193);
+        border-radius: 4px;
+        font-size: 15px;
+        margin-bottom: 20px;
+        padding: 8px;
+        color: rgb(237, 71, 71);
+    }
 
     body .user-info{
         margin: 20px;
