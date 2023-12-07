@@ -289,3 +289,58 @@
   
   
   
+
+
+
+/* Estilo padrão para o link de exclusão */
+a.btn-danger {
+  color: #fff; /* Cor do texto */
+  background-color: #D4E4F2; /* Cor de fundo vermelha */
+  border-color: #D4E4F2; /* Cor da borda vermelha */
+  padding: 8px 12px; /* Espaçamento interno */
+  text-decoration: none; /* Remover sublinhado padrão de links */
+  border-radius: 4px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Efeito de transição suave na mudança de cor de fundo */
+
+  /* Adicionando efeito de hover */
+  &:hover {
+      background-color: #D4E4F2; /* Cor de fundo vermelha mais escura quando passa o mouse */
+      border-color: #D4E4F2; /* Cor da borda vermelha mais escura quando passa o mouse */
+  }
+}
+
+/* Estilo para o link de exclusão quando desabilitado */
+a.btn-danger:disabled {
+  background-color: #ccc; /* Cor de fundo cinza para indicar desabilitação */
+  border-color: #ccc; /* Cor da borda cinza para indicar desabilitação */
+  cursor: not-allowed; /* Cursor de "não permitido" quando desabilitado */
+}
+
+/* Estilo padrão para o link de atualização */
+a.btn-primary {
+  color: #fff; /* Cor do texto */
+  background-color: #007bff; /* Cor de fundo azul */
+  border-color: #007bff; /* Cor da borda azul */
+  padding: 8px 12px; /* Espaçamento interno */
+  text-decoration: none; /* Remover sublinhado padrão de links */
+  border-radius: 4px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Efeito de transição suave na mudança de cor de fundo */
+
+  /* Adicionando efeito de hover */
+  &:hover {
+      background-color: #0056b3; /* Cor de fundo azul mais escura quando passa o mouse */
+      border-color: #0056b3; /* Cor da borda azul mais escura quando passa o mouse */
+  }
+}
+
+/* Estilo para o link de atualização quando desabilitado */
+a.btn-primary:disabled {
+  background-color: #ccc; /* Cor de fundo cinza para indicar desabilitação */
+  border-color: #ccc; /* Cor da borda cinza para indicar desabilitação */
+  cursor: not-allowed; /* Cursor de "não permitido" quando desabilitado */
+}
+
+
+.show-details {
+  color: #0056b3;
+}

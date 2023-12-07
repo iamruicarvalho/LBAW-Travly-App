@@ -4,16 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\User;
-use App\Models\Post;
-
 class PostLike extends Model
 {
     public $timestamps = false;
     protected $table = 'post_likes';
-    protected $primaryKey = ['id', 'postID'];
+    protected $primaryKey = null; // Para indicar que não há uma chave primária simples
+    public $incrementing = false; // Para indicar que não há auto-incremento
+
     protected $fillable = [
-        'id', 'postID'
+        'id', 'postid'
     ];
 
     public function user()
@@ -21,8 +20,11 @@ class PostLike extends Model
         return $this->belongsTo(User::class, 'id');
     }
 
+
+
+    // Relacionamento com o modelo Post
     public function post()
     {
-        return $this->belongsTo(Post::class, 'postID');
+        return $this->belongsTo(Post::class, 'postid');
     }
 }

@@ -37,29 +37,56 @@
                     <input type="submit" value="Add Post" class="btn btn-outline-secondary">
                 </div>
             </form>
+
+            @if(session()->has('message'))
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ session()->get('message') }}
+                </div>
+            @endif
+
             @foreach($data as $data)
 
-            <div class="post_deg">
+            <div class="welcome-post">
                 <div class="post-header">
                     @php
                         $user = App\Models\User::find($data->created_by);
                     @endphp
-                    <p class="post-description">{{ $user->name_ }}</p>
+                    <p class="user-name">{{ $user->name_ }}</p>
                 </div>
                 <div class="post-content">
                     <p class="post-description">{{ $data->description_ }}</p>
                 </div>
                 <div class="post-image">
-                    <img src="{{$data->content_}}">
+                    <img src="{{ asset('postimage/' . $data->content_) }}">
                 </div>
+                <a href="{{ url('/posts/' . $data->postid . '/likes') }}">See Likes</a>
                 <div class="post-actions">
                     <button class="like-button" onclick="toggleLike()"> 
                         <span class="heart-icon">❤️</span>
                         <span class="like-count">0</span>
                     </button>
-                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                    <button class="comment-button" onclick="addComment()">Comment</button>
+                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="upload-post-section">
+                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
+                            <input type="hidden" name="postid" value="{{ $data->postid }}">
+                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
+                        </div>
+                    </form>
                 </div>
+                <div class="post-details">
+                            <a href="post.likes" class="show-details"> {{ $data->likes_ }} likes</a>
+                            <a href="post.comments" class="show-details"> {{ $data->comments_ }} comments</a>
+                            <div class="post-actions">
+                                <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details">Show Comments</a>
+                            </div>
+
+                            <a class="show-details"> {{ $data->time_ }}</a>
+                </div>
+
+                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
+                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Update</a>
                 <div class="comments-section">
                     <!-- Lista de comentários aqui -->
                     <!-- Cada comentário pode ter um autor e o texto do comentário -->

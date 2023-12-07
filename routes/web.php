@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LikeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,8 +49,25 @@ Route::controller(PostController::class)->group(function () {
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');
 
 Route::get('/my_post', [HomeController::class, 'my_post'])->middleware('auth');
+Route::get('/my_posts_del/{postid}', [HomeController::class, 'my_posts_del'])->middleware('auth');
+Route::get('/post_update_page/{postid}', [HomeController::class, 'post_update_page'])->middleware('auth');
+Route::post('/update_post_data/{postid}', [HomeController::class, 'update_post_data'])->middleware('auth');
+
+Route::get('/posts/{postid}/likes', [LikeController::class, 'showLikes']);
+Route::post('/posts/{postid}/like', [LikeController::class, 'likePost'])->name('posts.like');
+Route::delete('/posts/{postid}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
+
 
 Route::post('/user_post', [HomeController::class, 'user_post']);
+
+Route::post('/user_comment', [HomeController::class, 'addComment'])->middleware('auth');
+
+Route::get('/posts/{postid}/comments', [HomeController::class, 'showPostComments']);
+Route::get('/comments/{commentid}/edit', [HomeController::class, 'editComment'])->middleware('auth');
+Route::put('/comments/{commentid}', [HomeController::class, 'updateComment'])->middleware('auth');
+Route::delete('/comments/{commentid}', [HomeController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
+
+
 
 // Groups
 Route::controller(GroupController::class)->group(function () {
