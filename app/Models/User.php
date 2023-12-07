@@ -86,14 +86,4 @@ class User extends Model implements Authenticatable
     {
         return $this->hasMany(UserNotification::class, 'id');
     }
-
-    public function visiblePosts()
-    {
-        // returns all the posts from the users I follow
-        return Post::select('post_.*')
-            ->fromRaw('post_', 'follows_')
-            ->where('follows_.followerID', '=', $this->id)
-            ->where('follows_.followedID', '=', 'post_.created_by');
-    }
-
 }
