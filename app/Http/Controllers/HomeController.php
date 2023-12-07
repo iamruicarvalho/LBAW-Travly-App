@@ -157,4 +157,48 @@ class HomeController extends Controller
         return view('comments.show', compact('post', 'comments'));
     }
 
+    public function editComment($commentid)
+    {
+        $comment = Comment::find($commentid);
+    
+        // Verificar se o comentário existe
+        if (!$comment) {
+            return redirect()->route('home')->with('error', 'Comentário não encontrado.');
+        }
+    
+        // Verificar se o usuário autenticado é o autor do comentário
+        if (Auth::check() && $comment->user_id != Auth::id()) {
+            return redirect()->route('home')->with('error', 'Você não tem permissão para editar este comentário.');
+        }
+    
+        return view('comments.edit', compact('comment'));
+    }
+    
+
+    public function updateComment(Request $request, $commentid)
+    {
+        $comment = Comment::find($commentid);
+
+
+        $comment->description_ = $request->input('comment');
+        $comment->save();
+
+        return redirect()->back()->with('message', 'Comment update successfully!');
+    }
+
+    public function destroy($commentid)
+    {
+        $comment = Comment::find($commentid);
+    
+        if (!$comment) {
+            return redirect()->back()->with('error', 'Comment not found');
+        }
+    
+        $comment->delete();
+    
+        return redirect()->back()->with('message', 'Comment deleted successfully!');
+    }
+    
+
+
 }

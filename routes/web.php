@@ -58,6 +58,11 @@ Route::post('/user_post', [HomeController::class, 'user_post']);
 Route::post('/user_comment', [HomeController::class, 'addComment'])->middleware('auth');
 
 Route::get('/posts/{postid}/comments', [HomeController::class, 'showPostComments']);
+Route::get('/comments/{commentid}/edit', [HomeController::class, 'editComment'])->middleware('auth');
+Route::put('/comments/{commentid}', [HomeController::class, 'updateComment'])->middleware('auth');
+Route::delete('/comments/{commentid}', [HomeController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
+
+
 
 // Groups
 Route::controller(GroupController::class)->group(function () {

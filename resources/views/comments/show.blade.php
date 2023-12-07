@@ -50,20 +50,7 @@
                 <div class="post-image">
                     <img src="{{$post->content_}}">
                 </div>
-                <div class="post-actions">
-                    <button class="like-button" onclick="toggleLike()"> 
-                        <span class="heart-icon">❤️</span>
-                        <span class="like-count">0</span>
-                    </button>
-                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="upload-post-section">
-                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
-                            <input type="hidden" name="postid" value="{{ $post->postid }}">
-                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
-                        </div>
-                    </form>
-                </div>
+
                 <div class="post-details">
                             <a href="post.likes" class="show-details"> {{ $post->likes_ }} likes</a>
                             <a href="post.comments" class="show-details"> {{ $post->comments_ }} comments</a>
@@ -82,7 +69,17 @@
                                 <p class="comment-description">{{ $comment->description_ }}</p>
                                 <p class="comment-author">Comment by: {{ $comment->user->name_ }}</p>
                                 <p class="comment-time">Posted on: {{ $comment->time_ }}</p>
-                                <!-- Adicione mais detalhes do comentário conforme necessário -->
+                                <form action="{{ url('comments/' . $comment->commentid) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    <textarea name="comment">{{ $comment->description_ }}</textarea>
+                                    <button type="submit">Salvar Edição</button>
+                                </form>
+                                <form action="{{ route('comments.destroy', $comment->commentid) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Are you sure to delete this?')" class="btn btn-danger">Delete</button>
+                                </form>
                             </div>
                         </div>
                     @empty
