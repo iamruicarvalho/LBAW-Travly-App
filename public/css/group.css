@@ -101,3 +101,10 @@
     border-radius: 5px;
     font-size: smaller;
 }
+
+.Group-container .owner{
+    color:#BAD1E6;
+    background-color: white;
+    font-weight: bold;
+    font-size: 15px;
+}

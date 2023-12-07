@@ -30,6 +30,7 @@
         @empty
             <p>No groups found.</p>
         @endforelse
+        <button id="create-group">Create new group</button>
     </ul>
     </div>
 

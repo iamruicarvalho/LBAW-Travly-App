@@ -58,7 +58,10 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/groups/{groupid}/details', [GroupController::class, 'groupDetails'])->name('group.details');
     Route::get('/groups/{groupid}/details/remove-user/{userid}', [GroupController::class, 'removeUser'])->name('group.removeuser');
     Route::get('/user/search', [GroupController::class, 'searchUsers'])->name('user.search');
-
+    Route::post('/groups/{groupid}/details/add-user/{userid}', [GroupController::class, 'addUser'])->name('group.adduser');
+    Route::post('/groups/{groupid}/details/editName', [GroupController::class, 'editName'])->name('group.editName');
+    Route::post('/groups/{groupid}/details/editDescription', [GroupController::class, 'editDescription'])->name('group.editDescription');
+    Route::post('/groups/{groupid}/details/deleteGroup', [GroupController::class, 'deleteGroup'])->name('group.delete');
 });
 
 // Authentication

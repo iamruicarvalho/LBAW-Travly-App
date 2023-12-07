@@ -34,18 +34,42 @@
 
     <div class="Group-container">
     <h2> {{ $group->name_ }}</h2>
-    
-            <p> Description: {{ $group->description_ }}</p>
+
+        @if($group->owners->contains(auth()->user()))
+            <form method="post" action="{{ route('group.editName', ['groupid' => $group->groupid]) }}">
+                @csrf
+                <input type="text" id="newName" name="name_" placeholder="New group name" required>
+                <button type="submit">Edit group name</button>
+            </form>
+        @endif
+
+        <p> Description: {{ $group->description_ }}</p>
+
+        @if($group->owners->contains(auth()->user()))
+            <form method="post" action="{{ route('group.editDescription', ['groupid' => $group->groupid]) }}">
+                @csrf
+                <input type="text" id="newDescription" name="description_" placeholder="New group description" required>
+                <button type="submit">Edit group description</button>
+            </form>
+        @endif
 
             <h3>Members:</h3>
             @if ($group->users->isEmpty())
                 <p>No users found for this group.</p>
             @else
-                <ul>
+                <ul id="users">
                     @foreach ($group->users as $user)
-                        <li>{{ $user->username }}</li>
+                        <li id="user">{{ $user->username }}</li>
                         @if($group->owners->contains(auth()->user()))
-                            <a href="{{ route('group.removeuser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}">Remove</a>
+                            @if(!$group->owners->contains($user))
+                                <a href="{{ route('group.removeuser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}">Remove</a>
+                            @else
+                                <a class="owner">Group Owner</a>
+                                <form method="post" action="{{ route('group.delete',  ['groupid' => $group->groupid]) }}">
+                                    @csrf
+                                    <button type="submit">Delete group</button>
+                                </form>
+                            @endif
                         @endif
                     @endforeach
                 </ul>

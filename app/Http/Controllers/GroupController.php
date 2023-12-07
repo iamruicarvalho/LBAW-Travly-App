@@ -38,6 +38,62 @@ class GroupController extends Controller
             ->with('success', 'Group created successfully');
     }
 
+    // Edit group name
+    public function editName(Request $request, $groupid)
+    {
+        $group = Group::find($groupid);
+
+        if (!$group) {
+            return redirect()->route('home')->with('error', 'Group not found');
+        }
+
+        $request->validate([
+            'name_' => 'required|string|max:255',
+        ]);
+
+        $group->name_ = $request->input('name_');
+        $group->save();
+
+        return redirect()->route('group.details', ['groupid' => $groupid])
+            ->with('success', 'Group name updated successfully');
+    }
+
+    // Edit group description
+    public function editDescription(Request $request, $groupid)
+    {
+        $group = Group::find($groupid);
+
+        if (!$group) {
+            return redirect()->route('home')->with('error', 'Group not found');
+        }
+
+        $request->validate([
+            'description_' => 'nullable|string',
+        ]);
+
+        $group->description_ = $request->input('description_');
+        $group->save();
+
+        return redirect()->route('group.details', ['groupid' => $groupid])
+            ->with('success', 'Group description updated successfully');
+    }
+
+    // Delete group
+    public function deleteGroup($groupid)
+    {
+        $group = Group::find($groupid);
+
+        if (!$group) {
+            return redirect()->route('groups')->with('error', 'Group not found');
+        }
+
+        //$this->authorize('delete', $group);
+
+        $group->delete();
+
+        return redirect()->route('groups')->with('success', 'Group deleted successfully');
+    }
+
     // Exibe a página de um grupo específico
     public function showGroup($groupid)
     {
@@ -101,6 +157,36 @@ class GroupController extends Controller
 
         return response()->json($users);
     }
+
+    public function addUser(Request $request, $groupid, $userId)
+{
+    // Find the group
+    $group = Group::find($groupid);
+
+    // Check if the group exists
+    if (!$group) {
+        return response()->json(['error' => 'Group not found'], 404);
+    }
+
+    // Check if the authenticated user is the owner of the group
+    if (!$group->owners->contains(auth()->user())) {
+        return response()->json(['error' => 'Permission denied'], 403);
+    }
+
+    // Add user to the group
+    $group->users()->attach($userId);
+
+    // Retrieve the user information if needed
+    $user = User::find($userId);
+
+    // You can customize the data you send in the response
+    $response = [
+        'user' => $user,
+        'message' => 'User added to the group successfully',
+    ];
+
+    return response()->json($response);
+}
 
     // Permite que um usuário solicite ingresso em um grupo
     public function requestJoin($groupId)
