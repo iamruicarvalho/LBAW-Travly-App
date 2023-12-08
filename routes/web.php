@@ -10,6 +10,8 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MessageController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -95,6 +97,11 @@ Route::controller(StaticPageController::class)->group(function () {
     Route::get('/privacy-policy', [StaticPageController::class, 'privacy_policy'])->name('static.privacy_policy');
     Route::get('/help', [StaticPageController::class, 'help'])->name('static.help');
 });
+
+
+Route::get('/messages', [MessageController::class, 'showAllConversations'])->name('messages.showAllConversations');
+Route::get('/messages/{id}', [MessagesController::class, 'show'])->name('messages.show');
+
 
 /*
 use Illuminate\Support\Facades\Route;
