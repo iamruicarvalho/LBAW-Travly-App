@@ -66,4 +66,71 @@ class MessageController extends Controller
         return response()->json(['conversations' => $conversations]);
     }
 
+
+    public function showAllConversations()
+    {
+        $conversations = Message::select('receiver', 'sender')
+            ->distinct()
+            ->where('sender', auth()->id())
+            ->orWhere('receiver', auth()->id())
+            ->get();
+    
+        $users = User::whereIn('id', $conversations->pluck('receiver')->merge($conversations->pluck('sender'))->unique())
+            ->get(['id', 'name_', 'username']); // Adicione 'username' aqui para buscar o campo username
+    
+        foreach ($conversations as $conversation) {
+            if ($conversation->receiver) {
+                $user = $users->where('id', $conversation->receiver)->first();
+                $conversation->receiverName = $user ? $user->name_ : 'Usuário Desconhecido';
+                $conversation->receiverUsername = $user ? $user->username : 'Username Desconhecido';
+            }
+        }
+    
+        return view('messages.show', ['conversations' => $conversations, 'users' => $users]);
+    }
+    
+    
+
+    public function show($id)
+    {
+        // Lógica para mostrar mensagens específicas
+        $messages = Message::where('id', $id)
+            ->where(function ($query) {
+                $query->where('sender', auth()->id())
+                    ->orWhere('receiver', auth()->id());
+            })
+            ->get();
+
+        return view('messages.show-conversation', ['messages' => $messages]);
+    }
+
+    public function showMessages($receiver)
+    {
+        // Obtenha o usuário autenticado
+        $user = Auth::user();
+
+        // Verifique se o usuário autenticado tem uma conversa com o receptor
+        $conversation = $user->conversations()->where('receiver', $receiver)->first();
+
+        // Se não houver uma conversa existente, crie uma nova
+        if (!$conversation) {
+            $conversation = $user->conversations()->create([
+                'receiver' => $receiver,
+            ]);
+        }
+
+        // Obtenha as mensagens da conversa
+        $messages = Message::where('conversation_id', $conversation->id)->get();
+
+        // Obtenha todas as conversas do usuário autenticado
+        $conversations = $user->conversations;
+
+        // Retorne a view com as mensagens da conversa selecionada e todas as conversas
+        return view('mensagens.show', [
+            'conversations' => $conversations,
+            'selectedConversation' => $conversation,
+            'messages' => $messages,
+        ]);
+    }
+
 }
