@@ -9,9 +9,9 @@
     <div class="left-sidebar">
         <ul class="sidebar-menu">
             <li><a href="{{ route('home') }}">🏠 Home</a></li>
-            <li><a href="#">🔍 Explore</a></li>
+            <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
             <li><a href="#">🔔 Notifications</a></li>
-            <li><a href="#">📨 Messages</a></li>
+            <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
             <li><a href="#">🌎 Wish List</a></li>
             <li><a href="{{ route('groups') }}">👥 Groups</a></li>
         </ul>
@@ -45,12 +45,12 @@
                 @foreach(Auth()->user()->posts()->get() as $post)
                     <div class="post-item">
                         <div class="post-content">
-                            <p>{{ $post->content_ }}</p>
+                            <img src="{{ asset('postimage/' . $post->content_) }}">
                             <p>{{ $post->description_ }}</p>
                         </div>
                         <div class="post-details">
-                            <a href="post.likes" class="show-details"> {{ $post->likes_ }} likes</a>
-                            <a href="post.comments" class="show-details"> {{ $post->comments_ }} comments</a>
+                            <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
+                            <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> {{ $post->comments_ }} comments</a>
                             <a> {{ $post->time_ }}</a>
                         </div>
                     </div>

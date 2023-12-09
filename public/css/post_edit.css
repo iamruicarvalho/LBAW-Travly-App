@@ -1,0 +1,227 @@
+/* Adicione este CSS ao seu arquivo de estilos */
+  /* Container Geral */
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+  
+  /* Barra Lateral Esquerda */
+  .left-sidebar {
+    width: 300px;
+    height: 100vh;
+    min-height: 100%;
+    background: url(background.jpg); 
+    color: black; 
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .left-sidebar .logo img {
+    max-width: 80%; /* Ajustado para 80% para evitar overflow */
+    border-radius: 50%;
+  }
+  
+  .left-sidebar .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  .left-sidebar .sidebar-menu li {
+    text-align: center;
+    margin-bottom: 45px;
+  }
+  
+  .left-sidebar .sidebar-menu li a{
+    color:  black;
+    font-size: larger;
+  }
+
+  .left-sidebar .sidebar-menu li a:hover{
+    color: rgb(191, 191, 191);
+  }
+
+  .left-sidebar .profile-section a{
+    color:  black;
+    font-size: larger;
+  } 
+
+  .left-sidebar .profile-section a:hover{
+    color: rgb(191, 191, 191);
+  } 
+
+  .left-sidebar .profile-section {
+    text-align: center;
+  }
+  
+  .left-sidebar .profile-section img {
+    width: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .left-sidebar .sidebar-section {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .left-sidebar .sidebar-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  /* Conteúdo Principal */
+  .main-content {
+    flex: 1; /* Cresce para ocupar o espaço restante */
+    padding: 15px;
+  }
+  
+  .top-section {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .top-section h2 {
+    font-size: 14px;
+  }
+  
+  .top-section .search-bar {
+    width: 200px; /* Ajustei a largura para 200px para dar mais destaque */
+    margin-top: 10px;
+    padding: 8px;
+    border: 2px solid #3498db; /* Cor da borda */
+    border-radius: 5px;
+    background-color: #ecf0f1; /* Cor de fundo */
+    color: #2c3e50; /* Cor do texto */
+    transition: all 0.3s ease; /* Transição suave para hover */
+  
+    /* Adiciona sombra suave */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .top-section .search-bar:hover {
+    border-color: #2980b9; /* Cor da borda ao passar o mouse */
+  }
+
+  .div_deg {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.title_deg {
+    text-align: center;
+    color: #333;
+}
+
+.div_deg form div {
+    margin-bottom: 15px;
+}
+
+.div_deg label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.div_deg textarea {
+    width: 100%;
+    height: 200px; /* Ajuste a altura conforme necessário */
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical; /* Permite redimensionamento vertical */
+}
+
+.img_deg {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
+.div_deg input[type="file"] {
+    margin-top: 5px;
+}
+
+.div_deg input[type="submit"] {
+    width: calc(100% - 50px); /* Menor largura para o botão */
+    margin-left: 15px;
+    background-color: #D4E4F2;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.div_deg input[type="submit"]:hover {
+    background-color: #D4E4F2;
+}
+
+
+
+  /* Barra Lateral Direita */
+  .right-sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: rgb(205, 205, 205);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  
+  .suggested-groups,
+  .people-near-you,
+  .trending-hashtags {
+    margin-bottom: 20px;
+  }
+  
+  .suggested-groups h3,
+  .people-near-you h3,
+  .trending-hashtags h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  ul li {
+    margin-bottom: 5px;
+  }
+  
+  .right-sidebar .sidebar-box {
+    margin-bottom: 20px;
+    border: 1px solid #D4E4F2;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .right-sidebar .sidebar-box h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  
+  
+  
+
+
+

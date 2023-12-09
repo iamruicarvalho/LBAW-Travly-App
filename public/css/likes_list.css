@@ -1,0 +1,207 @@
+/* Adicione este CSS ao seu arquivo de estilos */
+  /* Container Geral */
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+  
+  /* Barra Lateral Esquerda */
+  .left-sidebar {
+    width: 300px;
+    height: 100vh;
+    min-height: 100%;
+    background: url(background.jpg); 
+    color: black; 
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .left-sidebar .logo img {
+    max-width: 80%; /* Ajustado para 80% para evitar overflow */
+    border-radius: 50%;
+  }
+  
+  .left-sidebar .sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  .left-sidebar .sidebar-menu li {
+    text-align: center;
+    margin-bottom: 45px;
+  }
+  
+  .left-sidebar .sidebar-menu li a{
+    color:  black;
+    font-size: larger;
+  }
+
+  .left-sidebar .sidebar-menu li a:hover{
+    color: rgb(191, 191, 191);
+  }
+
+  .left-sidebar .profile-section a{
+    color:  black;
+    font-size: larger;
+  } 
+
+  .left-sidebar .profile-section a:hover{
+    color: rgb(191, 191, 191);
+  } 
+
+  .left-sidebar .profile-section {
+    text-align: center;
+  }
+  
+  .left-sidebar .profile-section img {
+    width: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+  }
+  
+  .left-sidebar .sidebar-section {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .left-sidebar .sidebar-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+
+.btn-outline-primary {
+    margin-bottom: 20px;
+}
+
+.list-group-item {
+    margin-top: 10px;
+}
+
+.list-group-item strong {
+    margin-right: 10px;
+}
+
+/* Style for the "Back to Home" button */
+.btn-outline-primary {
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-outline-primary i {
+    margin-right: 5px;
+}
+
+
+
+.col-md-8.offset-md-2 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-outline-primary {
+    background-color: #3498db;
+    color: #fff;
+    border-color: #3498db;
+    transition: background-color 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #267bb5;
+}
+
+.list-group-item {
+    margin-top: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.list-group-item strong {
+    display: block;
+    padding: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border-bottom: 1px solid #267bb5;
+    border-radius: 5px 5px 0 0;
+}
+
+/* Style for the "Back to Home" button */
+.btn-outline-primary {
+    display: inline-flex;
+    align-items: center;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.btn-outline-primary i {
+    margin-right: 5px;
+}
+
+
+
+  /* Barra Lateral Direita */
+  .right-sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: rgb(205, 205, 205);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  
+  .suggested-groups,
+  .people-near-you,
+  .trending-hashtags {
+    margin-bottom: 20px;
+  }
+  
+  .suggested-groups h3,
+  .people-near-you h3,
+  .trending-hashtags h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  ul li {
+    margin-bottom: 5px;
+  }
+  
+  .right-sidebar .sidebar-box {
+    margin-bottom: 20px;
+    border: 1px solid #D4E4F2;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .right-sidebar .sidebar-box h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  
+  
+  
+
+
+
