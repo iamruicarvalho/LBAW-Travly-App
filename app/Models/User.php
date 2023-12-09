@@ -96,4 +96,10 @@ class User extends Model implements Authenticatable
             ->where('follows_.followedID', '=', 'post_.created_by');
     }
 
+    public function postLikes()
+    {
+        return $this->hasMany(PostLike::class, 'id');
+    }
+
+
 }
