@@ -28,12 +28,13 @@
             <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
             <div class="user-info">
                 <div>
-                    <h3>{{ auth()->user()->username }}</h3>
-                    <p>{{ auth()->user()->description_ }}</p>
-                    <p>{{ auth()->user()->location }}</p>
+                    <h3>{{ auth()->user()->name_ }}</h3>
+                    <p>{{ auth()->user()->username }}</p>
+                    <p>{{ auth()->user()->description_ ? auth()->user()->description_ : 'Add description' }}</p>
+                    <p>{{ auth()->user()->location ? auth()->user()->location : 'Add location' }}</p>
                 </div>
                 <div>
-                    <p>0 Followers 0 Following</p>
+                    <p>{{ $user->followers()->count() }} Followers {{ $user->following()->count() }} Following</p>
                 </div>
             </div>
         </div>

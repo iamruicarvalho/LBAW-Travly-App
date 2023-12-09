@@ -72,16 +72,6 @@ class User extends Model implements Authenticatable
         return $this->hasMany(Request::class, 'receiverID');
     }
 
-    public function follows()
-    {
-        return $this->hasMany(Follow::class, 'followerID');
-    }
-
-    public function following()
-    {
-        return $this->hasMany(Follow::class, 'followedID');
-    }
-
     public function notifications()
     {
         return $this->hasMany(UserNotification::class, 'id');
@@ -101,5 +91,15 @@ class User extends Model implements Authenticatable
         return $this->hasMany(PostLike::class, 'id');
     }
 
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows_', 'followedid', 'followerid');
+    }
+
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'follows_', 'followerid', 'followedid');
+    }
+    
 
 }
