@@ -20,32 +20,33 @@
                 <a href="{{ route('profile.show', auth()->id())  }}">👤 {{ auth()->user()->username }}</a>
             </div>
         </div>
-    
-            {{-- Main Content --}}
-            <div class="container">
-            <div class="row">
-                <div class="col-md-8 offset-md-2">
-                    <a href="{{ url('/') }}" class="btn btn-outline-primary mb-3">
-                        <i class="bi bi-arrow-left"></i> Back to Home
-                    </a>
 
-                    <h1 class="mb-4">Likes for Post</h1>
-
-                    <p><strong>Post Content:</strong> {{ $post->content_ }}</p>
-
-                    <h2>Liked by:</h2>
-                    <ul class="list-group">
-                        @forelse($likers as $liker)
-                            <li class="list-group-item">
-                                <strong>User Name:</strong> {{ $liker->user ? $liker->user->name_ : 'Not Found' }}
-                            </li>
-                        @empty
-                            <li class="list-group-item">No likes yet.</li>
-                        @endforelse
-                    </ul>
+            <div class="messages-show">
+                <div class="header">
+                    <h1>Likes</h1>
+                    <div class="new-message-link">
+                        <a href="#">❤️</a>
+                    </div>
                 </div>
+                <div class="conversations-list">
+                    @forelse($likers as $liker)
+                                <div class="conversation-item">
+                                    <div class="user-avatar"></div>
+                                    <div class="conversation-details">
+                                        <p class="user-name">{{ $liker->user ? $liker->user->name_ : 'Not Found' }}</p>
+                                        <p class="username">{{ $liker->user ? $liker->user->username : '' }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                            @empty
+                            <li class="no-likes-message">No likes yet.</li>
+                        @endforelse
+                </div>
+
             </div>
-        </div>
+
+
+        
 
     {{-- Right Sidebar --}}
         <div class="right-sidebar">
