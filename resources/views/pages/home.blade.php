@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-
 @section('content')
     <div class="container">
         {{-- Left Sidebar --}}
         <div class="left-sidebar">
             <ul class="sidebar-menu">
                 <li><a href="{{ route('home') }}">🏠 Home</a></li>
-                <li><a href="#">🔍 Explore</a></li>
+                <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
+                
                 <li><a href="#">🔔 Notifications</a></li>
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
@@ -31,9 +31,11 @@
         <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="upload-post-section">
-                    {{-- Seu HTML de upload de post vai aqui --}}
                     <textarea name="description" placeholder="Write your post..."></textarea>
-                    <input type="file" name="image">
+                    <div class="upload-btn-wrapper">
+                        <button class="btn-upload">📸</button>
+                        <input type="file" name="image" accept="image/*">
+                    </div>
                     <input type="submit" value="Add Post" class="btn btn-outline-secondary">
                 </div>
             </form>
@@ -53,6 +55,9 @@
                         $user = App\Models\User::find($data->created_by);
                     @endphp
                     <p class="user-name">{{ $user->name_ }}</p>
+                    <p class="user-name">{{ $user->username }}</p>
+                    <p class="show-details"> {{ $data->time_ }}</p>
+
                 </div>
                 <div class="post-content">
                     <p class="post-description">{{ $data->description_ }}</p>
@@ -60,37 +65,14 @@
                 <div class="post-image">
                     <img src="{{ asset('postimage/' . $data->content_) }}">
                 </div>
-                <a href="{{ url('/posts/' . $data->postid . '/likes') }}">See Likes</a>
-                <div class="post-actions">
-                    <button class="like-button" onclick="toggleLike()"> 
-                        <span class="heart-icon">❤️</span>
-                        <span class="like-count">0</span>
-                    </button>
-                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="upload-post-section">
-                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
-                            <input type="hidden" name="postid" value="{{ $data->postid }}">
-                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
-                        </div>
-                    </form>
-                </div>
                 <div class="post-details">
-                            <a href="post.likes" class="show-details"> {{ $data->likes_ }} likes</a>
-                            <a href="post.comments" class="show-details"> {{ $data->comments_ }} comments</a>
-                            <div class="post-actions">
-                                <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details">Show Comments</a>
-                            </div>
-
+                            <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
+                            <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
                             <a class="show-details"> {{ $data->time_ }}</a>
                 </div>
 
                 <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Update</a>
-                <div class="comments-section">
-                    <!-- Lista de comentários aqui -->
-                    <!-- Cada comentário pode ter um autor e o texto do comentário -->
-                </div>
+                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
             </div>
 
             @endforeach

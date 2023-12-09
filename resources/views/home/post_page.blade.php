@@ -92,6 +92,6 @@
             </div>
         </div>
     </div>
-    <link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <link href="{{ url('css/post_edit.css') }}" rel="stylesheet">
 @endsection
 

@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @extends('layouts.app')
 
 
@@ -24,9 +7,10 @@
         <div class="left-sidebar">
             <ul class="sidebar-menu">
                 <li><a href="{{ route('home') }}">🏠 Home</a></li>
-                <li><a href="#">🔍 Explore</a></li>
+                <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
+                
                 <li><a href="#">🔔 Notifications</a></li>
-                <li><a href="#">📨 Messages</a></li>
+                <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
                 <li><a href="{{ route('groups') }}">👥 Groups</a></li>
             </ul>
@@ -48,18 +32,32 @@
                     <p class="post-description">{{ $post->description_ }}</p>
                 </div>
                 <div class="post-image">
-                    <img src="{{$post->content_}}">
+                    <img src="{{ asset('postimage/' . $post->content_) }}">
                 </div>
 
                 <div class="post-details">
-                            <a href="post.likes" class="show-details"> {{ $post->likes_ }} likes</a>
-                            <a href="post.comments" class="show-details"> {{ $post->comments_ }} comments</a>
+                            <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
+                            <a href="post.comments" class="show-details"> Comments</a>
 
                             <a class="show-details"> {{ $post->time_ }}</a>
                 </div>
 
                 <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
                 <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Update</a>
+
+                                    <!-- Adicione um formulário para adicionar novos comentários -->
+                                    @auth
+                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="upload-post-section">
+                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
+                            <input type="hidden" name="postid" value="{{ $post->postid }}">
+                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
+                        </div>
+                    </form>
+                    @else
+                        <p>Please log in to leave a comment.</p>
+                    @endauth
                 <div class="comments-section">
                     <h3>Comments:</h3>
 
@@ -78,30 +76,17 @@
                                 <form action="{{ route('comments.destroy', $comment->commentid) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure to delete this?')" class="btn btn-danger">Delete</button>
+                                    <button type="submit" onclick="return confirm('Are you sure to delete this?')">Delete</button>
                                 </form>
                             </div>
                         </div>
                     @empty
                         <p>No comments yet.</p>
                     @endforelse
-
-                    <!-- Adicione um formulário para adicionar novos comentários -->
-                    @auth
-                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="upload-post-section">
-                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
-                            <input type="hidden" name="postid" value="{{ $post->postid }}">
-                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
-                        </div>
-                    </form>
-                    @else
-                        <p>Please log in to leave a comment.</p>
-                    @endauth
                 </div>
 
             </div>
+
 
 
         {{-- Right Sidebar --}}
@@ -149,4 +134,3 @@
     </div>
     <link href="{{ url('css/home.css') }}" rel="stylesheet">
 @endsection
-
