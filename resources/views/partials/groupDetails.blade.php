@@ -10,7 +10,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <!-- Include your custom JavaScript file -->
-<script src="{{ asset('js/group.js') }}"></script>
+<script src="{{ asset('js/editGroup.js') }}"></script>
 
 <div class="group-container">
 

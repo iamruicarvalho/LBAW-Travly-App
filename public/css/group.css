@@ -108,3 +108,8 @@
     font-weight: bold;
     font-size: 15px;
 }
+
+.group-container .group-create-container .form-group a{
+    color: black;
+    font-weight: bold;
+}

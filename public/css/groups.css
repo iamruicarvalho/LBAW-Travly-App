@@ -111,3 +111,15 @@
     background-color: #D4E4F2;
 }
 
+.groups .create-group {
+    background-color: #BAD1E6;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.groups .create-group:hover {
+    background-color: gainsboro;
+}
+
+

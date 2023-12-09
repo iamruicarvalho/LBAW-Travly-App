@@ -11,31 +11,26 @@ class GroupController extends Controller
     // Exibe a página de criação de grupo
     public function showCreateForm()
     {
-        return view('group.create');
+        return view('partials.groupCreate');
     }
 
     // Cria um novo grupo
-    public function create(Request $request)
+    public function createGroup(Request $request)
     {
-
-        $this->authorize('create', Group::class);
-        
         $request->validate([
             'name_' => 'required|string|max:255',
             'description_' => 'nullable|string',
         ]);
 
-        // Crie o grupo
         $group = new Group();
         $group->name_ = $request->input('name_');
         $group->description_ = $request->input('description_');
         $group->save();
 
-        // Associe o usuário autenticado como proprietário do grupo
+        $group->users()->attach(auth()->user()->id);
         $group->owners()->attach(auth()->user()->id);
 
-        return redirect()->route('group.show', ['groupId' => $group->groupID])
-            ->with('success', 'Group created successfully');
+        return response()->json(['groupId' => $group->groupid, 'users' => $group->users]);
     }
 
     // Edit group name

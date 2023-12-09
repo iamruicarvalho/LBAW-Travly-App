@@ -30,7 +30,7 @@
         @empty
             <p>No groups found.</p>
         @endforelse
-        <button id="create-group">Create new group</button>
+        <a class="create-group" href="{{  route('groups.showcreate') }}">Create new group</a>
     </ul>
     </div>
 
