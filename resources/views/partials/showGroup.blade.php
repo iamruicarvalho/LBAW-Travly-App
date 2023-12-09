@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="groups-container">
+<div class="group-container">
 
     {{-- Left Sidebar --}}
     <div class="profile-sidebar-container">
@@ -26,11 +26,11 @@
     <h2> {{ $group->name_ }}</h2>
     
             <p> Description: {{ $group->description_ }}</p>
- 
+            <a href="{{ route('groups.details',  $group->name_) }}" class="view-details">View group details</a>
     </div>
 
     </div>
-    <link href="{{ url('css/groups.css') }}" rel="stylesheet">
+    <link href="{{ url('css/group.css') }}" rel="stylesheet">
 @endsection
 
 

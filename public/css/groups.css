@@ -39,6 +39,10 @@
     font-size: larger;
 }
 
+.left-sidebar .sidebar-menu li a:hover{
+    color: rgb(191, 191, 191);
+}
+
 .left-sidebar .profile-section a{
     color: black;
     font-size: larger;
@@ -47,6 +51,10 @@
 .left-sidebar .profile-section {
     text-align: center;
 }
+
+.left-sidebar .profile-section a:hover{
+    color: rgb(191, 191, 191);
+} 
 
 .left-sidebar .profile-section img {
     width: 80px;
@@ -102,3 +110,4 @@
 .groups ul li:hover {
     background-color: #D4E4F2;
 }
+
