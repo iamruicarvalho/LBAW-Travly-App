@@ -11,6 +11,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ExploreController;
+
 
 
 /*
@@ -101,6 +103,8 @@ Route::controller(StaticPageController::class)->group(function () {
 
 Route::get('/messages', [MessageController::class, 'showAllConversations'])->name('messages.showAllConversations');
 Route::get('/messages/{id}', [MessagesController::class, 'show'])->name('messages.show');
+
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 
 
 /*
