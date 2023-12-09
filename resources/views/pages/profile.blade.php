@@ -50,8 +50,10 @@
                         </div>
                         <div class="post-details">
                             <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
-                            <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> {{ $post->comments_ }} comments</a>
+                            <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
                             <a> {{ $post->time_ }}</a>
+                            <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                            <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
                         </div>
                     </div>
                 @endforeach

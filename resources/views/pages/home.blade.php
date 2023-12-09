@@ -72,7 +72,7 @@
                 </div>
 
                 <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Update</a>
+                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
             </div>
 
             @endforeach

@@ -37,7 +37,7 @@
 
                 <div class="post-details">
                             <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
-                            <a href="post.comments" class="show-details"> {{ $post->comments_ }} comments</a>
+                            <a href="post.comments" class="show-details"> Comments</a>
 
                             <a class="show-details"> {{ $post->time_ }}</a>
                 </div>
