@@ -1,96 +1,101 @@
-  body {
-    background-color: white;
-    color: black;
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-  }
+body {
+  background-color: white;
+  color: black;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+}
 
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #D4E4F2;
-    padding: 0;
-  }
+.white-link {
+  color: white;
+  font-weight: bold;
+  font-size: 22px;
+}
 
-  .logo h1 {
-    margin: 20px;
-    font-size: 2em;
-  }
 
-  .logo h1 a:hover {
-    color:rgb(41, 41, 93);
-  }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #D4E4F2;
+  padding: 1em;
+}
 
-  .nav-links {
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-end;
-    margin-left: 750px;
-  }
+.logo h1 {
+  margin: 0;
+  font-size: 1.5em;
+}
 
-  .nav-links ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-  }
+.logo h1 a {
+  text-decoration: none;
+  color: inherit;
+}
 
-  .nav-links li {
-    margin-left: 20px; /* Mudei para margin-left para criar espaço à esquerda */
-  }
+.nav-links {
+  margin-left: auto; /* Move os links para a direita */
+}
 
-  .nav-links a {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-    transition: color 0.3s ease;
-  }
+.nav-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
 
-  .nav-links a:hover {
-    color: rgb(41, 41, 93);
-  }
+.nav-links li {
+  margin-left: 20px;
+}
 
-  .user-info {
-    display: flex;
-    align-items: center;
-  }
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
 
-  .user-info .button {
-    background-color: #BAD1E6;
-    color: #fff;
-    padding: 0.5em 1em;
-    text-decoration: none;
-    border-radius: 3px;
-  }
 
-  .user-info span {
-    color: rgb(2, 27, 33);
-    font-weight: bold;
-  }
+.logo h1 a.white-link {
+  color: white;
+}
 
-  /**
-   * Override milligram colors
-   * Some styles might be missing
-   **/
-  button {
-    background-color: #BAD1E6;
-    border-color: #BAD1E6;
-  }
-  a.button {
-    background-color: #BAD1E6;
-    border-color: #BAD1E6;
-  }
-  a.button.button-outline {
-    color: #BAD1E6;
-  }
-  a {
-    color: white;
-  }
-  input[type=text]:focus,
-  input[type=email]:focus,
-  input[type=password]:focus {
-    border-color: white;
-  }
-  
+.nav-links a:hover {
+  color: #1f1f1f;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info img {
+  width: 30px; /* Ajuste o tamanho conforme necessário */
+  height: 30px; /* Ajuste o tamanho conforme necessário */
+  border-radius: 50%;
+}
+
+.logout-button {
+  margin-left: 10px;
+}
+
+/* Override milligram colors */
+button,
+a.button,
+a.button.button-outline {
+  background-color: #BAD1E6;
+  border-color: #BAD1E6;
+}
+
+a.button.button-outline {
+  color: #BAD1E6;
+}
+
+a {
+  color: white;
+}
+
+/* Input Focus Styles */
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus {
+  border-color: white;
+}

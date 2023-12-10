@@ -23,9 +23,10 @@
     <body>
         <main>
         <header style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="logo">
-                <h1><a href="{{ route('home') }}">Travly ✈</a></h1>
-            </div>
+        <div class="logo">
+            <h1><a href="{{ route('home') }}" class="white-link">Travly ✈</a></h1>
+        </div>
+
             <nav class="nav-links">
                 <ul>
                     <li><a href="{{ url('/about') }}">About</a></li>
@@ -35,9 +36,11 @@
                 </ul>
             </nav>
             @if (Auth::check())
-                <div class="user-info">
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a>
-                </div>
+            <div class="user-info">
+                <a class="logout-button" href="{{ url('/logout') }}">
+                    <img src="https://github.com/acarolinacc/teste/blob/main/logout%20(2).png?raw=true" alt="Logout">
+                </a>
+            </div>
             @endif
         </header>
 
