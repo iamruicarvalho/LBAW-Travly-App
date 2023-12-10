@@ -24,7 +24,7 @@
         <!-- Trends -->
         <div class="trending-section">
             <h2>Trending Topics</h2>
-            <ul>
+            <ul id="trendingList">
                 <li><a href="{{ route('posts.by.hashtag', 'Travel') }}"><img src="https://i.pinimg.com/564x/41/0f/ec/410fecb2c951ee9b149b7cbc3fcaca09.jpg" alt="Travel"><p>#Travel</p></a></li>
                 <li><a href="{{ route('posts.by.hashtag', 'Photography') }}"><img src="https://i.pinimg.com/564x/fe/db/89/fedb892f43b64a07acd96c306994f6e1.jpg" alt="Photography"><p>#Photography</p></a></li>
                 <li><a href="{{ route('posts.by.hashtag', 'DeliciousFood') }}"><img src="https://i.pinimg.com/564x/14/fb/31/14fb31ea5ed085cc4b07616b2d187842.jpg" alt="Travel"><p>#DeliciousFood</p></a></li>
@@ -36,53 +36,32 @@
             </ul>
         </div>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                function shuffleList() {
+                    var list = document.getElementById('trendingList');
+                    for (var i = list.children.length; i >= 0; i--) {
+                        list.appendChild(list.children[Math.random() * i | 0]);
+                    }
+                }
+                shuffleList();
+            });
+        </script>
+
+
 
         <!-- Content Discovery -->
         <div class="discovery-section">
             <h2>Trending Users</h2>
             <div class="suggested-users">
-                <div class="user-card">
-                    
-                    <img src="https://media.istockphoto.com/id/1329031407/photo/young-man-with-backpack-taking-selfie-portrait-on-a-mountain-smiling-happy-guy-enjoying.jpg?s=612x612&w=0&k=20&c=WvjAEx3QlWoAn49drp0N1vmxAgGObxWDpoXtaU2iB4Q=" alt="User 1">
-                    <p>Ethan</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://st.depositphotos.com/2069237/2453/i/450/depositphotos_24537371-stock-photo-hiker-portrait.jpg" alt="User 1">
-                    <p>Isabella</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://thumbs.dreamstime.com/b/outdoor-fashion-portrait-handsome-stylish-tourist-man-posing-beach-outdoor-fashion-portrait-handsome-stylish-tourist-181622160.jpg" alt="User 1">
-                    <p>Jackson</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://media.istockphoto.com/id/655931794/photo/backpacker-with-laptop-sits-on-the-top-view-point-under-mountain-settelment.jpg?s=612x612&w=0&k=20&c=8Hr0g7Nz9S1RxTI6Gix-OBhZvtD3IJDWkwoZjXVXmmw=" alt="User 1">
-                    <p>Aria</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://media.istockphoto.com/id/1208321964/photo/enjoying-the-amazing-sights-with-some-of-his-favourite-sounds.jpg?s=612x612&w=0&k=20&c=cnPRuWxPShErW9XVEAkSpufFGFwIOPWxWbsrDRaTFFs=" alt="User 1">
-                    <p>Mason</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://st4.depositphotos.com/12985790/20516/i/450/depositphotos_205163866-stock-photo-smiling-traveler-hat-backpack-tourist.jpg" alt="User 1">
-                    <p>Wyatt</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://img.freepik.com/premium-photo/smiling-tourist-woman-with-backpack-looking-away-near-canyon_171337-67237.jpg" alt="User 1">
-                    <p>Olivia</p>
-                    <button>Follow</button>
-                </div>
-                <div class="user-card">
-                    <img src="https://img.freepik.com/premium-photo/young-woman-with-hat-mountain-peak_216977-182.jpg" alt="User 1">
-                    <p>Scarlett</p>
-                    <button>Follow</button>
-                </div>
-                <!-- Add more user cards as needed -->
+                @foreach ($suggestedUsers as $user)
+                    <div class="user-card">
+                        <img src="https://img.freepik.com/vetores-premium/perfil-de-avatar-de-homem-no-icone-redondo_24640-14044.jpg" alt="{{ $user->name_ }}">
+                        <p>{{ $user->name_ }}</p>
+                        <p>{{ $user->username }}</p>
+                        <button>Follow</button>
+                    </div>
+                @endforeach
             </div>
         </div>
 
@@ -90,40 +69,18 @@
         <div class="trending-section">
             <h2>Explore Bucket List Cities</h2>
             <ul>
-                <li>
-                    <img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/07/03/1c/9c.jpg" alt="Travel">
-                    <p>Paris</p>
-                </li>
-                <li>
-                    <img src="https://www.deferias.pt/wp-content/uploads/2021/10/Dublin-1.jpg" alt="Travel">
-                    <p>Dublin</p>
-                </li>
-                <li>
-                    <img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2018/04/10/13/tokyo-main.jpg" alt="Travel">
-                    <p>Tokyo</p>
-                </li>
-                <li>
-                    <img src="https://www.studying-in-uk.org/wp-content/uploads/2019/05/study-in-london-1068x641.jpg" alt="Travel">
-                    <p>London</p>
-                </li>
-                <li>
-                    <img src="https://cdn.contexttravel.com/image/upload/w_1500,q_60/v1661527052/blog/Our%20Top%2013%20Venice%20Attractions%20and%20Their%20Histories:%20What%20They%20Are%20and%20Why%20You%20Need%20to%20Visit%20%20%28venice%20attractions%29/venice_attractions_hero.jpg" alt="Travel">
-                    <p>Venice</p>
-                </li>
-                <li>
-                    <img src="https://www.feelporto.com/blog/wp-content/uploads/2021/07/28_visitar-Porto-1200x630.jpg" alt="Travel">
-                    <p>Oporto</p>
-                </li>
-                <li>
-                    <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/56/1d/c8/vista-dall-alto-del-bagno.jpg?w=600&h=400&s=1" alt="Travel">
-                    <p>Budapest</p>
-                </li>
-                <li>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRSkl8sMKRiCBf6lzInYccUhGXHs6N11vu10qc5gYoSjdG-IDuEVJ0II-bHMyolFHxMI8&usqp=CAU" alt="Travel">
-                    <p>Vienna</p>
-                </li>
+                <li><a href="{{ route('posts.by.city', 'Paris') }}"><img src="https://media.tacdn.com/media/attractions-splice-spp-674x446/07/03/1c/9c.jpg" alt="Travel"><p>Paris</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'Dublin') }}"><img src="https://www.deferias.pt/wp-content/uploads/2021/10/Dublin-1.jpg" alt="Travel"><p>Dublin</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'Tokyo') }}"><img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2018/04/10/13/tokyo-main.jpg" alt="Travel"><p>Tokyo</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'London') }}"><img src="https://www.studying-in-uk.org/wp-content/uploads/2019/05/study-in-london-1068x641.jpg" alt="Travel"><p>London</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'Venice') }}"><img src="https://cdn.contexttravel.com/image/upload/w_1500,q_60/v1661527052/blog/Our%20Top%2013%20Venice%20Attractions%20and%20Their%20Histories:%20What%20They%20Are%20and%20Why%20You%20Need%20to%20Visit%20%20%28venice%20attractions%29/venice_attractions_hero.jpg" alt="Travel"><p>Venice</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'Oporto') }}"><img src="https://www.feelporto.com/blog/wp-content/uploads/2021/07/28_visitar-Porto-1200x630.jpg" alt="Travel"><p>Oporto</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'Budapest') }}"><img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/56/1d/c8/vista-dall-alto-del-bagno.jpg?w=600&h=400&s=1" alt="Travel"><p>Budapest</p></a></li>
+                <li><a href="{{ route('posts.by.city', 'Vienna') }}"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRSkl8sMKRiCBf6lzInYccUhGXHs6N11vu10qc5gYoSjdG-IDuEVJ0II-bHMyolFHxMI8&usqp=CAU" alt="Travel"><p>Vienna</p></a></li>
             </ul>
         </div>
+
+        
         <!-- Suggested Groups -->
         <div class="suggested-groups-section">
             <h2>Suggested Groups</h2>

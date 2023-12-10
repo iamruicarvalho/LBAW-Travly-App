@@ -113,7 +113,9 @@ Route::get('/messages', [MessageController::class, 'showAllConversations'])->nam
 Route::get('/messages/{id}', [MessagesController::class, 'show'])->name('messages.show');
 
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 
+Route::get('/posts/by-city/{city}', [PostController::class, 'getPostsByCity'])->name('posts.by.city');
 Route::get('/posts/{hashtag}', [PostController::class, 'getPostsByHashtag'])->name('posts.by.hashtag');
 
 /*

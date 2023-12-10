@@ -91,6 +91,14 @@ class PostController extends Controller
 
         return view('pages.by_hastag', compact('post', 'hashtag'));
     }
+
+    public function getPostsByCity($city)
+    {
+        $post = Post::where('description_', 'like', "%$city%")->get();
+
+        return view('pages.posts_by_city', compact('post', 'city'));
+    }
+
     
 
 }
