@@ -75,7 +75,7 @@ Route::delete('/comments/{commentid}', [HomeController::class, 'destroy'])->midd
 
 // Groups
 Route::controller(GroupController::class)->group(function () {
-    Route::get('/groups', [GroupController::class, 'list'])->name('groups');
+    Route::get('/groups', [GroupController::class, 'showGroups'])->name('groups.showGroups');
     Route::get('/groups/create', [GroupController::class, 'showCreateForm'])->name('groups.showcreate');
     Route::post('/groups/create', [GroupController::class, 'createGroup'])->name('groups.create');
     Route::get('/groups/{groupid}', [GroupController::class, 'showGroup'])->name('groups.show');
@@ -86,6 +86,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/groups/{groupid}/details/editName', [GroupController::class, 'editName'])->name('group.editName');
     Route::post('/groups/{groupid}/details/editDescription', [GroupController::class, 'editDescription'])->name('group.editDescription');
     Route::post('/groups/{groupid}/details/deleteGroup', [GroupController::class, 'deleteGroup'])->name('group.delete');
+    Route::post('/groups/leave', [GroupController::class, 'leaveGroup'])->name('groups.leave');
 });
 
 // Authentication

@@ -23,7 +23,7 @@
             <li><a href="#">🔔 Notifications</a></li>
             <li><a href="#">📨 Messages</a></li>
             <li><a href="#">🌎 Wish List</a></li>
-            <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+            <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
         </ul>
         <div class="profile-section">
             <!-- Profile information here -->
@@ -81,6 +81,8 @@
                 <div id="autocompleteSuggestions"></div>
                 <button id="addUserBtn">Add Member</button>
             </div>
+            @else
+                <a class="leave-group" data-group-id="{{ $group->groupid }}" data-user-id="{{ auth()->user()->id }}">Leave Group</a>
             @endif
             
     </div>

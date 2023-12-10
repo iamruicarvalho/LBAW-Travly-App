@@ -87,5 +87,44 @@ $(function() {
             userList.append('<a href="/groups/' + user.groupId + '/remove-user/' + user.id + '">Remove</a>');
         
     }
+
+    $(document).ready(function() {
+        // Assuming you have a variable to store the CSRF token
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    
+        // Event listener for the "Leave Group" link
+        $(document).on('click', '.leave-group', function() {
+            // Get the group ID from the data attribute
+            var groupid = $(this).data('group-id');
+    
+            // Confirm with the user before leaving the group
+            var confirmLeave = confirm("Are you sure you want to leave the group?");
+            
+            if (confirmLeave) {
+                // Send an AJAX request to leave the group
+                $.ajax({
+                    url: '/groups/leave',
+                    method: 'POST',
+                    data: {
+                        groupid: groupid,
+                        _token: csrfToken
+                    },
+                    success: function(response) {
+                        console.log("Left group successfully:", response);
+    
+                        // Handle UI updates or redirection after leaving the group
+                        // For example, you can reload the page
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.error("Error leaving group:", error);
+    
+                        // Handle errors or show a user-friendly message
+                        alert("An error occurred while leaving the group. Please try again.");
+                    }
+                });
+            }
+        });
+    });
  });
  

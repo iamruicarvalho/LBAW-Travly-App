@@ -9,12 +9,11 @@
             <div class="left-sidebar">
                 <ul class="sidebar-menu">
                     <li><a href="{{ route('home') }}">🏠 Home</a></li>
-                    <li><a href="#">🔍 Explore</a></li>
+                    <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
                     <li><a href="#">🔔 Notifications</a></li>
-                    <li><a href="#">📨 Messages</a></li>
+                    <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                     <li><a href="#">🌎 Wish List</a></li>
-                    <li><a href="#">👥 Groups</a></li>
-                    <li><a href="#">➕ More</a></li>
+                    <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
                 </ul>
                 <div class="profile-section">
                     <a href="{{ route('profile.show', auth()->id()) }}">👤 Profile</a>

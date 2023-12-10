@@ -12,7 +12,7 @@
                 <li><a href="#">🔔 Notifications</a></li>
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
-                <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+                <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
             </ul>
             <div class="profile-section">
                 <!-- Profile information here -->

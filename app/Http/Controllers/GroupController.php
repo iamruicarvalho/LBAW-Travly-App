@@ -7,7 +7,14 @@ use App\Models\Group;
 use App\Models\User;
 
 class GroupController extends Controller
-{
+{   
+    public function showGroups()
+    {
+        $userGroups = auth()->user()->groups;
+
+        return view('pages.groups', ['groups' => $userGroups]);
+    }
+
     // Exibe a página de criação de grupo
     public function showCreateForm()
     {
@@ -154,34 +161,34 @@ class GroupController extends Controller
     }
 
     public function addUser(Request $request, $groupid, $userId)
-{
-    // Find the group
-    $group = Group::find($groupid);
+    {
+        // Find the group
+        $group = Group::find($groupid);
 
-    // Check if the group exists
-    if (!$group) {
-        return response()->json(['error' => 'Group not found'], 404);
+        // Check if the group exists
+        if (!$group) {
+            return response()->json(['error' => 'Group not found'], 404);
+        }
+
+        // Check if the authenticated user is the owner of the group
+        if (!$group->owners->contains(auth()->user())) {
+            return response()->json(['error' => 'Permission denied'], 403);
+        }
+
+        // Add user to the group
+        $group->users()->attach($userId);
+
+        // Retrieve the user information if needed
+        $user = User::find($userId);
+
+        // You can customize the data you send in the response
+        $response = [
+            'user' => $user,
+            'message' => 'User added to the group successfully',
+        ];
+
+        return response()->json($response);
     }
-
-    // Check if the authenticated user is the owner of the group
-    if (!$group->owners->contains(auth()->user())) {
-        return response()->json(['error' => 'Permission denied'], 403);
-    }
-
-    // Add user to the group
-    $group->users()->attach($userId);
-
-    // Retrieve the user information if needed
-    $user = User::find($userId);
-
-    // You can customize the data you send in the response
-    $response = [
-        'user' => $user,
-        'message' => 'User added to the group successfully',
-    ];
-
-    return response()->json($response);
-}
 
     // Permite que um usuário solicite ingresso em um grupo
     public function requestJoin($groupId)
@@ -220,5 +227,23 @@ class GroupController extends Controller
 
         return redirect()->route('group.show', ['groupId' => $groupId])
             ->with('success', 'User joined the group successfully');
+    }
+
+    public function leaveGroup(Request $request)
+    {
+        $groupid = $request->input('groupid');
+
+        $group = Group::find($groupid);
+
+        if (!$group) {
+            return redirect()->route('home')->with('error', 'Group not found');
+        }
+
+        $user = auth()->user();
+
+        // Detach the user from the group
+        $user->groups()->detach($groupid);
+
+        return response()->json(['message' => 'Left the group successfully.']);
     }
 }
