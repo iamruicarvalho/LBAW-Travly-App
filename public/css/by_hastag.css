@@ -1,0 +1,121 @@
+.container {
+    max-width: 500px; /* Ajuste a largura máxima conforme necessário */
+    margin: 0 auto; /* Centraliza o bloco na página */
+}
+
+.container h2 {
+    text-align: center; /* Centraliza o texto */
+    font-size: 24px; /* Ajusta o tamanho da fonte conforme necessário */
+    margin-bottom: 20px; /* Adiciona espaço abaixo do título */
+    margin-top: 20px;
+}
+
+.welcome-post {
+    max-width: 500px; /* Ajuste a largura máxima conforme necessário */
+    margin: 0 auto; /* Centraliza o bloco na página */
+    border: 1px solid #ddd;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.show-details {
+    color: #555;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.show-details:hover {
+    color: #333;
+}
+
+.post-content {
+    margin: 15px 0;
+}
+
+.post-description {
+    font-size: 16px; /* Reduzi o tamanho da fonte */
+    line-height: 1.5;
+}
+
+.post-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.post-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.comments-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #D4E4F2;
+    border: 1px solid #D4E4F2;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #D4E4F2;
+    border: 1px solid #D4E4F2;
+}
+
+.btn:hover {
+    filter: brightness(90%);
+}
+
+.likes-section {
+    display: inline-block;
+}
+
+.like-btn {
+    text-decoration: none;
+    color: black;
+    position: relative;
+}
+
+.heart {
+    font-size: 20px;
+    transition: color 0.3s ease-in-out;
+}
+
+.like-btn.clicked .heart {
+    color: red; /* Cor quando clicado */
+}
+
+.like-count {
+    margin-left: 5px;
+}

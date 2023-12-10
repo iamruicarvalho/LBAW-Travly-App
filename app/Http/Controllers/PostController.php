@@ -82,6 +82,17 @@ class PostController extends Controller
 
         return view('posts.likes', compact('post', 'likes'));
     }
+
+    public function getPostsByHashtag($hashtag)
+    {
+        $post = Post::where('description_', 'like', "%#$hashtag%")
+                ->orderBy('time_', 'desc') // Ordena por data de criação descendente
+                ->get();
+
+        return view('pages.by_hastag', compact('post', 'hashtag'));
+    }
+    
+
 }
 
 

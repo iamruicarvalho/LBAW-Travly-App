@@ -49,8 +49,8 @@ CREATE TABLE user_ (
     email TEXT UNIQUE NOT NULL,
     password_ TEXT NOT NULL,
     private_ BOOLEAN NOT NULL DEFAULT TRUE,
-    description_ TEXT DEFAULT 'no description',
-    location TEXT DEFAULT 'not provided',
+    description_ TEXT DEFAULT 'Add description',
+    location TEXT DEFAULT 'Add location',
     countries_visited INT DEFAULT 0,
     remember_token VARCHAR(100) NULL 
 );

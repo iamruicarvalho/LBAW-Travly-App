@@ -54,10 +54,6 @@
                 </form>
                 {{-- End Editable fields --}}
             </div>
-
-            <div class="user-info">
-                <p>0 following 0 followers</p>
-            </div>
         </div>
         </div>
 

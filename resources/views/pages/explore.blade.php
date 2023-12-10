@@ -25,38 +25,14 @@
         <div class="trending-section">
             <h2>Trending Topics</h2>
             <ul>
-                <li>
-                    <img src="https://i.pinimg.com/564x/41/0f/ec/410fecb2c951ee9b149b7cbc3fcaca09.jpg" alt="Travel">
-                    <p>#Travel</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/fe/db/89/fedb892f43b64a07acd96c306994f6e1.jpg" alt="Travel">
-                    <p>#Photography</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/14/fb/31/14fb31ea5ed085cc4b07616b2d187842.jpg" alt="Travel">
-                    <p>#DeliciousFood</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/4e/a3/e9/4ea3e94865555f70d71a8c7a34cd42b0.jpg" alt="Travel">
-                    <p>#Art</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/2e/c0/77/2ec0773a1fcd847a5bd258ea4bba668e.jpg" alt="Travel">
-                    <p>#Wildlife</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/c3/f9/48/c3f9488a3e4e985a6cb62f9f12c5d3bb.jpg" alt="Travel">
-                    <p>#Nature</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/65/81/c0/6581c0c76ea5e610d44f9d51c27348b2.jpg" alt="Travel">
-                    <p>#Adventure</p>
-                </li>
-                <li>
-                    <img src="https://i.pinimg.com/564x/c8/50/c1/c850c158071975cb1402434292736609.jpg" alt="Travel">
-                    <p>#Beaches</p>
-                </li>
+                <li><a href="{{ route('posts.by.hashtag', 'Travel') }}"><img src="https://i.pinimg.com/564x/41/0f/ec/410fecb2c951ee9b149b7cbc3fcaca09.jpg" alt="Travel"><p>#Travel</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'Photography') }}"><img src="https://i.pinimg.com/564x/fe/db/89/fedb892f43b64a07acd96c306994f6e1.jpg" alt="Photography"><p>#Photography</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'DeliciousFood') }}"><img src="https://i.pinimg.com/564x/14/fb/31/14fb31ea5ed085cc4b07616b2d187842.jpg" alt="Travel"><p>#DeliciousFood</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'Art') }}"><img src="https://i.pinimg.com/564x/4e/a3/e9/4ea3e94865555f70d71a8c7a34cd42b0.jpg" alt="Photography"><p>#Art</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'Wildlife') }}"><img src="https://i.pinimg.com/564x/2e/c0/77/2ec0773a1fcd847a5bd258ea4bba668e.jpg" alt="Travel"><p>#Wildlife</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'Nature') }}"><img src="https://i.pinimg.com/564x/c3/f9/48/c3f9488a3e4e985a6cb62f9f12c5d3bb.jpg" alt="Photography"><p>#Nature</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'Adventure') }}"><img src="https://i.pinimg.com/564x/65/81/c0/6581c0c76ea5e610d44f9d51c27348b2.jpg" alt="Travel"><p>#Adventure</p></a></li>
+                <li><a href="{{ route('posts.by.hashtag', 'Beaches') }}"><img src="https://i.pinimg.com/564x/c8/50/c1/c850c158071975cb1402434292736609.jpg" alt="Photography"><p>#Beaches</p></a></li>
             </ul>
         </div>
 

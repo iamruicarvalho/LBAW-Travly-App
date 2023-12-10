@@ -114,6 +114,7 @@ Route::get('/messages/{id}', [MessagesController::class, 'show'])->name('message
 
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 
+Route::get('/posts/{hashtag}', [PostController::class, 'getPostsByHashtag'])->name('posts.by.hashtag');
 
 /*
 use Illuminate\Support\Facades\Route;
