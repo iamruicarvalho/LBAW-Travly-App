@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
     <head>
+        <link rel="icon" type="image/png" href="https://github.com/acarolinacc/teste/blob/main/plane.png?raw=true">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">

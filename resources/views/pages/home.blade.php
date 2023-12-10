@@ -84,19 +84,6 @@
                 <div class="post-content">
                     <p>Welcome to Travly! Start exploring and sharing your travel experiences.</p>
                 </div>
-                <div class="post-actions">
-                    <button class="like-button" onclick="toggleLike()"> 
-                        <span class="heart-icon">❤️</span>
-                        <span class="like-count">0</span>
-                    </button>
-                    <textarea class="comment-input" placeholder="Add a comment..."></textarea>
-                    <button class="comment-button" onclick="addComment()">Comment</button>
-                </div>
-                <div class="comments-section">
-                    <p>John Doe: I love this!</p>
-                    <!-- Lista de comentários aqui -->
-                    <!-- Cada comentário pode ter um autor e o texto do comentário -->
-                </div>
             </div>
         </div>
 
