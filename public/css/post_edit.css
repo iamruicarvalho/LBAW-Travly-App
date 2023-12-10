@@ -170,58 +170,181 @@
 
 
   /* Barra Lateral Direita */
-  .right-sidebar {
-    width: 200px;
-    padding: 20px;
-    background-color: rgb(205, 205, 205);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .search-bar {
-    margin-bottom: 20px;
-  }
-  
-  .suggested-groups,
-  .people-near-you,
-  .trending-hashtags {
-    margin-bottom: 20px;
-  }
-  
-  .suggested-groups h3,
-  .people-near-you h3,
-  .trending-hashtags h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  ul li {
-    margin-bottom: 5px;
-  }
-  
-  .right-sidebar .sidebar-box {
-    margin-bottom: 20px;
-    border: 1px solid #D4E4F2;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .right-sidebar .sidebar-box h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  
-  
-  
+/* Right Sidebar */
+.right-sidebar {
+  width: 280px;
+  padding: 20px;
+  background-color: #6084a3;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+  border-radius: 0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
 
+.search-bar {
+  margin-bottom: 20px;
+}
 
+.search-bar input {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f4f0ff;
+  color: #2c3e44;
+  font-size: 16px;
+}
 
+/* Additional styling for the suggested groups */
+.suggested-groups ul {
+  padding: 0;
+}
+
+.group-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.group-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.group-details {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Expand group details to full width */
+}
+
+.group-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.join-button {
+  background-color: #D4E4F2;
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+}
+
+.join-button:hover {
+  background-color: #2980b9;
+}
+
+/* Additional styling for the people near you */
+.people-near-you ul {
+  padding: 0;
+}
+
+.person-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.person-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.person-details {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Expand person details to full width */
+}
+
+.person-name {
+  font-weight: bold;
+  margin: 0;
+}
+
+.follow-button {
+  background-color: #D4E4F2;
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+}
+
+.follow-button:hover {
+  background-color: #2980b9;
+}
+
+.see-more-link {
+  display: block;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: color 0.3s ease; /* Added transition for smooth color change */
+}
+
+.see-more-link:hover {
+  text-decoration: underline;
+  color: #ffffff; /* Set the color to white on hover */
+}
+
+.suggested-groups,
+.people-near-you,
+.trending-hashtags {
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  margin-bottom: 5px;
+  transition: transform 0.3s ease;
+}
+
+ul li:hover {
+  transform: translateX(5px);
+}
+
+.right-sidebar .sidebar-box {
+  margin-bottom: 20px;
+  border: 1px solid #2980b9;
+  padding: 15px;
+  border-radius: 0;
+  background-color: #2980b9;
+  transition: transform 0.3s ease;
+}
+
+.right-sidebar .sidebar-box:hover {
+  transform: scale(1.05);
+}

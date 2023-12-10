@@ -48,27 +48,79 @@
                 <input type="text" placeholder="🔍 Search...">
             </div>
             <div class="suggested-groups">
-                {{-- Your suggested groups content goes here --}}
-                <h3>Suggested Groups</h3>
-                <!-- Display suggested groups -->
-                <ul>
-                    <li>Italia Lovers</li>
-                    <li>I heart Japan</li>
-                    <li>Budget travel</li>
-                    <!-- Add more suggested groups as needed -->
-                </ul>
+            <!-- Your suggested groups content goes here -->
+            <h3>Suggested Groups</h3>
+            <!-- Display suggested groups -->
+            <ul>
+                <li>
+                <div class="group-item">
+                    <img src="https://visitworld.today/media/blog/previews/KXyZ9HqVwd5zhbBvkREQrjJTLMRQ9JQW8VETjX23.webp" alt="Italia Lovers Avatar">
+                    <div class="group-details">
+                    <p class="group-name">Italia Lovers</p>
+                    <button class="join-button">Join</button>
+                    </div>
+                </div>
+                </li>
+                <li>
+                <div class="group-item">
+                    <img src="https://static.independent.co.uk/2022/08/24/12/iStock-1146262403.jpg?width=1200&height=900&fit=crop" alt="I heart Japan Avatar">
+                    <div class="group-details">
+                    <p class="group-name">I heart Japan</p>
+                    <button class="join-button">Join</button>
+                    </div>
+                </div>
+                </li>
+                <li>
+                <div class="group-item">
+                    <img src="https://heymondo.com/blog/wp-content/uploads/2022/03/10_tips_to-travel-on-a-budget.jpg" alt="Budget Travel Avatar">
+                    <div class="group-details">
+                    <p class="group-name">Budget travel</p>
+                    <button class="join-button">Join</button>
+                    </div>
+                </div>
+                </li>
+                <a href="#" class="see-more-link">See More</a>
+
+                <!-- Add more suggested groups as needed -->
+            </ul>
             </div>
 
             <div class="people-near-you">
-                {{-- Your people near you content goes here --}}
-                <h3>People Near You</h3>
-                <!-- Display people near you -->
-                <ul>
-                    <li>Bessie Cooper</li>
-                    <li>Olivia Silva</li>
-                    <li>Joseph Martini</li>
-                    <!-- Add more people as needed -->
-                </ul>
+            <!-- Your people near you content goes here -->
+            <h3>People Near You</h3>
+            <!-- Display people near you -->
+            <ul>
+                <li>
+                <div class="person-item">
+                    <img src="https://bgn2018media.s3.amazonaws.com/wp-content/uploads/2021/08/27082436/gettyimages-1201669316-612x612-1.jpg" alt="Bessie Cooper Avatar">
+                    <div class="person-details">
+                    <p class="person-name">Bessie Cooper</p>
+                    <button class="follow-button">Follow</button>
+                    </div>
+                </div>
+                </li>
+                <li>
+                <div class="person-item">
+                    <img src="https://img.freepik.com/free-photo/woman-mountain-with-travel-bag-looking-map_1303-11185.jpg" alt="Olivia Silva Avatar">
+                    <div class="person-details">
+                    <p class="person-name">Olivia Silva</p>
+                    <button class="follow-button">Follow</button>
+                    </div>
+                </div>
+                </li>
+                <li>
+                <div class="person-item">
+                    <img src="https://jooinn.com/images/travelling-boy-1.jpg" alt="Joseph Martini Avatar">
+                    <div class="person-details">
+                    <p class="person-name">Joseph Martini</p>
+                    <button class="follow-button">Follow</button>
+                    </div>
+                </div>
+                </li>
+                <a href="#" class="see-more-link">See More</a>
+
+                <!-- Add more people as needed -->
+            </ul>
             </div>
 
             <div class="trending-hashtags">
@@ -81,6 +133,8 @@
                     <li>#Explore</li>
                     <!-- Add more hashtags as needed -->
                 </ul>
+                <a href="#" class="see-more-link">See More</a>
+
             </div>
         </div>
     </div>
