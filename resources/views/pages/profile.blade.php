@@ -1,77 +1,86 @@
 @extends('layouts.app')
 
 @section('content')
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('styles.css') }}" /> 
-    <title>Travly | Social Network</title>
-</head>
-<body>
-    <div class="container">
-        <nav>
-            <div class="nav__logo">
-                <img src="{{ asset('https://raw.githubusercontent.com/WebDesignMastery/Explore_Destination_28-06-23/main/assets/logo.png') }}" alt="logo" /> 
+
+<div class="profile-container">
+    <div class="profile-sidebar-header-container">
+    {{-- Left Sidebar --}}
+    <div class="profile-sidebar-container">
+    <div class="left-sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="{{ route('home') }}">🏠 Home</a></li>
+            <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
+            <li><a href="#">🔔 Notifications</a></li>
+            <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
+            <li><a href="#">🌎 Wish List</a></li>
+            <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+        </ul>
+        <div class="profile-section">
+            <!-- Profile information here -->
+            <a href="{{  route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
+        </div>
+    </div>
+    </div>
+
+        <div class="profile-header">
+        <img src="https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg" alt="Header Picture" class="profile-header-picture">
+            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
+            <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
+            <div class="user-info">
+                <div>
+                    <h3>{{ auth()->user()->name_ }}</h3>
+                    <p>{{ auth()->user()->username }}</p>
+                    <p>{{ auth()->user()->description_ ? auth()->user()->description_ : 'Add description' }}</p>
+                    <p>{{ auth()->user()->location ? auth()->user()->location : 'Add location' }}</p>
+                </div>
+                <div>
+                    <p>{{ $user->followers()->count() }} Followers {{ $user->following()->count() }} Following</p>
+                </div>
             </div>
-            <ul class="nav__links">
-                <li class="link"><a href="#">About</a></li>
-                <li class="link"><a href="#">Help</a></li>
-                <li class="link"><a href="#">FAQ</a></li>
-                <li class="link"><a href="#">Privacy Policy</a></li>
-            </ul>
-        </nav>
-        <div class="destination__container">
-            <img class="bg__img__1" src="{{ asset('https://github.com/WebDesignMastery/Explore_Destination_28-06-23/blob/main/assets/bg-dots.png?raw=true') }}" alt="bg" /> 
-            <img class="bg__img__2" src="{{ asset('https://github.com/WebDesignMastery/Explore_Destination_28-06-23/blob/main/assets/bg-arrow.png?raw=true') }}" alt="bg" /> 
-            <div class="socials">
+        </div>
+        </div>
+
+        <div class="profile-body">
+            <div class="post">
+                <!-- Add user posts or a timeline here -->
+                @foreach(Auth()->user()->posts()->get() as $post)
+                    <div class="post-item">
+                        <div class="post-content">
+                            <img src="{{ asset('postimage/' . $post->content_) }}">
+                            <p>{{ $post->description_ }}</p>
+                        </div>
+                        <div class="post-details">
+                            <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
+                            <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
+                            <a> {{ $post->time_ }}</a>
+                            <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                            <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-            <div class="content">
-                <h1>EXPLORE<br />CONNECT<br /><span>DISCOVER</span></h1>
-                <p>
-                Welcome to Travly, where every moment is a new adventure. 
-                Dive into uncharted territories, connect with like-minded explorers, and let the journey be your destination. 
-                Embrace diverse cultures, share your experiences, and ignite the wanderlust within you. 
-                Travly is your passport to a world of discovery – join us and let the exploration begin!
-                </p>
-            </div>
-            <div class="form-container">
-                <form method="POST" action="{{ route('login') }}">
-                    {{ csrf_field() }}
-            
-                    <label for="email">E-mail</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
-                    @if ($errors->has('email'))
-                        <span class="error">
-                          {{ $errors->first('email') }}
-                        </span>
-                    @endif
-            
-                    <label for="password" >Password</label>
-                    <input id="password" type="password" name="password" required>
-                    @if ($errors->has('password'))
-                        <span class="error">
-                            {{ $errors->first('password') }}
-                        </span>
-                    @endif
-            
-                    <label>
-                        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
-                    </label>
-            
-                    <button type="submit">
-                        Login
-                    </button>
-                    <a class="button button-outline" href="{{ route('register') }}">Register</a>
-                    @if (session('success'))
-                        <p class="success">
-                            {{ session('success') }}
-                        </p>
-                    @endif
-                </form>
+                {{-- Right Sidebar --}}
+                <div class="profile-right-sidebars">
+                <div class="right-sidebar">
+                <div class="countries-visited">
+                    <h3>Countries visited</h3>
+                    <p> {{ auth()->user()->countries_visited }}/195 </p>
+                </div>
+                </div>
+                {{-- Right Sidebar --}}
+                <div class="right-sidebar">
+                <div class="Wish list destinations">
+                    <h3>Wish list destinations</h3>
+                    <ul>
+                        <li>Rio de Janeiro, Brasil</li>
+                        <li>Paris, França</li>
+                        <li>Mikonos, Grécia</li>
+                        <!-- Add more as saved -->
+                    </ul>
+                </div>
+                </div>
             </div>
         </div>
     </div>
-</body>
-<link href="{{ url('css/login.css') }}" rel="stylesheet">
+    <link href="{{ url('css/profile.css') }}" rel="stylesheet">
 @endsection
