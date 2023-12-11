@@ -19,15 +19,14 @@
     </div>
 
     {{-- Main Content --}}
-    <div class="col justify-content-center">
-        <div class="list-group">
+    <div class="main-content">
+        <div class="notifications">
             @forelse ($notifications as $notification)
                 @include('partials.showNotification')
             @empty
                 <p>No notifications found.</p>
             @endforelse
         </div>
-    </div>
 
-    <link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <link href="{{ url('css/notifications.css') }}" rel="stylesheet">
 @endsection

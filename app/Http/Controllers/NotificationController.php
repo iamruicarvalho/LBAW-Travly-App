@@ -37,6 +37,20 @@ class NotificationController extends Controller
         return $this->getAll();
     }
 
+    public function setSeen(Request $request){
+        if (Auth::check()) {
+            $this->validate($request, [
+            'notificationid' => 'required',
+            ]);
+        
+
+        $notif = Notification::find($request->input('notificationid'));
+        $notif->seen = TRUE;
+
+        $notif.save();
+        }
+    }
+
     public function addNotif(Request $request)
     {   
         if (Auth::check()) {
