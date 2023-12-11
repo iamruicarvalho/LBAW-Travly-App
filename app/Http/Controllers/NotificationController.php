@@ -14,7 +14,9 @@ class NotificationController extends Controller
 {
     public function getAll(){
         if (Auth::check()) {
-            $notifications = Auth::user()->allNotifications()->get();
+            $notifications = Notification::select('notification_.*')
+                            ->fromRaw('notification_')
+                            ->where('notification_.notifies', '=', Auth::user()->id)->get();
             return view('pages.notifications', ['notifications' => $notifications]);
         }
 

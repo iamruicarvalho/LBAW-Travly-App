@@ -25,14 +25,9 @@
                                 @else
                                         <p class="opacity-50 text-nowrap lead"> new </p>
                                 @endif
-                        </div>
+                        </div>  
                         <p class="opacity-50 text-nowrap lead p-2"> {{$notification->time_}} </p>
                 </div>
         </div>
         </a>
-        <form method="POST" class="list-group-item" action="{{ route('notifications.remove') }}">
-                        @csrf
-                        <input type="hidden" name="notificationid" id="notificationid" value='{{ $notification->notificationid }}'>
-                        <button type="submit">Remove</button>
-        </form>
 </div>

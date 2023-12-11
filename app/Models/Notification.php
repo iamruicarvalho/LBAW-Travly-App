@@ -27,9 +27,9 @@ class Notification extends Model
         return $this->belongsTo(User::class, 'sends_notif');
     }
 
-    public function get_type()
+    public function get_notif_type()
     {
-        $postNotification = PostNotification::where('notificationid', $this->notificationid)->first();
+        $postNotification = PostNotification::where('notificationid', $notificationid)->first();
         if ($postNotification) {
             return $postNotification->notification_type;
         }
@@ -41,5 +41,4 @@ class Notification extends Model
 
         return "error";
     }
-
 }
