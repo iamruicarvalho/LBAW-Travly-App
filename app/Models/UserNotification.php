@@ -11,14 +11,14 @@ class UserNotification extends Model
 {
     public $timestamps = false;
     protected $table = 'user_notification';
-    protected $primaryKey = 'notificationID';
+    protected $primaryKey = 'notificationid';
     protected $fillable = [
-        'notificationID', 'id', 'notification_type'
+        'notificationid', 'id', 'notification_type'
     ];
 
     public function notification()
     {
-        return $this->belongsTo(Notification::class, 'notificationID');
+        return $this->belongsTo(Notification::class, 'notificationid');
     }
 
     public function user()
