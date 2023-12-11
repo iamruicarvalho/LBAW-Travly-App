@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 </li>
-                <a href="#" class="see-more-link">See More</a>
+                <a href="{{ route('explore') }}" class="see-more-link">See More</a>
 
                 <!-- Add more suggested groups as needed -->
             </ul>
@@ -95,7 +95,7 @@
 
             <div class="people-near-you">
             <!-- Your people near you content goes here -->
-            <h3>People Near You</h3>
+            <h3>Trending Users</h3>
             <!-- Display people near you -->
             <ul>
                 <li>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
                 </li>
-                <a href="#" class="see-more-link">See More</a>
+                <a href="{{ route('explore') }}" class="see-more-link">See More</a>
 
                 <!-- Add more people as needed -->
             </ul>
@@ -141,7 +141,7 @@
                     <li>#Explore</li>
                     <!-- Add more hashtags as needed -->
                 </ul>
-                <a href="#" class="see-more-link">See More</a>
+                <a href="{{ route('explore') }}" class="see-more-link">See More</a>
 
             </div>
         </div>
