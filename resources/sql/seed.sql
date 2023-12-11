@@ -55,6 +55,12 @@ CREATE TABLE user_ (
     remember_token VARCHAR(100) NULL 
 );
 
+CREATE TABLE group_ (
+    groupID SERIAL PRIMARY KEY, 
+    name_ TEXT NOT NULL, 
+    description_ TEXT DEFAULT NULL              -- default value must be add a description
+);
+
 CREATE TABLE post_ (
     postID SERIAL PRIMARY KEY,
     content_ VARCHAR(256), 
@@ -63,13 +69,8 @@ CREATE TABLE post_ (
     comments_ INTEGER DEFAULT 0, 
     time_ TIMESTAMP NOT NULL,
     created_by INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
+    groupID INTEGER REFERENCES group_ (groupID) ON UPDATE CASCADE,
     content_type post_content_types
-);
-
-CREATE TABLE group_ (
-    groupID SERIAL PRIMARY KEY, 
-    name_ TEXT NOT NULL, 
-    description_ TEXT DEFAULT NULL              -- default value must be add a description
 );
 
 CREATE TABLE message_ (
@@ -696,18 +697,6 @@ INSERT INTO user_(username, name_, email, password_, private_) VALUES
             ('katiejack', 'Katie', 'katiejack723@example.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True),
             ('victoralice', 'Victor', 'victoralice298@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True);
 
-INSERT INTO post_(content_, description_, likes_, comments_, time_, created_by, content_type) VALUES
-            ('imagina uma imagem aqui', 'linda paisagem', 3, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina um video aqui', 'boa jogada', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina um video aqui', 'dia de folga', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina uma imagem aqui', 'a próxima tentativa será melhor', 4, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina uma imagem aqui', 'boa escolha', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina uma imagem aqui', 'experiência única', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina um video aqui', 'vou repetir', 4, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina um video aqui', 'não gostei', 4, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina uma imagem aqui', 'adorei este passeio', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina uma imagem aqui', 'recomendo muito este restaurante', 4, 0, '2023-10-25 08:30:15', 1,'image');
-
 INSERT INTO group_(name_, description_) VALUES
             ('Mundo Fora do Mapa', ''),
             ('Aventura sem Limites', ''),
@@ -715,6 +704,18 @@ INSERT INTO group_(name_, description_) VALUES
             ('Rota dos Sonhos', ''),
             ('Festival2031', 'Vens? S/N'),
             ('Roteiro Aventura', '');
+            
+INSERT INTO post_(content_, description_, likes_, comments_, time_, created_by, groupID, content_type) VALUES
+            ('imagina uma imagem aqui', 'linda paisagem', 3, 0, '2023-10-25 08:30:15', 1, 3,'image'),
+            ('imagina um video aqui', 'boa jogada', 4, 0, '2023-10-25 08:30:15', 1, 3,'video'),
+            ('imagina um video aqui', 'dia de folga', 4, 0, '2023-10-25 08:30:15', 1, 3,'video'),
+            ('imagina uma imagem aqui', 'a próxima tentativa será melhor', 4, 0, '2023-10-25 08:30:15', 1, NULL,'image'),
+            ('imagina uma imagem aqui', 'boa escolha', 4, 0, '2023-10-25 08:30:15', 1, NULL,'video'),
+            ('imagina uma imagem aqui', 'experiência única', 4, 0, '2023-10-25 08:30:15', 1, nULL,'video'),
+            ('imagina um video aqui', 'vou repetir', 4, 0, '2023-10-25 08:30:15', 1, NULL,'image'),
+            ('imagina um video aqui', 'não gostei', 4, 0, '2023-10-25 08:30:15', 1, NULL,'image'),
+            ('imagina uma imagem aqui', 'adorei este passeio', 4, 0, '2023-10-25 08:30:15', 1, NULL,'video'),
+            ('imagina uma imagem aqui', 'recomendo muito este restaurante', 4, 0, '2023-10-25 08:30:15', 1, NULL,'image');
 
 INSERT INTO message_(description_, time_, sender, receiver, sent_to, message_replies) VALUES
             ('ADORO VIAJAR!!!!', '2023-10-25 08:30:15', 1, NULL, 3, NULL),

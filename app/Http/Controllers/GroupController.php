@@ -10,7 +10,7 @@ class GroupController extends Controller
 {   
     public function showGroups()
     {
-        $userGroups = auth()->user()->groups;
+     $userGroups = auth()->user()->groups;
 
         return view('pages.groups', ['groups' => $userGroups]);
     }
@@ -105,7 +105,9 @@ class GroupController extends Controller
             return redirect()->route('home')->with('error', 'Group not found');
         }
 
-        return view('partials.showGroup', compact('group'));
+        $data = $group->posts; 
+
+        return view('partials.showGroup', compact('group', 'data'));
     }
 
     // Exibir detalhes de um grupo específico
