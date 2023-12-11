@@ -4,7 +4,7 @@
         <div class="d-flex gap-2 w-100 justify-content-between">
                 <div>
 
-                @switch( $notification->get_type() ) 
+                @switch( $notification->get_notif_type() ) 
                         @case('commented_post')
                                 <h5 class="mb-0">Commented Post</h5>
                         @break

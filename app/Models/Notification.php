@@ -29,7 +29,7 @@ class Notification extends Model
 
     public function get_notif_type()
     {
-        $postNotification = PostNotification::where('notificationid', $notificationid)->first();
+        $postNotification = PostNotification::where('notificationid', $this->notificationid)->first();
         if ($postNotification) {
             return $postNotification->notification_type;
         }

@@ -8,6 +8,7 @@ use App\Models\UserNotification;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class NotificationController extends Controller
@@ -24,18 +25,77 @@ class NotificationController extends Controller
         return "User not found.";
     }
     
-    //ainda não usado
-    public function showNotif($notificationID)
-    {
-        $notification = Notification::find("notificationid");
-        return view('partials.showNotification', ['notification'=> $notification]);
-    }
-
     public function removeNotif(Request $request)
     {
-        PostNotification::where('notificationid', '=', $request->input('notificationid'))->delete();
-        UserNotification::where('notificationid', '=', $request->input('notificationid'))->delete();
-        Notification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        // PostNotification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        // UserNotification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        // Notification::where('notificationid', '=', $request->input('notificationid'))->delete();
+        // return $this->getAll();
+
+        //para testar o addNotif
+        $this->addNotif($request);
         return $this->getAll();
+    }
+
+    public function addNotif(Request $request)
+    {   
+        if (Auth::check()) {
+
+            $this->validate($request, [
+                'notifType' => 'required', 
+                'to' => 'required|exists:user_,id',
+                'targetPost' => 'exists:post_,postid',
+            ]);
+
+            $uNotif = TRUE;
+
+            $notifType = $request->input('notifType');
+
+            $notification = new Notification();
+            $notification->notificationid = Notification::orderBy('notificationid','desc')->first()->notificationid + 1;
+            $notification->time_ = now();
+            $notification->notifies = $request->input('to');
+            $notification->sends_notif = Auth::user()->id;
+
+            $username = User::find($request->input('to'))->username;
+
+            switch($notifType){
+                case('started_following'):
+                    $notification->description_ = $username . ' started following you!';
+                    break;
+                case('request_follow'):
+                    $notification->description_ = $username . ' sent you a follow request!';
+                    break;
+                case('accepted_follow'):
+                    $notification->description_ = $username . ' accepted your follow request!';
+                    break;
+                case('liked_post'):
+                    $notification->description_ = $username . ' liked one of your posts!';
+                    $uNotif = FALSE;
+                    break;
+                case('commented_post'):
+                    $notification->description_ = $username . ' left a comment in one of your posts!';
+                    $uNotif = FALSE;
+                    break;
+            }
+
+            $notification->save();
+
+            if($uNotif){
+                $notif_type_add = new UserNotification();
+                $notif_type_add->notificationid = $notification->notificationid;
+                $notif_type_add->id = Auth::user->id();
+                $notif_type_add->notification_type = $notiftype;
+            } else {
+                $notif_type_add = new PostNotification();
+                $notif_type_add->notificationid = $notification->notificationid;
+                $notif_type_add->postid = $request->input('targetPost');
+                $notif_type_add->notification_type = $notifType;
+            }
+
+            $notif_type_add->save();
+
+            return 1;
+        } else return 0;
     }
 }
