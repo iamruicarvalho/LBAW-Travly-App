@@ -26,8 +26,12 @@
         <div class="profile-header">
         <form method="POST" action="{{ route('profile.update', auth()->id()) }}" id="update-profile-form" enctype="multipart/form-data">
             @csrf
-            <img src="{{ asset('storage/' . $user->header_picture) }}" alt="Header Picture" class="profile-header-picture">
-            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
+            <div class="header-container">
+                <img src="{{ asset($user->header_picture) }}" alt="Header Picture" class="profile-header-picture">
+            </div>
+            <div class="profile-container">
+                <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
+            </div>
 
             <div class="profile-editable-fields">
                 {{-- Editable fields --}}
@@ -50,11 +54,9 @@
 
                     <label for="header_picture">Header Picture</label>
                     <input id="header_picture" type="file" name="header_picture" accept="image/*">
-                    <img src="{{ auth()->user()->header_picture }}" alt="Header Picture" class="profile-header-picture-preview">
 
                     <label for="profile_picture">Profile Picture</label>
                     <input id="profile_picture" type="file" name="profile_picture" accept="image/*">
-                    <img src="{{ auth()->user()->profile_picture }}" alt="Profile Picture" class="profile-picture-preview">
 
                     <div class="profile-save-changes">
                         <button type="submit">Save Changes</button>
