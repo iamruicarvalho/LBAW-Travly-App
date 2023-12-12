@@ -30,7 +30,9 @@ class User extends Model implements Authenticatable
         'private_', 
         'description_', 
         'location', 
-        'countries_visited'
+        'countries_visited',
+        'header_picture',
+        'profile_picture'
     ];
     
     protected $hidden = [

@@ -24,13 +24,13 @@
 
         {{-- Profile Header --}}
         <div class="profile-header">
-            <img src="https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg" alt="Header Picture" class="profile-header-picture">
-            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
+        <form method="POST" action="{{ route('profile.update', auth()->id()) }}" id="update-profile-form" enctype="multipart/form-data">
+            @csrf
+            <img src="{{ asset('storage/' . $user->header_picture) }}" alt="Header Picture" class="profile-header-picture">
+            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
 
             <div class="profile-editable-fields">
                 {{-- Editable fields --}}
-                <form method="POST" action="{{ route('profile.update', auth()->id()) }}" id="update-profile-form">
-                    @csrf
                     <div class="username-input-control">
                         <label for="username">Name</label>
                         <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
@@ -47,6 +47,14 @@
 
                     <label for="location">Location</label>
                     <input id="location" type="text" name="location" value="{{ auth()->user()->location }}" required autocomplete="location">
+
+                    <label for="header_picture">Header Picture</label>
+                    <input id="header_picture" type="file" name="header_picture" accept="image/*">
+                    <img src="{{ auth()->user()->header_picture }}" alt="Header Picture" class="profile-header-picture-preview">
+
+                    <label for="profile_picture">Profile Picture</label>
+                    <input id="profile_picture" type="file" name="profile_picture" accept="image/*">
+                    <img src="{{ auth()->user()->profile_picture }}" alt="Profile Picture" class="profile-picture-preview">
 
                     <div class="profile-save-changes">
                         <button type="submit">Save Changes</button>

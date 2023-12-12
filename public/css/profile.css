@@ -224,4 +224,10 @@
         margin: 20px;
     }
     
-    
+    .profile-header-picture-preview,
+.profile-picture-preview {
+    width: 100px; /* Ajuste o tamanho conforme necessário */
+    height: 100px;
+    object-fit: cover; /* Garante que a imagem cubra o contêiner */
+    margin-top: 10px; /* Ajuste conforme necessário */
+}

@@ -52,6 +52,8 @@ CREATE TABLE user_ (
     description_ TEXT DEFAULT 'Add description',
     location TEXT DEFAULT 'Add location',
     countries_visited INT DEFAULT 0,
+    header_picture VARCHAR(255) DEFAULT 'https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg', 
+    profile_picture VARCHAR(255) DEFAULT 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', 
     remember_token VARCHAR(100) NULL 
 );
 
