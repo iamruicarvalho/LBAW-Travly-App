@@ -30,7 +30,9 @@ class User extends Model implements Authenticatable
         'private_', 
         'description_', 
         'location', 
-        'countries_visited'
+        'countries_visited',
+        'header_picture',
+        'profile_picture'
     ];
     
     protected $hidden = [
@@ -76,16 +78,6 @@ class User extends Model implements Authenticatable
     {
         return $this->hasMany(UserNotification::class, 'id');
     }
-
-    public function visiblePosts()
-    {
-        // returns all the posts from the users I follow
-        return Post::select('post_.*')
-            ->fromRaw('post_', 'follows_')
-            ->where('follows_.followerID', '=', $this->id)
-            ->where('follows_.followedID', '=', 'post_.created_by');
-    }
-
     public function postLikes()
     {
         return $this->hasMany(PostLike::class, 'id');

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LikeController;
@@ -87,6 +88,12 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/groups/{groupid}/details/editDescription', [GroupController::class, 'editDescription'])->name('group.editDescription');
     Route::post('/groups/{groupid}/details/deleteGroup', [GroupController::class, 'deleteGroup'])->name('group.delete');
     Route::post('/groups/leave', [GroupController::class, 'leaveGroup'])->name('groups.leave');
+});
+
+// Notifications
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'getAll'])->name('notifications');
+    Route::post('/notifications', [NotificationController::class, 'removeNotif'])->name('notifications.remove');
 });
 
 // Authentication

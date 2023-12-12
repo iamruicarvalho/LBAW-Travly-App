@@ -8,7 +8,7 @@
                 <li><a href="{{ route('home') }}">🏠 Home</a></li>
                 <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
                 
-                <li><a href="#">🔔 Notifications</a></li>
+                <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
                 <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
@@ -125,16 +125,14 @@
                     </div>
                 </div>
                 </li>
-                <a href="#" class="see-more-link">See More</a>
-
-                <!-- Add more suggested groups as needed -->
+                <a href="{{ route('explore') }}" class="see-more-link">See More</a>
             </ul>
             </div>
 
 
             <div class="people-near-you">
             <!-- Your people near you content goes here -->
-            <h3>People Near You</h3>
+            <h3>Trending Users</h3>
             <!-- Display people near you -->
             <ul>
                 <li>
@@ -164,7 +162,7 @@
                     </div>
                 </div>
                 </li>
-                <a href="#" class="see-more-link">See More</a>
+                <a href="{{ route('explore') }}" class="see-more-link">See More</a>
 
                 <!-- Add more people as needed -->
             </ul>
@@ -181,7 +179,7 @@
                     <li>#Explore</li>
                     <!-- Add more hashtags as needed -->
                 </ul>
-                <a href="#" class="see-more-link">See More</a>
+                <a href="{{ route('explore') }}" class="see-more-link">See More</a>
 
             </div>
         </div>

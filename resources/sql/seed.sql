@@ -52,6 +52,8 @@ CREATE TABLE user_ (
     description_ TEXT DEFAULT 'Add description',
     location TEXT DEFAULT 'Add location',
     countries_visited INT DEFAULT 0,
+    header_picture VARCHAR(256) DEFAULT 'https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg', 
+    profile_picture VARCHAR(256) DEFAULT 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', 
     remember_token VARCHAR(100) NULL 
 );
 
@@ -94,9 +96,10 @@ CREATE TABLE comment_ (
 );
 
 CREATE TABLE notification_ (
-    notificationID SERIAL PRIMARY KEY,
+    notificationid SERIAL PRIMARY KEY,
     description_ TEXT NOT NULL, 
     time_ TIMESTAMP NOT NULL,
+    seen BOOLEAN DEFAULT FALSE,
     notifies INTEGER NOT NULL REFERENCES user_ (id),
     sends_notif INTEGER NOT NULL REFERENCES user_ (id)
 );
@@ -118,13 +121,13 @@ CREATE TABLE belongs_ (
 );
 
 CREATE TABLE user_notification (
-    notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
+    notificationid INTEGER PRIMARY KEY REFERENCES notification_ (notificationid) ON UPDATE CASCADE,
     id INTEGER NOT NULL REFERENCES user_ (id), 
     notification_type user_notification_types NOT NULL
 );
 
 CREATE TABLE post_notification (
-    notificationID INTEGER PRIMARY KEY REFERENCES notification_ (notificationID) ON UPDATE CASCADE,
+    notificationid INTEGER PRIMARY KEY REFERENCES notification_ (notificationid) ON UPDATE CASCADE,
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE, 
     notification_type post_notification_types NOT NULL
 );
@@ -738,47 +741,47 @@ INSERT INTO comment_(description_, likes_, time_, id, postID, comment_replies) V
             ('Nunca vi nada assim!', 0, '2023-10-25 07:31:00', 67, 2, NULL),
             ('Uau!!!', 0, '2023-10-25 08:31:00', 45, 2, NULL);
 
-INSERT INTO notification_(notificationID, description_, time_, notifies, sends_notif) VALUES
-            (1, 'JohnDoe started following you', '2023-10-25 08:30:15', 5, 3),
-            (2, 'AliceSmith liked your recent post', '2023-10-25 10:15:40', 2, 4),
-            (3, 'RobertJohnson requested to follow you', '2023-10-25 12:20:55', 8, 6),
-            (4, 'EmilyBrown commented on your vacation post', '2023-10-25 14:45:30', 7, 9),
-            (5, 'You accepted SarahWilson follow request', '2023-10-25 15:55:10', 1, 5),
-            (6, 'DanielRoberts liked your cooking recipe', '2023-10-25 16:40:25', 10, 2),
-            (7, 'SophiaGarcia requested to follow you', '2023-10-25 17:25:55', 3, 7),
-            (8, 'MichaelAnderson started following your art account', '2023-10-25 18:10:45', 6, 8),
-            (9, 'AlexaHall liked your travel photography', '2023-10-25 19:30:20', 8, 2),
-            (10, 'OliverSmith commented on your latest blog post', '2023-10-25 20:15:35', 11, 5),
-            (11, 'You accepted LilyBrown follow request', '2023-10-25 21:05:50', 12, 10),
-            (12, 'LucasJones requested to follow you', '2023-10-25 22:40:10', 9, 1),
-            (13, 'EllaDavis started following your fashion page', '2023-10-25 23:30:30', 7, 4),
-            (14, 'GraceTurner liked your new artwork', '2023-10-26 08:00:15', 13, 6),
-            (15, 'NoahMartinez commented on your tech review', '2023-10-26 10:45:25', 14, 3),
-            (16, 'CharlotteWhite requested to follow you', '2023-10-26 12:20:50', 1, 5),
-            (17, 'You accepted JamesJohnson follow request', '2023-10-26 14:35:40', 7, 9),
-            (18, 'WilliamSmith liked your gardening tips', '2023-10-26 15:50:10', 4, 8),
-            (19, 'AvaTaylor commented on your fitness post', '2023-10-26 16:30:30', 2, 11),
-            (20, 'SophiaHarris started following your photography account', '2023-10-26 17:15:55', 9, 1),
-            (21, 'BenjaminWilson requested to follow you', '2023-10-26 18:25:15', 12, 2),
-            (22, 'EthanAnderson liked your recent artwork', '2023-10-26 19:40:40', 10, 3),
-            (23, 'You accepted MiaGarcia follow request', '2023-10-26 20:50:25', 4, 7),
-            (24, 'LucyDavis commented on your travel blog', '2023-10-26 21:35:10', 3, 8),
-            (25, 'DavidClark started following your fitness page', '2023-10-26 22:20:35', 15, 6),
-            (26, 'EmmaMartinez liked your food photography', '2023-10-27 08:10:20', 14, 5),
-            (27, 'LoganSmith requested to follow you', '2023-10-27 10:40:45', 11, 6),
-            (28, 'You accepted GraceRoberts follow request', '2023-10-27 12:55:30', 2, 7),
-            (29, 'JackTurner liked your new fashion collection', '2023-10-27 14:30:15', 4, 9),
-            (30, 'SophieJohnson commented on your art exhibit', '2023-10-27 15:20:25', 3, 1),
-            (31, 'You accepted DanielWilson follow request', '2023-10-27 16:15:50', 5, 8),
-            (32, 'LiamHarris started following your travel blog', '2023-10-27 17:45:55', 6, 10),
-            (33, 'ZoeSmith requested to follow you', '2023-10-27 18:30:40', 7, 12),
-            (34, 'You accepted WilliamDavis follow request', '2023-10-27 19:55:30', 1, 13),
-            (35, 'OliviaTaylor liked your latest tech review', '2023-10-27 21:40:15', 15, 2),
-            (36, 'JacksonTurner commented on your gardening post', '2023-10-27 22:25:55', 8, 14),
-            (37, 'IsabellaHarris started following your cooking channel', '2023-10-28 08:05:25', 10, 3),
-            (38, 'MasonAnderson liked your music composition', '2023-10-28 10:45:10', 7, 6),
-            (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', 4, 5),
-            (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', 2, 9);
+INSERT INTO notification_(notificationid, description_, time_, seen, notifies, sends_notif) VALUES
+            (1, 'JohnDoe started following you', '2023-10-25 08:30:15', FALSE, 5, 3),
+            (2, 'AliceSmith liked your recent post', '2023-10-25 10:15:40', FALSE, 2, 4),
+            (3, 'RobertJohnson requested to follow you', '2023-10-25 12:20:55', FALSE, 8, 6),
+            (4, 'EmilyBrown commented on your vacation post', '2023-10-25 14:45:30', FALSE, 7, 9),
+            (5, 'You accepted SarahWilson follow request', '2023-10-25 15:55:10', FALSE, 1, 5),
+            (6, 'DanielRoberts liked your cooking recipe', '2023-10-25 16:40:25', FALSE, 10, 2),
+            (7, 'SophiaGarcia requested to follow you', '2023-10-25 17:25:55', FALSE, 3, 7),
+            (8, 'MichaelAnderson started following your art account', '2023-10-25 18:10:45', FALSE, 6, 8),
+            (9, 'AlexaHall liked your travel photography', '2023-10-25 19:30:20', FALSE, 8, 2),
+            (10, 'OliverSmith commented on your latest blog post', '2023-10-25 20:15:35', FALSE, 11, 5),
+            (11, 'You accepted LilyBrown follow request', '2023-10-25 21:05:50', FALSE, 12, 10),
+            (12, 'LucasJones requested to follow you', '2023-10-25 22:40:10', FALSE, 9, 1),
+            (13, 'EllaDavis started following your fashion page', '2023-10-25 23:30:30', FALSE, 7, 4),
+            (14, 'GraceTurner liked your new artwork', '2023-10-26 08:00:15', FALSE, 13, 6),
+            (15, 'NoahMartinez commented on your tech review', '2023-10-26 10:45:25', FALSE, 14, 3),
+            (16, 'CharlotteWhite requested to follow you', '2023-10-26 12:20:50', FALSE, 1, 5),
+            (17, 'You accepted JamesJohnson follow request', '2023-10-26 14:35:40', FALSE, 7, 9),
+            (18, 'WilliamSmith liked your gardening tips', '2023-10-26 15:50:10', FALSE, 4, 8),
+            (19, 'AvaTaylor commented on your fitness post', '2023-10-26 16:30:30', FALSE, 2, 11),
+            (20, 'SophiaHarris started following your photography account', '2023-10-26 17:15:55', FALSE, 9, 1),
+            (21, 'BenjaminWilson requested to follow you', '2023-10-26 18:25:15', FALSE, 12, 2),
+            (22, 'EthanAnderson liked your recent artwork', '2023-10-26 19:40:40', FALSE, 10, 3),
+            (23, 'You accepted MiaGarcia follow request', '2023-10-26 20:50:25', FALSE, 4, 7),
+            (24, 'LucyDavis commented on your travel blog', '2023-10-26 21:35:10', FALSE, 3, 8),
+            (25, 'DavidClark started following your fitness page', '2023-10-26 22:20:35', FALSE, 15, 6),
+            (26, 'EmmaMartinez liked your food photography', '2023-10-27 08:10:20', FALSE, 14, 5),
+            (27, 'LoganSmith requested to follow you', '2023-10-27 10:40:45', FALSE, 11, 6),
+            (28, 'You accepted GraceRoberts follow request', '2023-10-27 12:55:30', FALSE, 2, 7),
+            (29, 'JackTurner liked your new fashion collection', '2023-10-27 14:30:15', FALSE, 4, 9),
+            (30, 'SophieJohnson commented on your art exhibit', '2023-10-27 15:20:25', FALSE, 3, 1),
+            (31, 'You accepted DanielWilson follow request', '2023-10-27 16:15:50', FALSE, 5, 8),
+            (32, 'LiamHarris started following your travel blog', '2023-10-27 17:45:55', FALSE, 6, 10),
+            (33, 'ZoeSmith requested to follow you', '2023-10-27 18:30:40', FALSE, 7, 12),
+            (34, 'You accepted WilliamDavis follow request', '2023-10-27 19:55:30', FALSE, 1, 13),
+            (35, 'OliviaTaylor liked your latest tech review', '2023-10-27 21:40:15', FALSE, 15, 2),
+            (36, 'JacksonTurner commented on your gardening post', '2023-10-27 22:25:55', FALSE, 8, 14),
+            (37, 'IsabellaHarris started following your cooking channel', '2023-10-28 08:05:25', FALSE, 10, 3),
+            (38, 'MasonAnderson liked your music composition', '2023-10-28 10:45:10', FALSE, 7, 6),
+            (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', FALSE, 4, 5),
+            (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', FALSE, 2, 9);
 
 INSERT INTO admin_(id) VALUES
             (1);
@@ -867,7 +870,7 @@ INSERT INTO owner_(id, groupID) VALUES
             (31,5),
             (9,6);
 
-INSERT INTO user_notification(notificationID, id, notification_type) VALUES
+INSERT INTO user_notification(notificationid, id, notification_type) VALUES
             (1, 3, 'request_follow'),
             (2, 5, 'accepted_follow'),
             (3, 8, 'started_following'),
@@ -909,7 +912,7 @@ INSERT INTO user_notification(notificationID, id, notification_type) VALUES
             (39, 9, 'accepted_follow'),
             (40, 5, 'started_following');
 
-INSERT INTO post_notification(notificationID, postID, notification_type) VALUES
+INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
             (1, 3, 'liked_post'),
             (2, 5, 'liked_post'),
             (3, 8, 'commented_post'),
