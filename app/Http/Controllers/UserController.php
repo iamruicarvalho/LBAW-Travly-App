@@ -39,11 +39,11 @@ class UserController extends Controller
     public function updateProfile(Request $request, $id)
     {
         $user = User::find($id);
-
+    
         if (!$user) {
             return redirect()->route('home')->with('error', 'Usuário não encontrado');
         }
-
+    
         $request->validate([
             'username' => [
                 'required',
@@ -53,16 +53,30 @@ class UserController extends Controller
             ],
             'description' => 'required|string',
             'location' => 'required|string',
+            'header_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Adicione esta linha
+            'profile_picture' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Adicione esta linha
         ]);
-
+    
         $user->username = $request->input('username');
         $user->description_ = $request->input('description');
         $user->location = $request->input('location');
+    
+        if ($request->hasFile('header_picture')) {
+            $headerPicturePath = $request->file('header_picture')->store('profile_pictures', 'public');
+            $user->header_picture = $headerPicturePath;
+        }
+    
+        if ($request->hasFile('profile_picture')) {
+            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $profilePicturePath;
+        }
+    
         $user->save();
-
+    
         return redirect()->route('profile.show', $id)->with('success', 'Perfil atualizado com sucesso');
     }
-
+    
+    
     // public function visiblePosts()
     // {
     //     // returns all the posts from the users I follow

@@ -23,10 +23,16 @@
     </div>
 
         <div class="profile-header">
-        <img src="https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg" alt="Header Picture" class="profile-header-picture">
-            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Profile Picture" class="profile-picture">
+            <div class="header-container">
+                <img src="{{ asset($user->header_picture) }}" alt="Header Picture" class="profile-header-picture">
+            </div>
+            <div class="profile-container">
+                <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
+            </div>
+            <div>
             <a href="{{ route('notifications', auth()->id()) }}" class="edit-profile-link">Notifications</a>
             <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
+            </div>
             <div class="user-info">
                 <div>
                     <h3>{{ auth()->user()->name_ }}</h3>
@@ -44,42 +50,48 @@
         <div class="profile-body">
             <div class="post">
                 <!-- Add user posts or a timeline here -->
-                @foreach(Auth()->user()->posts()->get() as $post)
-                    <div class="post-item">
-                        <div class="post-content">
-                            <img src="{{ asset('postimage/' . $post->content_) }}">
-                            <p>{{ $post->description_ }}</p>
+                @if (Auth()->user()->posts()->count() > 0)
+                    @foreach(Auth()->user()->posts()->get() as $post)
+                        <div class="post-item">
+                            <div class="post-content">
+                                <img src="{{ asset('postimage/' . $post->content_) }}">
+                                <p>{{ $post->description_ }}</p>
+                            </div>
+                            <div class="post-details">
+                                <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
+                                <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
+                                <a> {{ $post->time_ }}</a>
+                                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                                <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
+                            </div>
                         </div>
-                        <div class="post-details">
-                            <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
-                            <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
-                            <a> {{ $post->time_ }}</a>
-                            <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
-                            <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                @else
+                    <p>Looks like there are no posts yet 😭</p>
+                @endif
             </div>
+
+
                 {{-- Right Sidebar --}}
                 <div class="profile-right-sidebars">
-                <div class="right-sidebar">
-                <div class="countries-visited">
-                    <h3>Countries visited</h3>
-                    <p> {{ auth()->user()->countries_visited }}/195 </p>
-                </div>
-                </div>
+                    <div class="right-sidebar">
+                        <div class="countries-visited">
+                            <h3>Countries visited</h3>
+                            <p> {{ auth()->user()->countries_visited }}/195 </p>
+                        </div>
+                    </div>
                 {{-- Right Sidebar --}}
-                <div class="right-sidebar">
-                <div class="Wish list destinations">
-                    <h3>Wish list destinations</h3>
-                    <ul>
-                        <li>Rio de Janeiro, Brasil</li>
-                        <li>Paris, França</li>
-                        <li>Mikonos, Grécia</li>
-                        <!-- Add more as saved -->
-                    </ul>
-                </div>
-                </div>
+                    <div class="right-sidebar">
+                        <div class="Wish list destinations">
+                            <h3>Wish list destinations</h3>
+                                <ul>
+                                    <li>Rio de Janeiro, Brasil</li>
+                                    <li>Paris, França</li>
+                                    <li>Mikonos, Grécia</li>
+                                    <!-- Add more as saved -->
+                                </ul>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>
