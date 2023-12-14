@@ -2,7 +2,11 @@
 
 @section('content')
     <div class="help-container">
-        <a href="{{ route('home') }}"> < Go back home</a>
+        @if (Auth::check())
+            <a href="{{ route('home') }}"> < Go back home</a>
+        @else
+            <a href="{{ route('login') }}"> < Go back home</a>
+        @endif        
         <h1>Need some help?</h1>
         <div class="getting-started">
             <h2>Welcome to Travly<br>Get started with our platform in a few easy steps!</h2>
