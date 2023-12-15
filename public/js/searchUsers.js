@@ -32,7 +32,12 @@ function displayUsers(users) {
     }
 
     if (users.length === 0) {
-        usersList.innerHTML = '<li id="users-not-found"> No users found </li>';
+        // usersList.innerHTML = '<li id="users-not-found"> No users found </li>';
+        const usersNotFound = document.createElement('li');
+        usersNotFound.id = 'users-not-found';
+        usersNotFound.textContent = "No users found";
+
+        usersList.appendChild(usersNotFound);
         return;
     }
 

@@ -374,18 +374,22 @@ textarea {
   transition: width 0.3s ease;
 }
 
-.search-bar {
-  margin-bottom: 20px;
-}
-
-.search-bar input {
+#search-users {
+  margin-bottom: 0px;
   width: 100%;
   padding: 8px;
   border: none;
   border-radius: 5px;
-  background-color: #f4f0ff;
-  color: #2c3e44;
+  background-color: #d4e4f2;
+  color: #000000;
   font-size: 16px;
+}
+
+#user-profile-link:hover {
+  color: #000000;
+}
+#user-username {
+  margin-bottom: 3px;
 }
 
 /* Additional styling for the suggested groups */
@@ -516,12 +520,15 @@ ul {
   margin: 0;
 }
 
-ul li {
+ul li:not(#users-not-found, .sidebar-menu > li) {
   margin-bottom: 5px;
+}
+
+ul li:not(#users-not-found) {
   transition: transform 0.3s ease;
 }
 
-ul li:hover {
+ul li:hover:not(#users-not-found) {
   transform: translateX(5px);
 }
 
