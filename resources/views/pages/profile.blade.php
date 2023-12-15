@@ -35,10 +35,10 @@
             </div>
             <div class="user-info">
                 <div>
-                    <h3>{{ auth()->user()->name_ }}</h3>
-                    <p>{{ auth()->user()->username }}</p>
-                    <p>{{ auth()->user()->description_ ? auth()->user()->description_ : 'Add description' }}</p>
-                    <p>{{ auth()->user()->location ? auth()->user()->location : 'Add location' }}</p>
+                    <h3>{{ $user->name_ }}</h3>
+                    <p>{{ $user->username }}</p>
+                    <p>{{ $user->description_ ? $user->description_ : 'Add description' }}</p>
+                    <p>{{ $user->location ? $user->location : 'Add location' }}</p>
                 </div>
                 <div>
                     <p>{{ $user->followers()->count() }} Followers {{ $user->following()->count() }} Following</p>

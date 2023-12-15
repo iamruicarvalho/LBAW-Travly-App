@@ -184,7 +184,8 @@
         color:black;
     }
 
-    body .edit-profile-link {
+    body .edit-profile-link,
+    body .send-friend-request-link {
         display: block;
         margin-top: 40px;
         margin-left: auto; 
@@ -203,7 +204,8 @@
         font-size: 15px;
     }
 
-    body .edit-profile-link:hover {
+    body .edit-profile-link:hover,
+    body .send-friend-request-link:hover {
         color: white;
         background-color: rgb(41, 41, 93);
     }

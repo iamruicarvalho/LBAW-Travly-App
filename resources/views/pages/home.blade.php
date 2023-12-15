@@ -89,10 +89,12 @@
 
         {{-- Right Sidebar --}}
         <div class="right-sidebar">
-            <div class="search-bar">
-                {{-- Your search bar HTML goes here --}}
-                <input type="text" placeholder="🔍 Search...">
-            </div>
+            <form id="users-search-bar" action="{{ route('users.search') }}" method="GET">
+                @csrf
+                <input type="text" id="search-users" name="query" placeholder="🔍 Search users ..." autocomplete="off">
+            </form>
+            <ul id="users-list"><!-- users will appear here --></ul>
+
             <div class="suggested-groups">
             <!-- Your suggested groups content goes here -->
             <h3>Suggested Groups</h3>
@@ -185,5 +187,6 @@
         </div>
     </div>
     <link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/searchUsers.js') }}" defer></script>
 @endsection
 

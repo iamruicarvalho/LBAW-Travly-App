@@ -85,5 +85,16 @@ class UserController extends Controller
     //         ->where('follows_.followerID', '=', $this->id)
     //         ->where('follows_.followedID', '=', 'post_.created_by');
     // }
+
+    public function searchUsers(Request $request) {
+        $query = $request->input('query'); 
+
+        $users = User::where('username', 'like', $query . '%')
+                ->orWhere('name_', 'like', '%' . $query . '%')
+                ->select(['id', 'name_', 'username'])
+                ->get();
+        
+        return response()->json($users);
+    }
 }
 
