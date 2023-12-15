@@ -30,8 +30,13 @@
                 <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
             </div>
             <div>
-            <a href="{{ route('notifications', auth()->id()) }}" class="edit-profile-link">Notifications</a>
-            <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
+                @if (auth()->user() == $user)
+                    <a href="{{ route('notifications', auth()->id()) }}" class="edit-profile-link">Notifications</a>
+                    <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
+                @else
+                    <a href="#" class="send-friend-request-link">Notifications</a>
+                    <a href="#" class="send-friend-request-link">Send friend request</a>
+                @endif
             </div>
             <div class="user-info">
                 <div>
