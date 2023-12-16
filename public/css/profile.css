@@ -229,5 +229,17 @@
     body .user-info{
         margin: 20px;
     }
+
+    .error {
+        width: fit-content;
+        display: block;
+        background-color: rgb(244, 193, 193);
+        border-radius: 4px;
+        font-size: 12px;
+        margin-bottom: 20px;
+        padding: 8px;
+        color: rgb(237, 71, 71);
+    }
+
     
     
