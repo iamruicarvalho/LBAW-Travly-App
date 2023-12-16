@@ -53,50 +53,53 @@
         </div>
 
         <div class="profile-body">
-            <div class="post">
-                <!-- Add user posts or a timeline here -->
-                @if (Auth()->user()->posts()->count() > 0)
-                    @foreach(Auth()->user()->posts()->get() as $post)
-                        <div class="post-item">
-                            <div class="post-content">
-                                <img src="{{ asset('postimage/' . $post->content_) }}">
-                                <p>{{ $post->description_ }}</p>
+            @if (Auth()->user() == $user)
+                <div class="post">
+                    <!-- Add user posts or a timeline here -->
+                    @if (Auth()->user()->posts()->count() > 0)
+                        @foreach(Auth()->user()->posts()->get() as $post)
+                            <div class="post-item">
+                                <div class="post-content">
+                                    <img src="{{ asset('postimage/' . $post->content_) }}">
+                                    <p>{{ $post->description_ }}</p>
+                                </div>
+                                <div class="post-details">
+                                    <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
+                                    <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
+                                    <a> {{ $post->time_ }}</a>
+                                    <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                                    <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
+                                </div>
                             </div>
-                            <div class="post-details">
-                                <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
-                                <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
-                                <a> {{ $post->time_ }}</a>
-                                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
-                                <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <p>Looks like there are no posts yet 😭</p>
-                @endif
-            </div>
-
-
-                {{-- Right Sidebar --}}
-                <div class="profile-right-sidebars">
-                    <div class="right-sidebar">
-                        <div class="countries-visited">
-                            <h3>Countries visited</h3>
-                            <p> {{ auth()->user()->countries_visited }}/195 </p>
-                        </div>
+                        @endforeach
+                    @else
+                        <p>Looks like there are no posts yet 😭</p>
+                    @endif
+                </div>
+            @else
+                <p>You don't have access to this user's posts</p>
+            @endif    
+            
+            {{-- Right Sidebar --}}
+            <div class="profile-right-sidebars">
+                <div class="right-sidebar">
+                    <div class="countries-visited">
+                        <h3>Countries visited</h3>
+                        <p> {{ auth()->user()->countries_visited }}/195 </p>
                     </div>
-                {{-- Right Sidebar --}}
-                    <div class="right-sidebar">
-                        <div class="Wish list destinations">
-                            <h3>Wish list destinations</h3>
-                                <ul>
-                                    <li>Rio de Janeiro, Brasil</li>
-                                    <li>Paris, França</li>
-                                    <li>Mikonos, Grécia</li>
-                                    <!-- Add more as saved -->
-                                </ul>
-                        </div>
+                </div>
+            {{-- Right Sidebar --}}
+                <div class="right-sidebar">
+                    <div class="Wish list destinations">
+                        <h3>Wish list destinations</h3>
+                            <ul>
+                                <li>Rio de Janeiro, Brasil</li>
+                                <li>Paris, França</li>
+                                <li>Mikonos, Grécia</li>
+                                <!-- Add more as saved -->
+                            </ul>
                     </div>
+                </div>
             </div>
         </div>
     </div>
