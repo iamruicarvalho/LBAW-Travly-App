@@ -53,11 +53,16 @@
         </div>
 
         <div class="profile-body">
-            @if (Auth()->user() == $user)
+            <!-- possibility of seeing other users posts: -->
+            <!-- 1. I am seeing my personal profile -->
+            <!-- 2. I am visiting a friend's profile -->
+            <!-- 3. I am visiting a user that has a public account -->
+            <!-- Need to see if they are friends. Not implemented yet. Add this when done (    && (weAreFriends || !($user->private_)    )-->
+            @if (Auth()->user() == $user || (Auth()->user() != $user && !($user->private_)))
                 <div class="post">
                     <!-- Add user posts or a timeline here -->
-                    @if (Auth()->user()->posts()->count() > 0)
-                        @foreach(Auth()->user()->posts()->get() as $post)
+                    @if ($user->posts()->count() > 0)
+                        @foreach($user->posts()->get() as $post)
                             <div class="post-item">
                                 <div class="post-content">
                                     <img src="{{ asset('postimage/' . $post->content_) }}">
@@ -67,17 +72,21 @@
                                     <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
                                     <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
                                     <a> {{ $post->time_ }}</a>
-                                    <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
-                                    <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
+                                    <!-- If I'm on my personal profile page -->
+                                    @if (Auth()->user() == $user)  
+                                        <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                                        <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Edit</a>
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
                     @else
-                        <p>Looks like there are no posts yet 😭</p>
+                        <p>There are no posts yet 😭</p>
                     @endif
-                </div>
+                </div>            
+            <!-- Private account -->
             @else
-                <p>You don't have access to this user's posts</p>
+                <p>This is a private account. You don't have access to this user's posts.</p>
             @endif    
             
             {{-- Right Sidebar --}}
