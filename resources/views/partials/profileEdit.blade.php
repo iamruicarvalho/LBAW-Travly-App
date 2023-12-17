@@ -109,5 +109,4 @@
         </div>
     </div>
     <link href="{{ url('css/profile.css') }}" rel="stylesheet">
-    <!-- <script defer src="{{ asset('js/update_profile.js') }}"></script> -->
 @endsection

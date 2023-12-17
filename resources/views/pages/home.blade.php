@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-        <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="upload-post-section">
                     <textarea name="description" placeholder="Write your post..."></textarea>
