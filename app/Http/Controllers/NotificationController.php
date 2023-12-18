@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\PostNotification;
 use App\Models\UserNotification;
 use App\Models\Notification;
+use App\Models\Request;
 use App\Models\User;
+use App\Models\Follow;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -66,6 +68,14 @@ class NotificationController extends Controller
 
             $notifType = $request->input('notifType');
 
+            if($notifType == 'request_follow'){
+                $check = Request::where('senderid', $request->input('to'))->where('receiverid', Auth::user()->id)->exists();
+                if($check){
+                    createFriends(Auth::user()->id, $request->input('to'));
+                    $notifType = 'accepted_follow';
+                }
+            }
+
             $notification = new Notification();
             $notification->notificationid = Notification::orderBy('notificationid','desc')->first()->notificationid + 1;
             $notification->time_ = now();
@@ -80,6 +90,12 @@ class NotificationController extends Controller
                     break;
                 case('request_follow'):
                     $notification->description_ = $username . ' sent you a follow request!';
+
+                    $friendRequest = new Request();
+                    $friendRequest->senderid = Auth::user()->id;
+                    $friendRequest->receiverid = $request->input('to');
+
+                    $friendRequest
                     break;
                 case('accepted_follow'):
                     $notification->description_ = $username . ' accepted your follow request!';
@@ -112,5 +128,45 @@ class NotificationController extends Controller
 
             return 1;
         } else return 0;
+    }
+
+    public function acceptFriendRequest(Request $request) {
+        if (Auth::check()) {
+            
+            $this->validate($request, [
+                'toFollow' => 'required|exists:user_,id',
+            ]);
+
+            createFriends(Auth::user()->id, $request->input('toFollow'))
+        }
+
+        //redirect to error page (still none) with error user not logged in
+        return "Not logged in";
+    }
+
+    public function createFriends($friend1, $friend2){
+
+        $check1 = Request::where('senderid', $friend1)->where('receiverid', $friend2)->exists();
+        $check2 = Request::where('senderid', $friend2)->where('receiverid', $friend1)->exists();
+        
+        if($check1){
+            Request::where('senderid', $friend1)->where('receiverid', $friend2)->delete();
+        }
+        if($check2){
+            Request::where('senderid', $friend2)->where('receiverid', $friend1)->delete();
+        }
+    
+        $iFollowU = new Follow();
+        $iFollowU->followerID = $friend1;
+        $iFollowU->followedID = $friend2;
+
+        $uFollowMe = new Follow();
+        $uFollowMe->followerID = $friend2;
+        $uFollowMe->followedID = $friend1;
+
+        $iFollowU->save();
+        $uFollowMe->save();
+
+        getAll();
     }
 }

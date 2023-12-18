@@ -132,15 +132,15 @@ CREATE TABLE post_notification (
 );
 
 CREATE TABLE request_ (
-    senderID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    receiverID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    PRIMARY KEY (senderID, receiverID)
+    senderid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    receiverid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    PRIMARY KEY (senderid, receiverid)
 );
 
 CREATE TABLE follows_ (
-    followerID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    followedID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    PRIMARY KEY (followerID, followedID)
+    followerid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    followedid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    PRIMARY KEY (followerid, followedid)
 );
 
 CREATE TABLE post_likes (
@@ -970,7 +970,7 @@ INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
             (40, 5, 'liked_post');
             */
 
-INSERT INTO request_(senderID, receiverID) VALUES
+INSERT INTO request_(senderid, receiverid) VALUES
             (6, 17),
             (34, 48),
             (71, 32),
@@ -1059,7 +1059,7 @@ INSERT INTO request_(senderID, receiverID) VALUES
             (5, 69),
             (36, 94);
 
-INSERT INTO follows_(followerID, followedID) VALUES
+INSERT INTO follows_(followerid, followedid) VALUES
             (23, 67),
             (10, 35),
             (5, 51),

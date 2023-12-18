@@ -10,19 +10,19 @@ class Follow extends Model
 {
     public $timestamps = false;
     protected $table = 'follows_';
-    protected $primaryKey = ['followerID', 'followedID'];
+    protected $primaryKey = ['followerid', 'followedid'];
 
     protected $fillable = [
-        'followerID', 'followedID'
+        'followerid', 'followedid'
     ];
 
     public function follower()
     {
-        return $this->belongsTo(User::class, 'followerID');
+        return $this->belongsTo(User::class, 'followerid');
     }
 
     public function followed()
     {
-        return $this->belongsTo(User::class, 'followedID');
+        return $this->belongsTo(User::class, 'followedid');
     }
 }

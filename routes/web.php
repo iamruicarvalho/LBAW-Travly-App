@@ -96,6 +96,7 @@ Route::controller(GroupController::class)->group(function () {
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', [NotificationController::class, 'getAll'])->name('notifications');
     Route::post('/notifications', [NotificationController::class, 'removeNotif'])->name('notifications.remove');
+    Route::post('/notifications', [NotificationController::class, 'acceptFriendRequest'])->name('notifications.acceptFriend');
 });
 
 // Authentication

@@ -92,6 +92,15 @@ class User extends Model implements Authenticatable
     {
         return $this->belongsToMany(User::class, 'follows_', 'followerid', 'followedid');
     }
-    
 
+    public function isFriend($friend)
+    {
+        try{
+            $iFollowU = Follow::where('followerid', $this->id)->where('followedid', $friend)->first();
+            $uFollowMe = Follow::where('followerid', $friend)->where('followedid', $this->id)->first();
+            return True;
+        } catch (Exception $e){
+            return False;
+        }
+    }
 }
