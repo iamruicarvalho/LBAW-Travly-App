@@ -89,7 +89,7 @@ CREATE TABLE comment_ (
     description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0, 
     time_ TIMESTAMP NOT NULL,
-    id INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
+    id INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,                        -- comment author
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE,
     comment_replies INTEGER DEFAULT NULL REFERENCES comment_ (commentID) ON UPDATE CASCADE          -- tirar default null
 );

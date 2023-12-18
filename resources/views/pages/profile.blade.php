@@ -79,7 +79,7 @@
                             </div>
                             <div class="post-details">
                                 <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
-                                <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
+                                <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details">{{ $post->comments_ }} Comments</a>
                                 <a> {{ $post->time_ }}</a>
                                 <!-- If I'm on my personal profile page -->
                                 @if (Auth()->user() == $user)  

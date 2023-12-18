@@ -42,8 +42,10 @@
                             <a class="show-details"> {{ $post->time_ }}</a>
                 </div>
 
-                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Update</a>
+                @if (Auth()->user() == $user)
+                    <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
+                    <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Update</a>
+                @endif
 
                     <!-- Adicione um formulário para adicionar novos comentários -->
                     @auth
@@ -65,20 +67,28 @@
                         <div class="comment-item">
                             <div class="comment-details">
                                 <p class="comment-description">{{ $comment->description_ }}</p>
-                                <p class="comment-author">Comment by: {{ $comment->user->name_ }}</p>
+                                <p class="comment-author">Commented by: {{ $comment->user->username }}</p>
                                 <p class="comment-time">Posted on: {{ $comment->time_ }}</p>
-                                <form action="{{ url('comments/' . $comment->commentid) }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    @method('PUT')
-                                    <textarea name="comment">{{ $comment->description_ }}</textarea>
-                                    <button type="submit">Salvar Edição</button>
-                                </form>
-                                <form action="{{ route('comments.destroy', $comment->commentid) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Are you sure to delete this?')">Delete</button>
-                                </form>
+                                
+                                @if (Auth()->user()->id == $comment->id)
+                                    <!-- this can only appear if I am the author of the comment -->
+                                    <form action="{{ url('comments/' . $comment->commentid) }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PUT')
+                                        <textarea name="comment">{{ $comment->description_ }}</textarea>
+                                        <button type="submit">Salvar Edição</button>
+                                    </form>
+                                @endif
+                                @if (Auth()->user()->id == $post->created_by || Auth()->user()->id == $comment->id)     <!-- $comment->id refers to the id of the comment author -->
+                                    <!-- this can only appear if I am the owner of the account or the author of the comment -->
+                                    <form action="{{ route('comments.destroy', $comment->commentid) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure to delete this?')">Delete</button>
+                                    </form>
+                                @endif
                             </div>
+                            <hr>
                         </div>
                     @empty
                         <p>No comments yet.</p>
