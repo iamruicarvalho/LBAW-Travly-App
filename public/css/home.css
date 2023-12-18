@@ -357,6 +357,18 @@ textarea {
   margin-left: 5px;
 }
 
+.comment-description {
+  font-size: 18px;
+  color: #6084A3;
+}
+
+.comment-author {
+  color: black;
+}
+.comment-author:hover {
+  color: grey;
+}
+
   
 /* Barra Lateral Direita */
 /* Right Sidebar */

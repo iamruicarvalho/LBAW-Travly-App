@@ -67,7 +67,7 @@
                         <div class="comment-item">
                             <div class="comment-details">
                                 <p class="comment-description">{{ $comment->description_ }}</p>
-                                <p class="comment-author">Commented by: {{ $comment->user->username }}</p>
+                                Commented by: <a href="{{ route('profile.show', $comment->user->id) }}" class="comment-author">{{ $comment->user->username }}</a>
                                 <p class="comment-time">Posted on: {{ $comment->time_ }}</p>
                                 
                                 @if (Auth()->user()->id == $comment->id)
@@ -79,7 +79,8 @@
                                         <button type="submit">Salvar Edição</button>
                                     </form>
                                 @endif
-                                @if (Auth()->user()->id == $post->created_by || Auth()->user()->id == $comment->id)     <!-- $comment->id refers to the id of the comment author -->
+                                @if (Auth()->user()->id == $post->created_by || Auth()->user()->id == $comment->id)     
+                                    <!-- $comment->id refers to the id of the comment author -->
                                     <!-- this can only appear if I am the owner of the account or the author of the comment -->
                                     <form action="{{ route('comments.destroy', $comment->commentid) }}" method="POST">
                                         @csrf
@@ -88,7 +89,7 @@
                                     </form>
                                 @endif
                             </div>
-                            <hr>
+                            <hr style="background-color: black; height: 2px;">
                         </div>
                     @empty
                         <p>No comments yet.</p>
