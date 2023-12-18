@@ -45,8 +45,8 @@
                 <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
                 <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Update</a>
 
-                                    <!-- Adicione um formulário para adicionar novos comentários -->
-                                    @auth
+                    <!-- Adicione um formulário para adicionar novos comentários -->
+                    @auth
                     <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="upload-post-section">

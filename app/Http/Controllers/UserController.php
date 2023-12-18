@@ -96,5 +96,24 @@ class UserController extends Controller
         
         return response()->json($users);
     }
+
+    public function getFollowers($id) {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuário não encontrado');   
+        }
+
+        return view('partials.displayFollowers', compact('user'));
+    }
+    public function getFollowing($id) {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuário não encontrado');   
+        }
+
+        return view('partials.displayFollowing', compact('user'));
+    }
 }
 

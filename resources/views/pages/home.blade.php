@@ -66,9 +66,9 @@
                     <img src="{{ asset('postimage/' . $data->content_) }}">
                 </div>
                 <div class="post-details">
-                            <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
-                            <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
-                            <a class="show-details"> {{ $data->time_ }}</a>
+                    <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
+                    <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
+                    <a class="show-details"> {{ $data->time_ }}</a>
                 </div>
 
                 <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>

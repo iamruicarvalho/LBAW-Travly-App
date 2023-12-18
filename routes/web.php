@@ -43,6 +43,8 @@ Route::controller(UserController::class)->group(function () {
 
     //other users
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
+    Route::get('/{userid}/followers', [UserController::class, 'getFollowers'])->name('followers');
+    Route::get('/{userid}/following', [UserController::class, 'getFollowing'])->name('following');
 });
 
 // Post
