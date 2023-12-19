@@ -115,5 +115,15 @@ class UserController extends Controller
 
         return view('partials.displayFollowing', compact('user'));
     }
+
+    public function settings($id) {
+        $user = User::find($id);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuário não encontrado');
+        }
+
+        return view('partials.settings', compact('user'));
+    }
 }
 

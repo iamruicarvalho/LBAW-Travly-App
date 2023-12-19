@@ -40,6 +40,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/profile/show/{id}', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile/edit/{id}', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/settings/{id}', [UserController::class, 'settings'])->name('profile.settings');
 
     //other users
     Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');

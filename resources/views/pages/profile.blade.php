@@ -19,6 +19,9 @@
                     <!-- Profile information here -->
                     <a href="{{ route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
                 </div>
+                <div class="settings">
+                    <a href="{{ route('profile.settings', auth()->id()) }}">⚙️ Settings</a>
+                </div>
             </div>
         </div>
 
