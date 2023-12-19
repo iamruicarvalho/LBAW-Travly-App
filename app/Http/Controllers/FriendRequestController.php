@@ -82,8 +82,8 @@ class FriendRequestController extends Controller{
                  'toRemove' => 'required|exists:user_,id',
             ]);
 
-            Auth::user()->followers()->remove($request->input($toRemove))
-            Auth::user()->following()->remove($request->input($toRemove))
+            Auth::user()->followers()->remove($request->input($toRemove));
+            Auth::user()->following()->remove($request->input($toRemove));
 
             return redirect()->back();
         }
@@ -92,34 +92,28 @@ class FriendRequestController extends Controller{
         return redirect()->action('login');
     }
 
-
-
     public function sendFriendRequest(Request $request){
         if (Auth::check()) {
 
             $this->validate($request, [
                 'notifType' => 'required', 
                 'to' => 'required|exists:user_,id',
-                'targetPost' => 'exists:post_,postid',
             ]);
             
             $notifType = $request->input('notifType');
 
-            $friendRequest = new Request();
-            $friendRequest->createRequest(Auth::user()->id, $request->input('to')); //Create new friend request
+            Auth::user()->requestsSent()->attach($request->input('to'));
 
-            $check = Request::where('senderid', $request->input('to'))->where('receiverid', Auth::user()->id)->exists(); //check if other person already sent request
+            $check = FriendRequest::where('senderid', $request->input('to'))->where('receiverid', Auth::user()->id)->exists(); //check if other person already sent request
             
             if($check){ //if they did, make them friends and change notif to accepted_follow
-                createFriends(Auth::user()->id, $request->input('to'));
+                $this->createFriends(Auth::user()->id, $request->input('to'));
                 $notifType = 'accepted_follow';
-                $notifCheck = addNotif($request); //can be used to check if notification was created
-                return redirect()->back();
             } 
 
-            $notifCheck = addNotif($request); //can be used to check if notification was created
+            $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif($request); //can be used to check if notification was created
 
-            return Redirect::back();
+            return redirect()->back();
         }
         
         //redirect to error page (still none) with error user not logged in

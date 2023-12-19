@@ -66,18 +66,19 @@ class User extends Model implements Authenticatable
 
     public function requestsSent()
     {
-        return $this->hasMany(FriendRequest::class, 'senderID');
+        return $this->belongsToMany(User::class, 'request_', 'senderid', 'receiverid');
     }
 
     public function requestsReceived()
     {
-        return $this->hasMany(FriendRequest::class, 'receiverID');
+        return $this->belongsToMany(User::class, 'request_', 'receiverid', 'senderid');
     }
 
     public function notifications()
     {
         return $this->hasMany(UserNotification::class, 'id');
     }
+
     public function postLikes()
     {
         return $this->hasMany(PostLike::class, 'id');

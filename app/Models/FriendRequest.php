@@ -15,6 +15,8 @@ class FriendRequest extends Model
         'senderid', 'receiverid'
     ];
 
+    public $incrementing = false;
+
     public function sender()
     {
         return $this->belongsTo(User::class, 'senderid');
@@ -23,12 +25,5 @@ class FriendRequest extends Model
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiverid');
-    }
-
-    public function createRequest($sender, $receiver){
-        $this->senderid = Auth::user()->id;
-        $this->receiverid = $request->input('to');
-
-        $this->save();
     }
 }

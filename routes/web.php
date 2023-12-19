@@ -102,6 +102,7 @@ Route::controller(NotificationController::class)->group(function () {
 Route::controller(FriendRequestController::class)->group(function () {
     Route::post('/request/reject', [FriendRequestController::class, 'rejectFriendRequest'])->name('request.rejectFriend');
     Route::post('/request/accept', [FriendRequestController::class, 'acceptFriendRequest'])->name('request.acceptFriend');
+    Route::post('/request/sendFollow', [FriendRequestController::class, 'sendFriendRequest'])->name('request.sendFollow');
     Route::post('/request/removeFriend', [FriendRequestController::class, 'removeFriend'])->name('request.removeFriend');
     Route::post('/request/removeFollow', [FriendRequestController::class, 'removeFollow'])->name('request.removeFollow');
 });
