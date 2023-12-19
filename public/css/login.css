@@ -393,14 +393,20 @@ nav {
 .login-form .success {
   color: #286c72;
   font-weight: bold;
+  margin-top: 10px;
 }
 
 .remember-me {
   display: flex;
   align-items: center;
-  margin-bottom: 1.5em; 
+  margin-bottom: 1em; 
+  margin-right: 13em; 
+}
+
+.remember-me label {
+  margin-right: 0; /* Adjust the margin as needed */
 }
 
 .remember-me input {
-  margin-right: 0.5em;
+  margin-bottom: 5px;
 }
