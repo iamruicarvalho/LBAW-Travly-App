@@ -19,7 +19,6 @@ class FriendRequestController extends Controller{
             $this->validate($request, [
                  'notifType' => 'required', 
                  'to' => 'required|exists:user_,id',
-                 'targetPost' => 'exists:post_,postid',
             ]);
 
             $userid = Auth::user()->id;
@@ -27,11 +26,33 @@ class FriendRequestController extends Controller{
             $this->createFriends($userid, $request->input('to')); //Make me follow target and target follow me
             $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif($request); //send notification accepting friend request
             
-            return redirect()->back(); //redirect()->action('notifications');
+            return redirect()->back();
         }
 
         //redirect to error page (still none) with error user not logged in
-        return redirect()->action('home');
+        return redirect()->action('login');
+    }
+
+    public function rejectFriendRequest(Request $request) {
+        
+        if (Auth::check()) {
+            
+            $this->validate($request, [
+                 'notifType' => 'required', 
+                 'to' => 'required|exists:user_,id',
+            ]);
+
+            $userid = Auth::user()->id;
+
+            FriendRequest::where('senderid', $request->input('to'))->where('receiverid', $userid)->delete();
+
+            $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif($request); //send notification accepting friend request
+            
+            return redirect()->back();
+        }
+
+        //redirect to error page (still none) with error user not logged in
+        return redirect()->action('login');
     }
 
     public function sendFriendRequest(Request $request){

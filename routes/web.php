@@ -100,7 +100,8 @@ Route::controller(NotificationController::class)->group(function () {
 });
 
 Route::controller(FriendRequestController::class)->group(function () {
-    Route::post('/request', [FriendRequestController::class, 'acceptFriendRequest'])->name('request.acceptFriend');
+    Route::post('/request/rej', [FriendRequestController::class, 'rejectFriendRequest'])->name('request.rejectFriend');
+    Route::post('/request/del', [FriendRequestController::class, 'acceptFriendRequest'])->name('request.acceptFriend');
 });
 
 // Authentication

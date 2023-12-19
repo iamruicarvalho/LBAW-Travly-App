@@ -110,4 +110,15 @@
     border-radius: 50%;
   }
 
+  .follow_req {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    padding: 10px;
+  }
+
+  .notif_unav, #accept_req , .a-r_button {
+    margin: 0;
+  }
+
   

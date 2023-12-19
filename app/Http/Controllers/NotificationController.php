@@ -86,6 +86,9 @@ class NotificationController extends Controller
                 case('accepted_follow'):
                     $notification->description_ = $username . ' accepted your follow request!';
                     break;
+                case('rejected_follow'):
+                    $notification->description_ = $username . ' rejected your follow request!';
+                    break;
                 case('liked_post'):
                     $notification->description_ = $username . ' liked one of your posts!';
                     $uNotif = FALSE;

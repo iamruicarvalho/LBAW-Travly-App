@@ -35,7 +35,7 @@ DROP TYPE IF EXISTS post_notification_types CASCADE;
 --====================================--
 
 CREATE TYPE post_content_types AS ENUM ('image', 'video');
-CREATE TYPE user_notification_types AS ENUM ('started_following', 'request_follow', 'accepted_follow');
+CREATE TYPE user_notification_types AS ENUM ('started_following', 'request_follow', 'accepted_follow', 'rejected_follow');
 CREATE TYPE post_notification_types AS ENUM ('liked_post', 'commented_post');
 
 --====================================--
