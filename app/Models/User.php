@@ -119,4 +119,8 @@ class User extends Model implements Authenticatable
         $check = FriendRequest::where('senderid', $target)->where('receiverid', $this->id)->exists();
         return $check && !$this->isFriend($target);
     }
+
+    public function follows($target){
+        return Follow::where('followerid', $this->id)->where('followedid', $friend)->exists();
+    }
 }

@@ -55,6 +55,45 @@ class FriendRequestController extends Controller{
         return redirect()->action('login');
     }
 
+    public function removeFollow(Request $request) { //used for public accounts (iFollowU)
+        
+        if (Auth::check()) {
+            
+            $this->validate($request, [
+                 'notifType' => 'required', 
+                 'toRemove' => 'required|exists:user_,id',
+            ]);
+
+            $userid = Auth::user()->removeFollow($request->input($toRemove));
+
+            return redirect()->back();
+        }
+
+        //redirect to error page (still none) with error user not logged in
+        return redirect()->action('login');
+    }
+
+    public function removeFriend(Request $request) { //used for friends (iFollowU, uFollowMe)
+        
+        if (Auth::check()) {
+            
+            $this->validate($request, [
+                 'notifType' => 'required', 
+                 'toRemove' => 'required|exists:user_,id',
+            ]);
+
+            Auth::user()->followers()->remove($request->input($toRemove))
+            Auth::user()->following()->remove($request->input($toRemove))
+
+            return redirect()->back();
+        }
+
+        //redirect to error page (still none) with error user not logged in
+        return redirect()->action('login');
+    }
+
+
+
     public function sendFriendRequest(Request $request){
         if (Auth::check()) {
 
