@@ -22,9 +22,9 @@
                     <img src="{{ asset('postimage/' . $post->content_) }}">
                 </div>
                 <div class="post-details">
-                            <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
-                            <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
-                            <a class="show-details"> {{ $post->time_ }}</a>
+                    <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
+                    <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details"> Comments</a>
+                    <a class="show-details"> {{ $post->time_ }}</a>
                 </div>
 
                 <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
@@ -34,5 +34,5 @@
             <p>No posts found for #{{ $hashtag }}</p>
         @endforelse
     </div>
-    <link href="{{ url('css/by_hastag.css') }}" rel="stylesheet">
+    <link href="{{ url('css/by_hashtag.css') }}" rel="stylesheet">
 @endsection

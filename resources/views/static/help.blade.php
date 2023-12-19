@@ -72,7 +72,6 @@
         <div class="feedback">
             <h2>Feedback</h2>
             <p>Travly cares about their users and their opinions.<br>Tell us what you like and what could be possibly improved so that you can enjoy the app even more.</p>
-            <input name="feedback" placeholder="Give us your feedback">
         </div>
     </div>
     <link href="{{ url('css/help.css') }}" rel="stylesheet">

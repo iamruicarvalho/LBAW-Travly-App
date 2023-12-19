@@ -21,32 +21,28 @@
             </div>
         </div>
 
-            <div class="messages-show">
-                <div class="header">
-                    <h1>Likes</h1>
-                    <div class="new-message-link">
-                        <a href="#">❤️</a>
-                    </div>
+        <div class="messages-show">
+            <div class="header">
+                <h1>Likes</h1>
+                <div class="new-message-link">
+                    <a href="#">❤️</a>
                 </div>
-                <div class="conversations-list">
-                    @forelse($likers as $liker)
-                                <div class="conversation-item">
-                                    <div class="user-avatar"></div>
-                                    <div class="conversation-details">
-                                        <p class="user-name">{{ $liker->user ? $liker->user->name_ : 'Not Found' }}</p>
-                                        <p class="username">{{ $liker->user ? $liker->user->username : '' }}</p>
-                                    </div>
-                                </div>
-                            </a>
-                            @empty
-                            <li class="no-likes-message">No likes yet.</li>
-                        @endforelse
-                </div>
-
             </div>
-
-
-        
+            <div class="conversations-list">
+                @forelse($likers as $liker)
+                    <div class="conversation-item">
+                        <div class="user-avatar"></div>
+                        <div class="conversation-details">
+                            <p class="user-name">{{ $liker->user ? $liker->user->name_ : 'Not Found' }}</p>
+                            <p class="username">{{ $liker->user ? $liker->user->username : '' }}</p>
+                        </div>
+                    </div>
+                    </a>
+                    @empty
+                    <li class="no-likes-message">No likes yet.</li>
+                @endforelse
+            </div>
+        </div>
 
     {{-- Right Sidebar --}}
         <div class="right-sidebar">

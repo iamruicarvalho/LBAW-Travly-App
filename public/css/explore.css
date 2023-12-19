@@ -1,5 +1,13 @@
 /* Estilos para a Página de Exploração */
 
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #D4E4F2;
+    padding: 1em;
+  }
+
   /* Container Geral */
   .container {
     display: flex;
