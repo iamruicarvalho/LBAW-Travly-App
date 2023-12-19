@@ -1,6 +1,11 @@
 // const token = document.querySelector('meta[name="csrf-token"').content;
+const searchForm = document.getElementById('users-search-bar');
 const searchUsers = document.getElementById('search-users');
 const usersList = document.getElementById('users-list');
+
+searchForm.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent the default form submission
+});
 
 searchUsers.addEventListener('keyup', () => {
     const user = searchUsers.value.toLowerCase();      // convert input search to lower case
