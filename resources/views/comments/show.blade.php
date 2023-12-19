@@ -66,7 +66,7 @@
                         <div class="comment-details">
                             <p class="comment-description">{{ $comment->description_ }}</p>
                             Commented by: <a href="{{ route('profile.show', $comment->user->id) }}" class="comment-author">{{ $comment->user->username }}</a>
-                            <p class="comment-time">Posted on: {{ $comment->time_ }}</p>
+                            <p class="comment-time">Posted on: {{ \Carbon\Carbon::parse($comment->time_)->diffForHumans() }}</p>
                             
                             @if (Auth()->user()->id == $comment->id)
                                 <!-- this can only appear if I am the author of the comment -->
