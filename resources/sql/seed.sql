@@ -744,7 +744,7 @@ INSERT INTO notification_(notificationid, description_, time_, seen, notifies, s
             (1, 'SarahWilson accepted your follow request!', '2023-10-25 15:55:10', FALSE, 1, 5),
             (2, 'JohnDoe started following you!', '2023-10-25 08:30:15', FALSE, 5, 3),
             (3, 'AliceSmith liked one of your posts!', '2023-10-25 10:15:40', FALSE, 1, 4),
-            (4, 'RobertJohnson sent you a follow request!', '2023-10-25 12:20:55', FALSE, 8, 6),
+            (4, 'RobertJohnson sent you a follow request!', '2023-10-25 12:20:55', FALSE, 1, 6),
             (5, 'EmilyBrown left a comment in one of your posts!', '2023-10-25 14:45:30', FALSE, 1, 9),
             (6, 'DanielRoberts liked one of your posts!', '2023-10-25 16:40:25', FALSE, 6, 2),
             (7, 'SophiaGarcia sent you a follow request!', '2023-10-25 17:25:55', FALSE, 3, 7),
@@ -971,6 +971,8 @@ INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
             */
 
 INSERT INTO request_(senderid, receiverid) VALUES
+            (6, 1);
+            /*
             (6, 17),
             (34, 48),
             (71, 32),
@@ -1057,8 +1059,9 @@ INSERT INTO request_(senderid, receiverid) VALUES
             (1, 84),
             (74, 28),
             (5, 69),
-            (36, 94);
+            (36, 94);*/
 
+/*
 INSERT INTO follows_(followerid, followedid) VALUES
             (23, 67),
             (10, 35),
@@ -1224,6 +1227,7 @@ INSERT INTO follows_(followerid, followedid) VALUES
             (33, 32),
             (5, 4),
             (2, 1);
+            */
 
 INSERT INTO post_likes(id, postID) VALUES
             (2, 1), 

@@ -9,6 +9,19 @@
                 @case('liked_post')
                     <h5 class="title">Liked Post</h5>
                 @break
+                @case('request_follow')
+                    <h5 class="title">Follow Request</h5>
+                    @if(Auth::user()->canAcceptRequestFrom($notification->sends_notif))
+                        <form method="POST" action="{{ route('request.acceptFriend') }}" id="accept_req">
+                            @csrf
+                            <input type="hidden" id="to" name="to" value="{{$notification->sends_notif}}" />
+                            <input type="hidden" id="notifType" name="notifType" value='accepted_follow' />
+                            <button type="submit">Accept</button>
+                        </form>
+                    @else
+                        <p class="notif_unav"> Cannot accept friend request </p>
+                    @endif
+                @break
                 @default
                     <h5 class="title">Follow Request</h5>
                 @break

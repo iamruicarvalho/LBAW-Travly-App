@@ -8,9 +8,10 @@ use App\Models\User;
 
 class Follow extends Model
 {
-    public $timestamps = false;
     protected $table = 'follows_';
     protected $primaryKey = ['followerid', 'followedid'];
+
+    public $incrementing = false; 
 
     protected $fillable = [
         'followerid', 'followedid'

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 
-class Request extends Model
+class FriendRequest extends Model
 {
     public $timestamps = false;
     protected $table = 'request_';
@@ -23,5 +23,12 @@ class Request extends Model
     public function receiver()
     {
         return $this->belongsTo(User::class, 'receiverID');
+    }
+
+    public function createRequest($sender, $receiver){
+        $this->senderid = Auth::user()->id;
+        $this->receiverid = $request->input('to');
+
+        $this->save();
     }
 }

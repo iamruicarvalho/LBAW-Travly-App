@@ -12,7 +12,7 @@ use App\Models\Group;
 use App\Models\Admin;
 use App\Models\Comment;
 use App\Models\Follow;
-use App\Models\Request;
+use App\Models\FriendRequest;
 use App\Models\UserNotification;
 
 class User extends Model implements Authenticatable 
@@ -66,12 +66,12 @@ class User extends Model implements Authenticatable
 
     public function requestsSent()
     {
-        return $this->hasMany(Request::class, 'senderID');
+        return $this->hasMany(FriendRequest::class, 'senderID');
     }
 
     public function requestsReceived()
     {
-        return $this->hasMany(Request::class, 'receiverID');
+        return $this->hasMany(FriendRequest::class, 'receiverID');
     }
 
     public function notifications()
@@ -95,12 +95,28 @@ class User extends Model implements Authenticatable
 
     public function isFriend($friend)
     {
-        try{
-            $iFollowU = Follow::where('followerid', $this->id)->where('followedid', $friend)->first();
-            $uFollowMe = Follow::where('followerid', $friend)->where('followedid', $this->id)->first();
-            return True;
-        } catch (Exception $e){
-            return False;
+        $iFollowU = Follow::where('followerid', $this->id)->where('followedid', $friend)->exists();
+        $uFollowMe = Follow::where('followerid', $friend)->where('followedid', $this->id)->exists();
+        return ($iFollowU && $uFollowMe);       
+    }
+
+    public function removeFollow($friend){
+        $remFriend = Follow::where('followerid', $this->id)->where('followedid', $friend);
+        if($remFriend->exists()){
+            $remFriend->delete();
         }
+    }
+
+    public function canSendRequestTo($target){
+        $check = FriendRequest::where('senderid', $this->id)->where('receiverid', $target)->exists();
+        if($check && ! $this->isFriend($target)){
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    public function canAcceptRequestFrom($target){
+        $check = FriendRequest::where('senderid', $target)->where('receiverid', $this->id)->exists();
+        return $check && !$this->isFriend($target);
     }
 }

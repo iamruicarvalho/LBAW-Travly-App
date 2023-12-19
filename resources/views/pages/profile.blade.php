@@ -31,7 +31,6 @@
             </div>
             <div>
                 @if (auth()->user() == $user)
-                    <a href="{{ route('notifications', auth()->id()) }}" class="edit-profile-link">Notifications</a>
                     <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
                 @else
                     <a href="#" class="send-friend-request-link">Notifications</a>
