@@ -33,6 +33,7 @@
     </div>
     </div>
 
+    <div class="main-content">
     <div class="group-create-container">
         <h2>Create a New Group</h2>
 
@@ -71,6 +72,7 @@
            
             <button type="submit" class="btn btn-primary">Create Group</button>
         </form>
+    </div>
     </div>
 </div>
 <link href="{{ url('css/group.css') }}" rel="stylesheet">

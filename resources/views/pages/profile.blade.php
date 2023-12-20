@@ -4,23 +4,35 @@
 
 <div class="profile-container">
     <div class="profile-sidebar-header-container">
-    {{-- Left Sidebar --}}
-    <div class="profile-sidebar-container">
-    <div class="left-sidebar">
-        <ul class="sidebar-menu">
-            <li><a href="{{ route('home') }}">🏠 Home</a></li>
-            <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
-            <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
-            <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
-            <li><a href="#">🌎 Wish List</a></li>
-            <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
-        </ul>
-        <div class="profile-section">
-            <!-- Profile information here -->
-            <a href="{{  route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
-        </div>
-    </div>
-    </div>
+        {{-- Left Sidebar --}}
+        @guest
+            <div class="left-sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="{{ route('login') }}">🔐 Login</a></li>
+                    <li><a href="{{ route('register') }}">📝 Register</a></li>
+                </ul>
+            </div>
+        @endguest
+        @auth
+            <div class="profile-sidebar-container">
+                <div class="left-sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="{{ route('home') }}">🏠 Home</a></li>
+                    <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
+                    <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
+                    <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
+                    <li><a href="#">🌎 Wish List</a></li>
+                    <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
+                </ul>
+                    <div class="profile-section">
+                        <!-- Profile information here -->
+                        <a href="{{ route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
+                    </div>
+                </div>
+            </div>
+        @endauth
+
+
         <div class="profile-header">
             <div class="header-container">
                 <img src="{{ asset($user->header_picture) }}" alt="Header Picture" class="profile-header-picture">
@@ -28,15 +40,43 @@
             <div class="profile-container">
                 <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
             </div>
+            @if (auth()->check())
             <div>
                 @if (auth()->user() == $user)
                     <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
                 @else
-                    <!-- add account privacy verification -->
-                    <a href="#" class="send-friend-request-link">Notifications</a>
-                    <a href="#" class="send-friend-request-link">Send friend request</a>
+                    @switch($user->private_)
+                        @case(true)
+                            @if(!auth()->user()->canSendRequestTo($user->id))
+                                <a class="edit-profile-link">Already Friends</a>    
+                            @else
+                                <form method="POST" action="{{ route('request.sendFollow') }}">
+                                    @csrf
+                                    <input type="hidden" id="to" name="to" value="{{ $user->id }}"/>
+                                    <input type="hidden" id="notifType" name="notifType" value='request_follow' />
+                                    <button type="submit" class="send-friend-request-link">Send friend request</button>
+                                </form>
+                            @endif
+                        @break
+                        @case(false)
+                            @if(auth()->user()->isFollowing($user->id))
+                                <a class="edit-profile-link">Follows</a> 
+                            @else
+                                <form method="POST" action="{{ route('request.sendFollow') }}">
+                                    @csrf
+                                    <input type="hidden" id="to" name="to" value="{{ $user->id }}"/>
+                                    <input type="hidden" id="notifType" name="notifType" value='request_follow' />
+                                    <button type="submit" class="send-friend-request-link">Follow</button>
+                                </form>
+                            @endif
+                        @break
+                    @endswitch
                 @endif
             </div>
+        @else
+            <p style="color: #D4E4F2;">.</p>
+            <p style="color: #D4E4F2;">.</p>
+        @endif
             <div class="user-info">
                 <div>
                     <h3>{{ $user->username }}</h3>
@@ -108,7 +148,7 @@
             <div class="right-sidebar">
                 <div class="countries-visited">
                     <h3>Countries visited</h3>
-                    <p> {{ auth()->user()->countries_visited }}/195 </p>
+                    <p> {{ $user->countries_visited }}/195 </p>
                 </div>
             </div>
             {{-- Right Sidebar --}}

@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\GuestController;
 
 
 
@@ -66,7 +67,7 @@ Route::get('/post_update_page/{postid}', [HomeController::class, 'post_update_pa
 Route::post('/update_post_data/{postid}', [HomeController::class, 'update_post_data'])->middleware('auth');
 
 Route::get('/posts/{postid}/likes', [LikeController::class, 'showLikes']);
-Route::post('/posts/{postid}/like', [LikeController::class, 'likePost'])->name('posts.like');
+Route::post('/posts/{postid}/like', [LikeController::class, 'likePost'])->name('posts.likes');
 Route::delete('/posts/{postid}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
 
 
@@ -107,6 +108,7 @@ Route::controller(FriendRequestController::class)->group(function () {
     Route::post('/request/reject', [FriendRequestController::class, 'rejectFriendRequest'])->name('request.rejectFriend');
     Route::post('/request/accept', [FriendRequestController::class, 'acceptFriendRequest'])->name('request.acceptFriend');
     Route::post('/request/sendFollow', [FriendRequestController::class, 'sendFriendRequest'])->name('request.sendFollow');
+    Route::post('/request/startFollow', [FriendRequestController::class, 'startFollowing'])->name('request.startFollow');
     Route::post('/request/removeFriend', [FriendRequestController::class, 'removeFriend'])->name('request.removeFriend');
     Route::post('/request/removeFollow', [FriendRequestController::class, 'removeFollow'])->name('request.removeFollow');
 });
@@ -140,6 +142,8 @@ Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 
 Route::get('/posts/by-city/{city}', [PostController::class, 'getPostsByCity'])->name('posts.by.city');
 Route::get('/posts/{hashtag}', [PostController::class, 'getPostsByHashtag'])->name('posts.by.hashtag');
+
+Route::get('/guest-login', [GuestController::class, 'showGuestPosts'])->name('guest');
 
 /*
 use Illuminate\Support\Facades\Route;

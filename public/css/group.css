@@ -95,6 +95,10 @@
 
 }
 
+.group-container .group-create-container{
+    margin-top: 50px;
+}
+
 .group-container .view-details:hover {
     background-color: rgb(191, 191, 191);
 }
