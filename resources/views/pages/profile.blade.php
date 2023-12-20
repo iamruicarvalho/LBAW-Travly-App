@@ -19,9 +19,6 @@
                     <!-- Profile information here -->
                     <a href="{{ route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
                 </div>
-                <div class="settings">
-                    <a href="{{ route('profile.settings', auth()->id()) }}">⚙️ Settings</a>
-                </div>
             </div>
         </div>
 
@@ -44,22 +41,29 @@
             </div>
             <div class="user-info">
                 <div>
-                    <h3>{{ $user->name_ }}</h3>
-                    <p>{{ $user->username }}</p>
+                    <h3>{{ $user->username }}</h3>
+                    <p>{{ $user->name_ }}</p>
                     <p>{{ $user->description_ ? $user->description_ : 'Add description' }}</p>
                     <p>{{ $user->location ? $user->location : 'Add location' }}</p>
                 </div>
                 <!-- Need to see if they are friends. Not implemented yet. Add this when done (    && (weAreFriends || !($user->private_)    )-->
-                @if (Auth()->user() == $user || (Auth()->user() != $user && !($user->private_)))
-                    <div class="followers-following-link">
-                        <a href="{{ route('followers', $user->id) }}" class="followers-link">{{ $user->followers()->count() }} Followers</a>
-                        <a href="{{ route('following', $user->id) }}" class="following-link">{{ $user->following()->count() }} Following</a>
-                    </div>
-                @else
-                    <div class="followers-following-link">
-                        <p>{{ $user->followers()->count() }} Followers {{ $user->following()->count() }} Following</p>
-                    </div>
-                @endif
+                <div class="user-links">
+                    @if (Auth()->user() == $user || (Auth()->user() != $user && !($user->private_)))
+                        <div class="followers-following-link">
+                            <a href="{{ route('followers', $user->id) }}" class="followers-link">{{ $user->followers()->count() }} Followers</a>
+                            <a href="{{ route('following', $user->id) }}" class="following-link">{{ $user->following()->count() }} Following</a>
+                        </div>
+                    @else
+                        <div class="followers-following-link">
+                            <p>{{ $user->followers()->count() }} Followers {{ $user->following()->count() }} Following</p>
+                        </div>
+                    @endif
+                    @if (Auth()->user() == $user)
+                        <div>
+                            <a href="{{ route('profile.delete', $user->id) }}"  class="delete-account-link">Delete Account</a>
+                        </div> 
+                    @endif
+                </div>
             </div>
         </div>
     </div>

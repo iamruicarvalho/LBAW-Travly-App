@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -116,14 +118,18 @@ class UserController extends Controller
         return view('partials.displayFollowing', compact('user'));
     }
 
-    public function settings($id) {
-        $user = User::find($id);
+    public function deleteAccount($id) {
+        $user = Auth::user();
 
-        if (!$user) {
-            return redirect()->back()->with('error', 'Usuário não encontrado');
-        }
+        $user->username = "anonymous".$user->id;
+        $user->name_ = "Anonymous";
+        $user->email = "anonymous".$user->id."@example.com";
+        $user->password_ = Hash::make(Str::random(40));
 
-        return view('partials.settings', compact('user'));
+        $user->save();
+        Auth::logout();
+
+        return redirect()->route('login');
     }
 }
 

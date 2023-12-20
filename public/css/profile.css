@@ -147,6 +147,47 @@
         margin-top: -19px;
     }
 
+    body .user-links {
+        display: flex;
+        flex-direction: row;
+    }
+
+    body .followers-following-link {
+        margin-top: 10px;
+    }
+
+    body .followers-following-link a, 
+    body .followers-following-link p {
+        color: black;
+    }
+
+    body .followers-following-link a:hover, 
+    body .followers-following-link p:hover {
+        color: grey;
+    }
+
+    body .user-links .delete-account-link {
+        display: block;
+        margin: 0 50px 0 24em;
+        color: rgb(41, 41, 93);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 30px;
+        border-color: rgb(41, 41, 93);
+        background-color: white;
+        text-decoration: none;
+        text-align: center;
+        /* width: fit-content; */
+        font-size: 15px;
+    }
+
+    body .user-links .delete-account-link:hover {   
+        color: white;
+        background-color: rgb(41, 41, 93);
+    }
+
     body .profile-body {
         display: flex;
         margin-top: 20px;
