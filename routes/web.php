@@ -8,6 +8,7 @@ use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LikeController;
@@ -40,6 +41,12 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/profile/show/{id}', [UserController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile/edit/{id}', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/delete/{id}', [UserController::class, 'deleteAccount'])->name('profile.delete');
+
+    //other users
+    Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
+    Route::get('/{userid}/followers', [UserController::class, 'getFollowers'])->name('followers');
+    Route::get('/{userid}/following', [UserController::class, 'getFollowing'])->name('following');
 });
 
 // Post
@@ -94,6 +101,14 @@ Route::controller(GroupController::class)->group(function () {
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications', [NotificationController::class, 'getAll'])->name('notifications');
     Route::post('/notifications', [NotificationController::class, 'removeNotif'])->name('notifications.remove');
+});
+
+Route::controller(FriendRequestController::class)->group(function () {
+    Route::post('/request/reject', [FriendRequestController::class, 'rejectFriendRequest'])->name('request.rejectFriend');
+    Route::post('/request/accept', [FriendRequestController::class, 'acceptFriendRequest'])->name('request.acceptFriend');
+    Route::post('/request/sendFollow', [FriendRequestController::class, 'sendFriendRequest'])->name('request.sendFollow');
+    Route::post('/request/removeFriend', [FriendRequestController::class, 'removeFriend'])->name('request.removeFriend');
+    Route::post('/request/removeFollow', [FriendRequestController::class, 'removeFollow'])->name('request.removeFollow');
 });
 
 // Authentication

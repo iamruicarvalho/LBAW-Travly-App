@@ -2,7 +2,11 @@
 
 @section('content')
     <div class="help-container">
-        <a href="{{ route('home') }}"> < Go back home</a>
+        @if (Auth::check())
+            <a href="{{ route('home') }}"> < Go back home</a>
+        @else
+            <a href="{{ route('login') }}"> < Go back home</a>
+        @endif        
         <h1>Need some help?</h1>
         <div class="getting-started">
             <h2>Welcome to Travly<br>Get started with our platform in a few easy steps!</h2>
@@ -68,7 +72,6 @@
         <div class="feedback">
             <h2>Feedback</h2>
             <p>Travly cares about their users and their opinions.<br>Tell us what you like and what could be possibly improved so that you can enjoy the app even more.</p>
-            <input name="feedback" placeholder="Give us your feedback">
         </div>
     </div>
     <link href="{{ url('css/help.css') }}" rel="stylesheet">

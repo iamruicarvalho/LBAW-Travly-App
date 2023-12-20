@@ -1,5 +1,12 @@
-/* Barra Lateral Esquerda */
-.left-sidebar {
+  /* Container Geral */
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+  
+  /* Barra Lateral Esquerda */
+  .left-sidebar {
     width: 300px;
     height: 100vh;
     min-height: 100%;
@@ -10,8 +17,7 @@
     flex-direction: column;
     align-items: center;
   }
-  
-  
+
   .left-sidebar .logo img {
     max-width: 80%; /* Ajustado para 80% para evitar overflow */
     border-radius: 50%;
@@ -67,66 +73,52 @@
     margin-bottom: 10px;
   }
 
-/* groups */
+  /* notififications */
 
-.main-content {
-    flex: 1; 
-    padding: 50px;
-}
+  .main-content {
+    flex: 1; /* Cresce para ocupar o espaço restante */
+    padding: 15px;
+  }
 
-.groups {
-    margin-top: 20px;
-    width: 100%; 
-}
-
-.groups-container {
+  .notifications {
     display: flex;
-    justify-content: space-between;
-}
+    flex-direction: column;
+  }
 
-.groups ul {
-    list-style: none;
-    padding: 0;
-}
-
-.groups ul li {
-    background-color: white; 
-    border: 1px solid #BAD1E6;   
-    border-radius: 5px;
-    padding: 20px;            
-}
-
-.groups ul li a {
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
-}
-
-.groups ul li:hover {
-    background-color: #D4E4F2;
-}
-
-.groups .create-group {
-    background-color: #BAD1E6;
-    color: white;
+  .notif_container {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
     padding: 10px;
-    border-radius: 5px;
-}
+  }
 
-.groups .create-group:hover {
-    background-color: gainsboro;
-}
+  .notif_container:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+  }
 
-ul li:not(#users-not-found, .sidebar-menu > li) {
-  margin-bottom: 10px;
-}
+  .notif_content {
+    justify-content: flex-start;
+    flex-grow: 1;
+  }
 
-ul li:not(#users-not-found) {
-  transition: transform 0.3s ease;
-}
+  .notif_content * {
+    padding: 0; 
+    margin: 0;
+  }
 
-ul li:hover:not(#users-not-found) {
-  transform: translateX(5px);
-}
+  .pf_pic{
+    border-radius: 50%;
+  }
 
+  .follow_req {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    padding: 10px;
+  }
 
+  .notif_unav, #accept_req , .a-r_button {
+    margin: 0;
+  }
+
+  

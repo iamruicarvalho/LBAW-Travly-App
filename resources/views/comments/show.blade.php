@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
     <div class="container">
         {{-- Left Sidebar --}}
@@ -8,11 +7,10 @@
             <ul class="sidebar-menu">
                 <li><a href="{{ route('home') }}">🏠 Home</a></li>
                 <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
-                
-                <li><a href="#">🔔 Notifications</a></li>
+                <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
-                <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+                <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
             </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
@@ -21,32 +19,35 @@
         </div>
 
         {{-- Main Content --}}
-            <div class="welcome-post">
-                <div class="post-header">
-                    @php
-                        $user = App\Models\User::find($post->created_by);
-                    @endphp
-                    <p class="user-name">{{ $user->name_ }}</p>
-                </div>
-                <div class="post-content">
-                    <p class="post-description">{{ $post->description_ }}</p>
-                </div>
-                <div class="post-image">
-                    <img src="{{ asset('postimage/' . $post->content_) }}">
-                </div>
+        <div class="welcome-post">
+            @php
+                $user = App\Models\User::find($post->created_by);
+            @endphp
+            <div class="post-header">
+                <p class="user-name">{{ $user->name_ }}</p>
+            </div>
+            <div class="post-content">
+                <p class="post-description">{{ $post->description_ }}</p>
+            </div>
+            <div class="post-image">
+                <img src="{{ asset('postimage/' . $post->content_) }}">
+            </div>
 
-                <div class="post-details">
-                            <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
-                            <a href="post.comments" class="show-details"> Comments</a>
+            <div class="post-details">
+                <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
+                <a class="show-details"> {{ \Carbon\Carbon::parse($post->time_)->diffForHumans() }}</a>
+            </div>
 
-                            <a class="show-details"> {{ $post->time_ }}</a>
-                </div>
+            @if (Auth()->user() == $user)
+                <a onclick="return confirm('Are you sure you want to delete this?')" href="{{ url('my_posts_del', $post->postid) }}" class="btn btn-danger">Delete</a>
+                <a href="{{ url('post_update_page', $post->postid) }}" class="btn btn-primary">Update</a>
+            @endif
 
-                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$post->postid)}}" class="btn btn-primary">Update</a>
-
-                                    <!-- Adicione um formulário para adicionar novos comentários -->
-                                    @auth
+            <!-- Adicione um formulário para adicionar novos comentários -->
+            @auth
+                @if (Auth()->user()->id == $post->created_by)
+                    <!-- <p>You cannot comment on your own post.</p> -->
+                @else
                     <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="upload-post-section">
@@ -55,41 +56,52 @@
                             <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
                         </div>
                     </form>
-                    @else
-                        <p>Please log in to leave a comment.</p>
-                    @endauth
-                <div class="comments-section">
-                    <h3>Comments:</h3>
+                @endif
+            @else
+                <p>Please log in to leave a comment.</p>
+            @endauth
 
-                    @forelse($comments as $comment)
-                        <div class="comment-item">
-                            <div class="comment-details">
-                                <p class="comment-description">{{ $comment->description_ }}</p>
-                                <p class="comment-author">Comment by: {{ $comment->user->name_ }}</p>
-                                <p class="comment-time">Posted on: {{ $comment->time_ }}</p>
+            <div class="comments-section">
+                <h3>Comments:</h3>
+
+                @forelse($comments as $comment)
+                    <div class="comment-item">
+                        <div class="comment-details">
+                            <p class="comment-description">{{ $comment->description_ }}</p>
+                            Commented by: <a href="{{ route('profile.show', $comment->user->id) }}" class="comment-author">{{ $comment->user->username }}</a>
+                            <p class="comment-time">Posted on: {{ \Carbon\Carbon::parse($comment->time_)->diffForHumans() }}</p>
+                            
+                            @if (Auth()->user()->id == $comment->id)
+                                <!-- this can only appear if I am the author of the comment -->
                                 <form action="{{ url('comments/' . $comment->commentid) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     <textarea name="comment">{{ $comment->description_ }}</textarea>
                                     <button type="submit">Salvar Edição</button>
                                 </form>
+                            @endif
+                            @if (Auth()->user()->id == $post->created_by || Auth()->user()->id == $comment->id)     
+                                <!-- $comment->id refers to the id of the comment author -->
+                                <!-- this can only appear if I am the owner of the account or the author of the comment -->
                                 <form action="{{ route('comments.destroy', $comment->commentid) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" onclick="return confirm('Are you sure to delete this?')">Delete</button>
                                 </form>
-                            </div>
+                            @endif
                         </div>
-                    @empty
-                        <p>No comments yet.</p>
-                    @endforelse
-                </div>
-
+                        <hr style="background-color: black; height: 2px;">
+                    </div>
+                @empty
+                    <p>No comments yet.</p>
+                @endforelse
             </div>
 
+        </div>
 
 
-            {{-- Right Sidebar --}}
+
+        {{-- Right Sidebar --}}
         <div class="right-sidebar">
             <div class="search-bar">
                 {{-- Your search bar HTML goes here --}}
@@ -182,7 +194,6 @@
                     <!-- Add more hashtags as needed -->
                 </ul>
                 <a href="{{ route('explore') }}" class="see-more-link">See More</a>
-
             </div>
         </div>
     </div>

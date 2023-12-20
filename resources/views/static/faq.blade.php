@@ -2,7 +2,11 @@
 
 @section('content')
     <div class="faq-container">
-        <a href="{{ route('home') }}"> < Go back home</a>
+        @if (Auth::check())
+            <a href="{{ route('home') }}"> < Go back home</a>
+        @else
+            <a href="{{ route('login') }}"> < Go back home</a>
+        @endif
         <h1>FAQ - Travly</h1>
 
         <h2>What is Travly?</h2>
@@ -37,8 +41,6 @@
 
         <h2>Can I delete my account?</h2>
         <p>Yes, you can delete your account. Go to the account settings, find the option to delete your account, and follow the instructions. Keep in mind that this action is irreversible.</p>
-
-
     </div>
     <link href="{{ url('css/faq.css') }}" rel="stylesheet">
 @endsection

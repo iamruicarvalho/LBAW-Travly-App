@@ -41,4 +41,12 @@ class Notification extends Model
 
         return "error";
     }
+
+    public function set_seen()
+    {
+        if(! $this->seen){
+            $this->seen = FALSE;
+            $this.save();
+        }
+    }
 }

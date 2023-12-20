@@ -7,7 +7,6 @@
             <ul class="sidebar-menu">
                 <li><a href="{{ route('home') }}">🏠 Home</a></li>
                 <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
-                
                 <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
@@ -28,7 +27,7 @@
                 </div>
             </div>
 
-        <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
+            <form action="{{url('user_post')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="upload-post-section">
                     <textarea name="description" placeholder="Write your post..."></textarea>
@@ -56,7 +55,7 @@
                     @endphp
                     <p class="user-name">{{ $user->name_ }}</p>
                     <p class="user-name">{{ $user->username }}</p>
-                    <p class="show-details"> {{ $data->time_ }}</p>
+                    <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
 
                 </div>
                 <div class="post-content">
@@ -66,13 +65,14 @@
                     <img src="{{ asset('postimage/' . $data->content_) }}">
                 </div>
                 <div class="post-details">
-                            <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
-                            <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
-                            <a class="show-details"> {{ $data->time_ }}</a>
+                    <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
+                    <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
+                    
+                    <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
+                    <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
                 </div>
 
-                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
+                
             </div>
 
             @endforeach
@@ -89,10 +89,12 @@
 
         {{-- Right Sidebar --}}
         <div class="right-sidebar">
-            <div class="search-bar">
-                {{-- Your search bar HTML goes here --}}
-                <input type="text" placeholder="🔍 Search...">
-            </div>
+            <form id="users-search-bar" action="{{ route('users.search') }}" method="GET">
+                @csrf
+                <input type="text" id="search-users" name="query" placeholder="🔍 Search users ..." autocomplete="off">
+            </form>
+            <ul id="users-list"><!-- users will appear here --></ul>
+
             <div class="suggested-groups">
             <!-- Your suggested groups content goes here -->
             <h3>Suggested Groups</h3>
@@ -185,5 +187,6 @@
         </div>
     </div>
     <link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/searchUsers.js') }}" defer></script>
 @endsection
 

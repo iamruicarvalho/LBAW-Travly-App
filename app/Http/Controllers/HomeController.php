@@ -180,7 +180,6 @@ class HomeController extends Controller
     {
         $comment = Comment::find($commentid);
 
-
         $comment->description_ = $request->input('comment');
         $comment->save();
 

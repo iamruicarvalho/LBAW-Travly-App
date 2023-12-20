@@ -15,13 +15,13 @@
 <div class="group-container">
 
     {{-- Left Sidebar --}}
-    <div class="profile-sidebar-container">
+    <div class="sidebar-container">
     <div class="left-sidebar">
         <ul class="sidebar-menu">
             <li><a href="{{ route('home') }}">🏠 Home</a></li>
-            <li><a href="#">🔍 Explore</a></li>
-            <li><a href="#">🔔 Notifications</a></li>
-            <li><a href="#">📨 Messages</a></li>
+            <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
+            <li><a href="{{ route('notifications') }}">🔔 Notifications</a></li>
+            <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
             <li><a href="#">🌎 Wish List</a></li>
             <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
         </ul>
@@ -32,6 +32,7 @@
     </div>
     </div>
 
+    <div class="main-content">
     <div class="Group-container">
     <h2> {{ $group->name_ }}</h2>
 

@@ -11,7 +11,7 @@
                 <li><a href="#">🔔 Notifications</a></li>
                 <li><a href="#">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
-                <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+                <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
             </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
@@ -20,11 +20,11 @@
         </div>
 
         @if(session()->has('message'))
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    {{ session()->get('message') }}
-                </div>
-            @endif
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                {{ session()->get('message') }}
+            </div>
+        @endif
 
         {{-- Main Content --}}
         <div class="div_deg">

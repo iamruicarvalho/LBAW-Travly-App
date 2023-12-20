@@ -35,7 +35,7 @@ DROP TYPE IF EXISTS post_notification_types CASCADE;
 --====================================--
 
 CREATE TYPE post_content_types AS ENUM ('image', 'video');
-CREATE TYPE user_notification_types AS ENUM ('started_following', 'request_follow', 'accepted_follow');
+CREATE TYPE user_notification_types AS ENUM ('started_following', 'request_follow', 'accepted_follow', 'rejected_follow');
 CREATE TYPE post_notification_types AS ENUM ('liked_post', 'commented_post');
 
 --====================================--
@@ -52,8 +52,8 @@ CREATE TABLE user_ (
     description_ TEXT DEFAULT 'Add description',
     location TEXT DEFAULT 'Add location',
     countries_visited INT DEFAULT 0,
-    header_picture VARCHAR(256) DEFAULT 'https://i.pinimg.com/564x/c6/24/3b/c6243b6f22e618863b06d0e190be214a.jpg', 
-    profile_picture VARCHAR(256) DEFAULT 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', 
+    header_picture VARCHAR(256) DEFAULT 'https://i.pinimg.com/originals/3e/64/54/3e6454934ac0836b8a3112008b3a5c0a.jpg', 
+    profile_picture VARCHAR(256) DEFAULT 'https://i.pinimg.com/originals/10/d9/6e/10d96e8abddf88f21c8108e5158c80bc.jpg', 
     remember_token VARCHAR(100) NULL 
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE comment_ (
     description_ TEXT NOT NULL,
     likes_ INTEGER DEFAULT 0, 
     time_ TIMESTAMP NOT NULL,
-    id INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,
+    id INTEGER NOT NULL REFERENCES user_ (id) ON UPDATE CASCADE,                        -- comment author
     postID INTEGER NOT NULL REFERENCES post_ (postID) ON UPDATE CASCADE,
     comment_replies INTEGER DEFAULT NULL REFERENCES comment_ (commentID) ON UPDATE CASCADE          -- tirar default null
 );
@@ -133,15 +133,15 @@ CREATE TABLE post_notification (
 );
 
 CREATE TABLE request_ (
-    senderID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    receiverID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    PRIMARY KEY (senderID, receiverID)
+    senderid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    receiverid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    PRIMARY KEY (senderid, receiverid)
 );
 
 CREATE TABLE follows_ (
-    followerID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    followedID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    PRIMARY KEY (followerID, followedID)
+    followerid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    followedid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    PRIMARY KEY (followerid, followedid)
 );
 
 CREATE TABLE post_likes (
@@ -742,16 +742,17 @@ INSERT INTO comment_(description_, likes_, time_, id, postID, comment_replies) V
             ('Uau!!!', 0, '2023-10-25 08:31:00', 45, 2, NULL);
 
 INSERT INTO notification_(notificationid, description_, time_, seen, notifies, sends_notif) VALUES
-            (1, 'JohnDoe started following you', '2023-10-25 08:30:15', FALSE, 5, 3),
-            (2, 'AliceSmith liked your recent post', '2023-10-25 10:15:40', FALSE, 2, 4),
-            (3, 'RobertJohnson requested to follow you', '2023-10-25 12:20:55', FALSE, 8, 6),
-            (4, 'EmilyBrown commented on your vacation post', '2023-10-25 14:45:30', FALSE, 7, 9),
-            (5, 'You accepted SarahWilson follow request', '2023-10-25 15:55:10', FALSE, 1, 5),
-            (6, 'DanielRoberts liked your cooking recipe', '2023-10-25 16:40:25', FALSE, 10, 2),
-            (7, 'SophiaGarcia requested to follow you', '2023-10-25 17:25:55', FALSE, 3, 7),
-            (8, 'MichaelAnderson started following your art account', '2023-10-25 18:10:45', FALSE, 6, 8),
-            (9, 'AlexaHall liked your travel photography', '2023-10-25 19:30:20', FALSE, 8, 2),
-            (10, 'OliverSmith commented on your latest blog post', '2023-10-25 20:15:35', FALSE, 11, 5),
+            (1, 'SarahWilson accepted your follow request!', '2023-10-25 15:55:10', FALSE, 1, 5),
+            (2, 'JohnDoe started following you!', '2023-10-25 08:30:15', FALSE, 5, 3),
+            (3, 'AliceSmith liked one of your posts!', '2023-10-25 10:15:40', FALSE, 1, 4),
+            (4, 'RobertJohnson sent you a follow request!', '2023-10-25 12:20:55', FALSE, 1, 6),
+            (5, 'EmilyBrown left a comment in one of your posts!', '2023-10-25 14:45:30', FALSE, 1, 9),
+            (6, 'DanielRoberts liked one of your posts!', '2023-10-25 16:40:25', FALSE, 6, 2),
+            (7, 'SophiaGarcia sent you a follow request!', '2023-10-25 17:25:55', FALSE, 3, 7),
+            (8, 'MichaelAnderson started following you!', '2023-10-25 18:10:45', FALSE, 6, 8),
+            (9, 'AlexaHall liked one of your posts!', '2023-10-25 19:30:20', FALSE, 1, 2),
+            (10, 'OliverSmith left a comment in one of your posts!', '2023-10-25 20:15:35', FALSE, 1, 5);
+            /*
             (11, 'You accepted LilyBrown follow request', '2023-10-25 21:05:50', FALSE, 12, 10),
             (12, 'LucasJones requested to follow you', '2023-10-25 22:40:10', FALSE, 9, 1),
             (13, 'EllaDavis started following your fashion page', '2023-10-25 23:30:30', FALSE, 7, 4),
@@ -782,6 +783,7 @@ INSERT INTO notification_(notificationid, description_, time_, seen, notifies, s
             (38, 'MasonAnderson liked your music composition', '2023-10-28 10:45:10', FALSE, 7, 6),
             (39, 'You accepted MiaJones follow request', '2023-10-28 12:30:35', FALSE, 4, 5),
             (40, 'EvelynGarcia commented on your latest blog post', '2023-10-28 14:50:50', FALSE, 2, 9);
+            */
 
 INSERT INTO admin_(id) VALUES
             (1);
@@ -871,6 +873,13 @@ INSERT INTO owner_(id, groupID) VALUES
             (9,6);
 
 INSERT INTO user_notification(notificationid, id, notification_type) VALUES
+            (1, 5, 'accepted_follow'),
+            (2, 3, 'started_following'),
+            (4, 6, 'request_follow'),
+            (7, 7, 'request_follow'),
+            (8, 8, 'started_following');
+
+            /*
             (1, 3, 'request_follow'),
             (2, 5, 'accepted_follow'),
             (3, 8, 'started_following'),
@@ -911,8 +920,15 @@ INSERT INTO user_notification(notificationid, id, notification_type) VALUES
             (38, 10, 'request_follow'),
             (39, 9, 'accepted_follow'),
             (40, 5, 'started_following');
+            */
 
 INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
+            (3, 1,'liked_post'),
+            (5, 1,'commented_post'),
+            (6, 1,'liked_post'),
+            (9, 1,'liked_post'),
+            (10, 1,'commented_post');
+            /*
             (1, 3, 'liked_post'),
             (2, 5, 'liked_post'),
             (3, 8, 'commented_post'),
@@ -953,8 +969,11 @@ INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
             (38, 10, 'liked_post'),
             (39, 9, 'commented_post'),
             (40, 5, 'liked_post');
+            */
 
-INSERT INTO request_(senderID, receiverID) VALUES
+INSERT INTO request_(senderid, receiverid) VALUES
+            (6, 1);
+            /*
             (6, 17),
             (34, 48),
             (71, 32),
@@ -1041,9 +1060,10 @@ INSERT INTO request_(senderID, receiverID) VALUES
             (1, 84),
             (74, 28),
             (5, 69),
-            (36, 94);
+            (36, 94);*/
 
-INSERT INTO follows_(followerID, followedID) VALUES
+/*
+INSERT INTO follows_(followerid, followedid) VALUES
             (23, 67),
             (10, 35),
             (5, 51),
@@ -1208,6 +1228,7 @@ INSERT INTO follows_(followerID, followedID) VALUES
             (33, 32),
             (5, 4),
             (2, 1);
+            */
 
 INSERT INTO post_likes(id, postID) VALUES
             (2, 1), 

@@ -26,7 +26,7 @@ body, html {
 .left-sidebar .sidebar-menu {
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    margin: 20px 0 30px;
 }
 
 .left-sidebar .sidebar-menu li {

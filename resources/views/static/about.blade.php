@@ -2,7 +2,11 @@
 
 @section('content')
     <div class="about-container">
-        <a href="{{ route('home') }}"> < Go back home</a>
+        @if (Auth::check())
+            <a href="{{ route('home') }}"> < Go back home</a>
+        @else
+            <a href="{{ route('login') }}"> < Go back home</a>
+        @endif        
         <h1> About Travly </h1> 
         <h2>Welcome to Travly - Your Passport to Adventure!</h2>
         <p>In a world where digital connectivity is an integral part of our daily lives, we introduce Travly, a groundbreaking social network exclusively crafted for passionate travelers. Born from our love for exploration and the deep-seated desire to foster genuine connections among travel enthusiasts, Travly is not just a platform; it's a community dedicated to the spirit of adventure.</p>

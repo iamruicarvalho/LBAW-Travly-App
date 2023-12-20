@@ -12,7 +12,7 @@ use App\Models\Group;
 use App\Models\Admin;
 use App\Models\Comment;
 use App\Models\Follow;
-use App\Models\Request;
+use App\Models\FriendRequest;
 use App\Models\UserNotification;
 
 class User extends Model implements Authenticatable 
@@ -66,18 +66,19 @@ class User extends Model implements Authenticatable
 
     public function requestsSent()
     {
-        return $this->hasMany(Request::class, 'senderID');
+        return $this->belongsToMany(User::class, 'request_', 'senderid', 'receiverid');
     }
 
     public function requestsReceived()
     {
-        return $this->hasMany(Request::class, 'receiverID');
+        return $this->belongsToMany(User::class, 'request_', 'receiverid', 'senderid');
     }
 
     public function notifications()
     {
         return $this->hasMany(UserNotification::class, 'id');
     }
+
     public function postLikes()
     {
         return $this->hasMany(PostLike::class, 'id');
@@ -92,6 +93,35 @@ class User extends Model implements Authenticatable
     {
         return $this->belongsToMany(User::class, 'follows_', 'followerid', 'followedid');
     }
-    
 
+    public function isFriend($friend)
+    {
+        $iFollowU = Follow::where('followerid', $this->id)->where('followedid', $friend)->exists();
+        $uFollowMe = Follow::where('followerid', $friend)->where('followedid', $this->id)->exists();
+        return ($iFollowU && $uFollowMe);       
+    }
+
+    public function removeFollow($friend){
+        $remFriend = Follow::where('followerid', $this->id)->where('followedid', $friend);
+        if($remFriend->exists()){
+            $remFriend->delete();
+        }
+    }
+
+    public function canSendRequestTo($target){
+        $check = FriendRequest::where('senderid', $this->id)->where('receiverid', $target)->exists();
+        if($check && ! $this->isFriend($target)){
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    public function canAcceptRequestFrom($target){
+        $check = FriendRequest::where('senderid', $target)->where('receiverid', $this->id)->exists();
+        return $check && !$this->isFriend($target);
+    }
+
+    public function follows($target){
+        return Follow::where('followerid', $this->id)->where('followedid', $friend)->exists();
+    }
 }

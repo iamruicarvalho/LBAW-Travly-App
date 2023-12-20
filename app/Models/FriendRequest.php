@@ -6,22 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 
-class Request extends Model
+class FriendRequest extends Model
 {
     public $timestamps = false;
     protected $table = 'request_';
-    protected $primaryKey = ['senderID', 'receiverID'];
+    protected $primaryKey = ['senderid', 'receiverid'];
     protected $fillable = [
-        'senderID', 'receiverID'
+        'senderid', 'receiverid'
     ];
+
+    public $incrementing = false;
 
     public function sender()
     {
-        return $this->belongsTo(User::class, 'senderID');
+        return $this->belongsTo(User::class, 'senderid');
     }
 
     public function receiver()
     {
-        return $this->belongsTo(User::class, 'receiverID');
+        return $this->belongsTo(User::class, 'receiverid');
     }
 }

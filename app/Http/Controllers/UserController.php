@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -85,5 +87,49 @@ class UserController extends Controller
     //         ->where('follows_.followerID', '=', $this->id)
     //         ->where('follows_.followedID', '=', 'post_.created_by');
     // }
+
+    public function searchUsers(Request $request) {
+        $query = $request->input('query'); 
+
+        $users = User::where('username', 'like', '%' . $query . '%')
+                ->orWhere('name_', 'like', '%' . $query . '%')
+                ->select(['id', 'name_', 'username'])
+                ->get();
+        
+        return response()->json($users);
+    }
+
+    public function getFollowers($id) {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuário não encontrado');   
+        }
+
+        return view('partials.displayFollowers', compact('user'));
+    }
+    public function getFollowing($id) {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return redirect()->back()->with('error', 'Usuário não encontrado');   
+        }
+
+        return view('partials.displayFollowing', compact('user'));
+    }
+
+    public function deleteAccount($id) {
+        $user = Auth::user();
+
+        $user->username = "anonymous".$user->id;
+        $user->name_ = "Anonymous";
+        $user->email = "anonymous".$user->id."@example.com";
+        $user->password_ = Hash::make(Str::random(40));
+
+        $user->save();
+        Auth::logout();
+
+        return redirect()->route('login');
+    }
 }
 

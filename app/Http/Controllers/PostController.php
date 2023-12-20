@@ -89,7 +89,7 @@ class PostController extends Controller
                 ->orderBy('time_', 'desc') // Ordena por data de criação descendente
                 ->get();
 
-        return view('pages.by_hastag', compact('post', 'hashtag'));
+        return view('pages.by_hashtag', compact('post', 'hashtag'));
     }
 
     public function getPostsByCity($city)

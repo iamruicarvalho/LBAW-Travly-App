@@ -35,7 +35,7 @@
             <div class="profile-editable-fields">
                 {{-- Editable fields --}}
                     <div class="username-input-control">
-                        <label for="username">Name</label>
+                        <label for="username">Username</label>
                         <input id="username" type="text" name="username" value="{{ auth()->user()->username }}" required autocomplete="username">
                         @if ($errors->has('username'))
                             <span class="error">
@@ -108,5 +108,4 @@
         </div>
     </div>
     <link href="{{ url('css/profile.css') }}" rel="stylesheet">
-    <!-- <script defer src="{{ asset('js/update_profile.js') }}"></script> -->
 @endsection
