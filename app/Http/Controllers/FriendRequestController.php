@@ -37,7 +37,6 @@ class FriendRequestController extends Controller{
         if (Auth::check()) {
             
             $this->validate($request, [
-                 'notifType' => 'required', 
                  'to' => 'required|exists:user_,id',
             ]);
 
@@ -45,7 +44,7 @@ class FriendRequestController extends Controller{
 
             FriendRequest::where('senderid', $request->input('to'))->where('receiverid', $userid)->delete();
 
-            $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif($request->input('notifType'), $request->input('to'), FALSE); //send notification accepting friend request
+            $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif('rejected_follow', $request->input('to'), FALSE); //send notification accepting friend request
             
             return redirect()->back();
         }
@@ -59,11 +58,12 @@ class FriendRequestController extends Controller{
         if (Auth::check()) {
             
             $this->validate($request, [
-                 'notifType' => 'required', 
                  'toRemove' => 'required|exists:user_,id',
             ]);
 
             $userid = Auth::user()->removeFollow($request->input($toRemove));
+
+            $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif('unfollow', $request->input('toRemove'), FALSE);
 
             return redirect()->back();
         }
@@ -77,12 +77,13 @@ class FriendRequestController extends Controller{
         if (Auth::check()) {
             
             $this->validate($request, [
-                 'notifType' => 'required', 
                  'toRemove' => 'required|exists:user_,id',
             ]);
 
             Auth::user()->followers()->remove($request->input($toRemove));
             Auth::user()->following()->remove($request->input($toRemove));
+
+            $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif('unfriend', $request->input('toRemove'), FALSE);
 
             return redirect()->back();
         }
