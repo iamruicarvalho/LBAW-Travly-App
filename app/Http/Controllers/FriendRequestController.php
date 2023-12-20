@@ -61,7 +61,7 @@ class FriendRequestController extends Controller{
                  'toRemove' => 'required|exists:user_,id',
             ]);
 
-            $userid = Auth::user()->removeFollow($request->input($toRemove));
+            Auth::user()->following()->detach($request->input('toRemove'));
 
             $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif('unfollow', $request->input('toRemove'), FALSE);
 
@@ -80,8 +80,11 @@ class FriendRequestController extends Controller{
                  'toRemove' => 'required|exists:user_,id',
             ]);
 
-            Auth::user()->followers()->remove($request->input($toRemove));
-            Auth::user()->following()->remove($request->input($toRemove));
+            Auth::user()->followers()->detach($request->input('toRemove'));
+            Auth::user()->following()->detach($request->input('toRemove'));
+
+            FriendRequest::where('senderid', $request->input('toRemove'))->where('receiverid', Auth::user()->id)->delete();
+            FriendRequest::where('receiverid', $request->input('toRemove'))->where('senderid', Auth::user()->id)->delete();
 
             $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif('unfriend', $request->input('toRemove'), FALSE);
 

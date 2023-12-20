@@ -22,13 +22,11 @@
             <form method="POST" action="{{ route('request.acceptFriend') }}" id="accept_req">
                 @csrf
                 <input type="hidden" id="to" name="to" value="{{$notification->sends_notif}}" />
-                <input type="hidden" id="notifType" name="notifType" value='accepted_follow' />
                 <button type="submit" class="a-r_button">Accept</button>
             </form>
             <form method="POST" action="{{ route('request.rejectFriend') }}" id="accept_req">
                 @csrf
                 <input type="hidden" id="to" name="to" value="{{$notification->sends_notif}}" />
-                <input type="hidden" id="notifType" name="notifType" value='rejected_follow' />
                 <button type="submit" class="a-r_button">Reject</button>
             </form>
         @else
