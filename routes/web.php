@@ -98,6 +98,7 @@ Route::controller(GroupController::class)->group(function () {
     Route::post('/groups/{groupid}/details/editDescription', [GroupController::class, 'editDescription'])->name('group.editDescription');
     Route::post('/groups/{groupid}/details/deleteGroup', [GroupController::class, 'deleteGroup'])->name('group.delete');
     Route::post('/groups/leave', [GroupController::class, 'leaveGroup'])->name('groups.leave');
+    Route::get('/groups/search', [GroupController::class, 'searchGroups'])->name('groups.search');
 });
 
 // Notifications

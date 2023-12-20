@@ -248,4 +248,15 @@ class GroupController extends Controller
 
         return response()->json(['message' => 'Left the group successfully.']);
     }
+
+    public function searchGroups(Request $request)
+    {
+        $query = $request->input('query');
+    
+        $groups = Group::where('name_', 'like', '%' . $query . '%')
+            ->orWhere('description_', 'like', '%' . $query . '%')
+            ->get();
+    
+        return response()->json($groups);
+    }
 }
