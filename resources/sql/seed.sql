@@ -700,16 +700,53 @@ INSERT INTO user_(username, name_, email, password_, private_) VALUES
             ('victoralice', 'Victor', 'victoralice298@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True);
 
 INSERT INTO post_(content_, description_, likes_, comments_, time_, created_by, content_type) VALUES
-            ('imagina uma imagem aqui', 'linda paisagem', 3, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina um video aqui', 'boa jogada', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina um video aqui', 'dia de folga', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina uma imagem aqui', 'a próxima tentativa será melhor', 4, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina uma imagem aqui', 'boa escolha', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina uma imagem aqui', 'experiência única', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina um video aqui', 'vou repetir', 4, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina um video aqui', 'não gostei', 4, 0, '2023-10-25 08:30:15', 1,'image'),
-            ('imagina uma imagem aqui', 'adorei este passeio', 4, 0, '2023-10-25 08:30:15', 1,'video'),
-            ('imagina uma imagem aqui', 'recomendo muito este restaurante', 4, 0, '2023-10-25 08:30:15', 1,'image');
+            ('imagina uma imagem aqui', '🌍✈️ Exploring the world, one adventure at a time! 🌟 Embracing new cultures, tasting exotic flavors, and creating memories that last a lifetime. 📸 Join me on this journey of discovery and lets inspire each other to wander far and wide. 🌏 #Nature #TravelLife #Wanderlust #AdventureAwaits 🗺️✨', 3, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina um video aqui', '🌅 Chase sunsets, collect stories. Where to next? 🗺️✨ #SunsetSeeker #Nature #TravelInspiration', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina um video aqui', '🏰 Lost in the magic of historical wonders. Every corner has a tale to tell. 📜 #Travel #HistoryBuff #ExploreDiscoverRepeat', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina uma imagem aqui', '🍜 Savoring the flavors of the world, one delicious dish at a time. Whats your favorite global cuisine? 🌮🍣 #DeliciousFood #FoodExplorer #TasteTheWorld', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina uma imagem aqui', '🌊 Dive into the unknown, explore beneath the surface. Adventure awaits beneath the waves! 🌊🐠 #UnderwaterExplorer #OceanLove', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina uma imagem aqui', '🚂 All aboard the train of discovery! Next stop: Unknown wonders and untold stories. 🚄🌐 #Travel #TrainTravel #JourneyOfATraveler', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina um video aqui', '🏞️ Natures masterpiece, where every hike unveils a new canvas. Lace-up and explore! 🥾🌲 #HikingAdventures #NatureLover', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina um video aqui', '🌌 Stargazing under foreign skies, connecting with the cosmos. Share your favorite celestial moments! 🌠🔭 #StarryNights #CosmicConnection', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina uma imagem aqui', '🏰 Living the fairytale in historic castles. Because every traveler deserves a royal adventure! 👑🏰 #CastleExplorer #FairytaleDreams', 4, 0, '2023-10-25 08:30:15', 1,'video'),
+            ('imagina uma imagem aqui', '🏝️ Island vibes and salty breezes. Tag your travel buddy for the next tropical escape! 🌺🏖️ #Nature #IslandLife #BeachBound', 4, 0, '2023-10-25 08:30:15', 1,'image'),
+            ('imagina um video aqui', '🎵 Music is my travel companion, harmonizing with every journey. Share your favorite travel playlist below! 🌍🎶 #Nature #TravelTunes #MusicalAdventures', 5, 0, '2023-11-05 10:45:30', 1,'video'),
+            ('imagina uma imagem aqui', '🏞️ Exploring the beauty of untouched landscapes. Join me on this quest for hidden gems! 💎 #OffTheBeatenPath #NatureExplorer', 6, 0, '2023-11-07 15:20:45', 1,'image'),
+
+            ('imagina um video aqui', '🚁 Soaring above city skylines, capturing the pulse of urban life from a new perspective. 🏙️✨ #CityscapeAerials #SkyHigh', 7, 0, '2023-11-10 18:10:20', 1,'video'),
+
+            ('imagina uma imagem aqui', '🌸 Embracing the tranquility of botanical gardens, where every bloom tells a story. 🌺📖 #BotanicalBeauty #FloralEscape', 8, 0, '2023-11-15 09:55:10', 1,'image'),
+
+            ('imagina um video aqui', '🏰 Roaming the cobblestone streets of historic towns, discovering tales of the past. Step back in time with me! 🕰️🗺️ #TimeTraveler #HistoricJourneys', 9, 0, '2023-11-18 12:30:55', 1,'video'),
+
+            ('imagina uma imagem aqui', '🌅 Morning rituals with a view – because every sunrise is a promise of a new adventure. ☀️🌄 #Photography #MorningMagic #SunriseChaser', 10, 0, '2023-11-22 07:15:40', 1,'image'),
+
+            ('imagina um video aqui', '🏞️ Chasing waterfalls and feeling the mist on my face. Natures symphony in full play! 🌊🎶 #WaterfallWonders #NatureMelody', 11, 0, '2023-11-25 14:20:30', 1,'video'),
+
+            ('imagina um video aqui', '🌌 Campfire tales under the starlit sky – where stories come to life in the glow of the flames. 🔥✨ #Adventure #CampfireChronicles #NighttimeNarratives', 12, 0, '2023-11-28 20:05:15', 1,'video'),
+
+            ('imagina uma imagem aqui', '🏔️ Conquering mountain peaks and finding serenity at the summit. The higher you climb, the clearer the view! ⛰️🏞️ #MountainExplorer #PeakPerformance', 13, 0, '2023-12-02 11:40:50', 1,'image'),
+
+            ('imagina uma imagem aqui', '🌈 Chasing rainbows in unexpected places – because joy is found in the most colorful moments of life. 🌦️🌈 #RainbowChaser #ColorfulAdventures', 14, 0, '2023-12-05 16:30:25', 1,'image'),
+            ('imagina uma imagem aqui', '🗼 Parisian vibes and croissants for breakfast. Exploring the streets of Paris, where every corner whispers romance. 🥐🇫🇷 #ParisianDreams #CityOfLove', 15, 0, '2023-12-10 09:15:30', 30,'image'),
+
+('imagina um video aqui', '🍀 Dublins lively spirit captured in every pubs melody. Join me in the heart of Irelands capital! 🎻🍺 #DublinDiaries #IrishAdventures', 16, 0, '2023-12-12 13:40:45', 36,'video'),
+
+('imagina um video aqui', '🏯 Tokyos neon lights painting the night. Dive into the energy of the bustling metropolis! 🌃🇯🇵 #TokyoNights #CityLights', 17, 0, '2023-12-15 18:30:20', 30,'video'),
+
+('imagina uma imagem aqui', '🇬🇧 London calling! From red phone booths to the Thames, savoring the iconic sights of the British capital. ☎️🎡 #LondonExplorer #BritishCharm', 18, 0, '2023-12-18 11:55:10', 30,'image'),
+
+('imagina uma imagem aqui', '🚤 Cruising through the canals of Venice, where every bridge tells a story. Lost in the charm of Italys floating city. 🇮🇹🛶 #VenetianDreams #CanalCruise', 19, 0, '2023-12-20 15:20:55', 32,'image'),
+
+('imagina um video aqui', '🍷 Sipping port wine in the historic cellars of Oporto. Embracing the flavors of Portugals enchanting city by the river. 🍇🇵🇹 #PortoWineTasting #RiversideRendezvous', 20, 0, '2023-12-22 20:10:30', 32,'video'),
+
+('imagina um video aqui', '🏰 Exploring the charming streets of Budapest, where history meets modernity. Join me on a journey through Hungarys vibrant capital! 🇭🇺🏰 #BudapestAdventures #HistoricCharm', 21, 0, '2023-12-25 14:45:30', 33,'video'),
+
+('imagina uma imagem aqui', '🌆 Budapests skyline illuminated at twilight. Capturing the citys beauty from the heights! 🌇🏞️ #BudapestSkyline #CityPanorama', 22, 0, '2023-12-28 20:25:15', 34,'image'),
+
+('imagina uma imagem aqui', '🏞️ Serenity found in the gardens of Kyoto, a peaceful escape in the heart of Japan. 🌸🍵 #KyotoGardens #JapaneseTranquility', 23, 0, '2024-01-02 11:10:50', 35,'image'),
+
+('imagina um video aqui', '🌉 Strolling along the illuminated bridges of Prague, where every step feels like a journey through time. 🌌🇨🇿 #PragueNights #CityTimeWarp', 24, 0, '2024-01-05 16:50:25', 36,'video');
 
 INSERT INTO group_(name_, description_) VALUES
             ('Mundo Fora do Mapa', ''),
