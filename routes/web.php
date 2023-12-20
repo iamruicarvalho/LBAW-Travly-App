@@ -57,6 +57,8 @@ Route::controller(PostController::class)->group(function () {
     Route::post('/posts/delete', [PostController::class, 'deletePost'])->name('posts.delete');
     Route::post('/posts/edit/{id}', [PostController::class, 'editPost'])->name('posts.edit');
     Route::post('/posts/like', [PostController::class, 'likePost'])->name('posts.like');
+    Route::get('/posts/search', [PostController::class, 'searchPosts'])->name('posts.search');
+
 });
 
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');

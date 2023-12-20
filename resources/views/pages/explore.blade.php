@@ -19,7 +19,16 @@
             </div>
         </div>
     <div class="explore-container">
+        <div class="search-container">
+            <form id="posts-search-bar" action="{{ route('posts.search') }}" method="GET">
+                @csrf
+                <input type="text" id="search-posts" name="query" placeholder="🔍 Search posts ..." autocomplete="off" class="search-input">
+            </form>
+            <ul id="posts-list" class="posts-list"></ul>
+        </div>
 
+
+        
         <!-- Trends -->
         <div class="trending-section">
             <h2>Trending Topics</h2>
@@ -115,4 +124,6 @@
 
     </div>
     <link href="{{ url('css/explore.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/searchPosts.js') }}" defer></script>
+
 @endsection

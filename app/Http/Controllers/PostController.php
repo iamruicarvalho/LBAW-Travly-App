@@ -99,6 +99,18 @@ class PostController extends Controller
         return view('pages.posts_by_city', compact('post', 'city'));
     }
 
+    public function searchPosts(Request $request)
+    {
+        $query = $request->input('query');
+    
+        $posts = Post::where('content_', 'like', '%' . $query . '%')
+            ->orWhere('description_', 'like', '%' . $query . '%')
+            ->with('created_by') 
+            ->get();
+    
+        return response()->json($posts);
+    }
+    
     
 
 }

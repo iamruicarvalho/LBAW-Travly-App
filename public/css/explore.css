@@ -313,3 +313,56 @@ li {
     background-color: #fff;
     color: #000;
 }
+
+.search-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px;
+    margin-left: 0px;
+}
+
+.search-input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.posts-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.posts-list li {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra leve para cada post */
+}
+
+.post-content, .post-description, .post-created-by {
+    margin-bottom: 10px;
+}
+
+/* Estilo para a divisão entre os posts */
+.posts-list li:not(:last-child) {
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px; /* Aumenta a margem para maior separação */
+}
