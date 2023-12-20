@@ -1,4 +1,4 @@
-// const token = document.querySelector('meta[name="csrf-token"').content;
+// const token = document.querySelector('meta[name="csrf-token"]').content;
 const searchForm = document.getElementById('posts-search-bar');
 const searchPosts = document.getElementById('search-posts');
 const postsList = document.getElementById('posts-list');
@@ -8,57 +8,46 @@ searchForm.addEventListener('submit', (event) => {
 });
 
 searchPosts.addEventListener('keyup', () => {
-    const post = searchPosts.value.toLowerCase();
-    search(post);
-})
+    const postQuery = searchPosts.value.trim();
+    if (postQuery) {
+        search(postQuery);
+    } else {
+        postsList.innerHTML = '';
+    }
+});
 
-let search = (post) => {
-    const url = `/posts/search?query=${post}`;
+let search = (postQuery) => {
+    const url = `/posts/search?query=${postQuery}`;
     fetch(url)
         .then(response => response.json())
-        .then(data => {
-            displayPosts(data); 
-        })
+        .then(data => displayPosts(data))
         .catch(error => {
-            console.log('Error: ', error);
+            console.error('Search Error:', error);
+            postsList.textContent = 'An error occurred while searching.';
         });
 }
 
 function displayPosts(posts) {
     postsList.innerHTML = '';
 
-    let searchInput = searchPosts.value.trim().toLowerCase();
-    if (searchInput === '') {
-        postsList.innerHTML = '';
-        return;
-    }
-
     if (posts.length === 0) {
-        const postsNotFound = document.createElement('li');
-        postsNotFound.id = 'posts-not-found';
-        postsNotFound.textContent = "No posts found";
-
-        postsList.appendChild(postsNotFound);
+        postsList.textContent = "No posts found";
         return;
     }
 
     posts.forEach(post => {
         const postInfoListItem = document.createElement('li');
-        const postContent = document.createElement('p');
-        const postDescription = document.createElement('p');
-        const postCreatedBy = document.createElement('p');
-
-        postContent.textContent = post.content_;
-        postDescription.textContent = post.description_;
-        postCreatedBy.textContent = `Created by: ${post.created_by.username}`;
+        appendElement(postInfoListItem, 'p', post.content_, 'post-content');
+        appendElement(postInfoListItem, 'p', post.description_, 'post-description');
+        appendElement(postInfoListItem, 'p', `Created by: ${post.created_by.username}`, 'post-created-by');
 
         postsList.appendChild(postInfoListItem);
-        postInfoListItem.appendChild(postContent);
-        postInfoListItem.appendChild(postDescription);
-        postInfoListItem.appendChild(postCreatedBy);
-
-        postContent.style.fontSize = '16px';
-        postDescription.style.fontSize = '13px';
-        postCreatedBy.style.fontSize = '13px';
     });
+}
+
+function appendElement(parent, elementType, text, className) {
+    const element = document.createElement(elementType);
+    element.textContent = text;
+    if (className) element.className = className;
+    parent.appendChild(element);
 }

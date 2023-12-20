@@ -103,13 +103,14 @@ class PostController extends Controller
     {
         $query = $request->input('query');
     
-        $posts = Post::where('content_', 'like', '%' . $query . '%')
-            ->orWhere('description_', 'like', '%' . $query . '%')
-            ->with('created_by') 
-            ->get();
+        $posts = Post::whereRaw('LOWER(content_) LIKE ?', ['%' . strtolower($query) . '%'])
+                     ->orWhereRaw('LOWER(description_) LIKE ?', ['%' . strtolower($query) . '%'])
+                     ->with('created_by') 
+                     ->get();
     
         return response()->json($posts);
     }
+    
     
     
 
