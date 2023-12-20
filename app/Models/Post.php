@@ -20,6 +20,13 @@ class Post extends Model
     ];
     
 
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'created_by');
