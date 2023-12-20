@@ -31,7 +31,6 @@
             </div>
             <div>
                 @if (auth()->user() == $user)
-                    <a href="{{ route('notifications', auth()->id()) }}" class="edit-profile-link">Notifications</a>
                     <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
                 @else
                     <!-- add account privacy verification -->
@@ -87,7 +86,7 @@
                             <div class="post-details">
                                 <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
                                 <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details">{{ $post->comments_ }} Comments</a>
-                                <a> {{ $post->time_ }}</a>
+                                <p> {{ \Carbon\Carbon::parse($post->time_)->diffForHumans() }}</p>
                                 <!-- If I'm on my personal profile page -->
                                 @if (Auth()->user() == $user)  
                                     <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $post->postid)}}" class="btn btn-danger">Delete</a>

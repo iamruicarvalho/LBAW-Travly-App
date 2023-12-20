@@ -56,7 +56,7 @@
                     @endphp
                     <p class="user-name">{{ $user->name_ }}</p>
                     <p class="user-name">{{ $user->username }}</p>
-                    <p class="show-details"> {{ $data->time_ }}</p>
+                    <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
 
                 </div>
                 <div class="post-content">
@@ -68,11 +68,12 @@
                 <div class="post-details">
                     <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
                     <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
-                    <a class="show-details"> {{ $data->time_ }}</a>
+                    
+                    <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
+                    <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
                 </div>
 
-                <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
+                
             </div>
 
             @endforeach

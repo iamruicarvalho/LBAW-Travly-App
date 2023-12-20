@@ -21,10 +21,10 @@
 
         {{-- Main Content --}}
         <div class="welcome-post">
+            @php
+                $user = App\Models\User::find($post->created_by);
+            @endphp
             <div class="post-header">
-                @php
-                    $user = App\Models\User::find($post->created_by);
-                @endphp
                 <p class="user-name">{{ $user->name_ }}</p>
             </div>
             <div class="post-content">
@@ -36,7 +36,7 @@
 
             <div class="post-details">
                 <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>
-                <a class="show-details"> {{ $post->time_ }}</a>
+                <a class="show-details"> {{ \Carbon\Carbon::parse($post->time_)->diffForHumans() }}</a>
             </div>
 
             @if (Auth()->user() == $user)
@@ -46,14 +46,18 @@
 
             <!-- Adicione um formulário para adicionar novos comentários -->
             @auth
-            <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="upload-post-section">
-                    <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
-                    <input type="hidden" name="postid" value="{{ $post->postid }}">
-                    <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
-                </div>
-            </form>
+                @if (Auth()->user()->id == $post->created_by)
+                    <!-- <p>You cannot comment on your own post.</p> -->
+                @else
+                    <form action="{{url('user_comment')}}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="upload-post-section">
+                            <textarea name="comment" class="comment-input" placeholder="Add a comment..."></textarea>
+                            <input type="hidden" name="postid" value="{{ $post->postid }}">
+                            <input type="submit" value="Add Comment" class="btn btn-outline-secondary">
+                        </div>
+                    </form>
+                @endif
             @else
                 <p>Please log in to leave a comment.</p>
             @endauth
