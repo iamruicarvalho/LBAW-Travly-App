@@ -5,22 +5,33 @@
 <div class="profile-container">
     <div class="profile-sidebar-header-container">
         {{-- Left Sidebar --}}
-        <div class="profile-sidebar-container">
+        @guest
             <div class="left-sidebar">
                 <ul class="sidebar-menu">
-                    <li><a href="{{ route('home') }}">🏠 Home</a></li>
-                    <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
-                    <li><a href="#">🔔 Notifications</a></li>
-                    <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
-                    <li><a href="#">🌎 Wish List</a></li>
-                    <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+                    <li><a href="{{ route('login') }}">🔐 Login</a></li>
+                    <li><a href="{{ route('register') }}">📝 Register</a></li>
                 </ul>
-                <div class="profile-section">
-                    <!-- Profile information here -->
-                    <a href="{{ route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
+            </div>
+        @endguest
+        @auth
+            <div class="profile-sidebar-container">
+                <div class="left-sidebar">
+                    <ul class="sidebar-menu">
+                        <li><a href="{{ route('home') }}">🏠 Home</a></li>
+                        <li><a href="{{ route('explore') }}">🔍 Explore</a></li>
+                        <li><a href="#">🔔 Notifications</a></li>
+                        <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
+                        <li><a href="#">🌎 Wish List</a></li>
+                        <li><a href="{{ route('groups') }}">👥 Groups</a></li>
+                    </ul>
+                    <div class="profile-section">
+                        <!-- Profile information here -->
+                        <a href="{{ route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endauth
+
 
         <div class="profile-header">
             <div class="header-container">
@@ -34,8 +45,14 @@
                     <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
                 @else
                     <!-- add account privacy verification -->
+                    @auth
                     <a href="#" class="send-friend-request-link">Notifications</a>
                     <a href="#" class="send-friend-request-link">Send friend request</a>
+                    @endauth
+                    @guest
+                        <p style="color: #D4E4F2;">.</p>
+                        <p style="color: #D4E4F2;">.</p>
+                    @endguest
                 @endif
             </div>
             <div class="user-info">
@@ -109,7 +126,7 @@
             <div class="right-sidebar">
                 <div class="countries-visited">
                     <h3>Countries visited</h3>
-                    <p> {{ auth()->user()->countries_visited }}/195 </p>
+                    <p> {{ $user->countries_visited }}/195 </p>
                 </div>
             </div>
             {{-- Right Sidebar --}}

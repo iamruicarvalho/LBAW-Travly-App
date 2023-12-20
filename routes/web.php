@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\GuestController;
 
 
 
@@ -139,6 +140,8 @@ Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 
 Route::get('/posts/by-city/{city}', [PostController::class, 'getPostsByCity'])->name('posts.by.city');
 Route::get('/posts/{hashtag}', [PostController::class, 'getPostsByHashtag'])->name('posts.by.hashtag');
+
+Route::get('/guest-login', [GuestController::class, 'showGuestPosts'])->name('guest');
 
 /*
 use Illuminate\Support\Facades\Route;

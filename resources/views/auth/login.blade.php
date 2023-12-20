@@ -18,7 +18,7 @@
                     <li class="link"><a href="{{ url('/help') }}">Help</a></li>
                     <li class="link"><a href="{{ url('/faq') }}">FAQ</a></li>
                     <li class="link"><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
-                    <li class="link"><a class="guest-link" href="{{ url('/guest-login') }}">Enter as Guest</a></li>
+                    <a href="{{ route('guest') }}" class="guest-link">Enter as Guest</a>
                 </ul>
 
             </nav>
