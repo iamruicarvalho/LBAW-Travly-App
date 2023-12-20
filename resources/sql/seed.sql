@@ -35,7 +35,7 @@ DROP TYPE IF EXISTS post_notification_types CASCADE;
 --====================================--
 
 CREATE TYPE post_content_types AS ENUM ('image', 'video');
-CREATE TYPE user_notification_types AS ENUM ('started_following', 'request_follow', 'accepted_follow');
+CREATE TYPE user_notification_types AS ENUM ('started_following', 'request_follow', 'accepted_follow', 'rejected_follow');
 CREATE TYPE post_notification_types AS ENUM ('liked_post', 'commented_post');
 
 --====================================--
@@ -132,15 +132,15 @@ CREATE TABLE post_notification (
 );
 
 CREATE TABLE request_ (
-    senderID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    receiverID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    PRIMARY KEY (senderID, receiverID)
+    senderid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    receiverid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    PRIMARY KEY (senderid, receiverid)
 );
 
 CREATE TABLE follows_ (
-    followerID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    followedID INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
-    PRIMARY KEY (followerID, followedID)
+    followerid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    followedid INTEGER REFERENCES user_ (id) ON UPDATE CASCADE,
+    PRIMARY KEY (followerid, followedid)
 );
 
 CREATE TABLE post_likes (
@@ -744,7 +744,7 @@ INSERT INTO notification_(notificationid, description_, time_, seen, notifies, s
             (1, 'SarahWilson accepted your follow request!', '2023-10-25 15:55:10', FALSE, 1, 5),
             (2, 'JohnDoe started following you!', '2023-10-25 08:30:15', FALSE, 5, 3),
             (3, 'AliceSmith liked one of your posts!', '2023-10-25 10:15:40', FALSE, 1, 4),
-            (4, 'RobertJohnson sent you a follow request!', '2023-10-25 12:20:55', FALSE, 8, 6),
+            (4, 'RobertJohnson sent you a follow request!', '2023-10-25 12:20:55', FALSE, 1, 6),
             (5, 'EmilyBrown left a comment in one of your posts!', '2023-10-25 14:45:30', FALSE, 1, 9),
             (6, 'DanielRoberts liked one of your posts!', '2023-10-25 16:40:25', FALSE, 6, 2),
             (7, 'SophiaGarcia sent you a follow request!', '2023-10-25 17:25:55', FALSE, 3, 7),
@@ -970,7 +970,9 @@ INSERT INTO post_notification(notificationid, postID, notification_type) VALUES
             (40, 5, 'liked_post');
             */
 
-INSERT INTO request_(senderID, receiverID) VALUES
+INSERT INTO request_(senderid, receiverid) VALUES
+            (6, 1);
+            /*
             (6, 17),
             (34, 48),
             (71, 32),
@@ -1057,9 +1059,10 @@ INSERT INTO request_(senderID, receiverID) VALUES
             (1, 84),
             (74, 28),
             (5, 69),
-            (36, 94);
+            (36, 94);*/
 
-INSERT INTO follows_(followerID, followedID) VALUES
+/*
+INSERT INTO follows_(followerid, followedid) VALUES
             (23, 67),
             (10, 35),
             (5, 51),
@@ -1224,6 +1227,7 @@ INSERT INTO follows_(followerID, followedID) VALUES
             (33, 32),
             (5, 4),
             (2, 1);
+            */
 
 INSERT INTO post_likes(id, postID) VALUES
             (2, 1), 
