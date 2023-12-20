@@ -54,24 +54,15 @@ class NotificationController extends Controller
         }
     }
 
-    public function addNotif(Request $request)
+    public function addNotif($notifType, $to, $targetPost)
     {   
         if (Auth::check()) {
-
-            $this->validate($request, [
-                'notifType' => 'required', 
-                'to' => 'required|exists:user_,id',
-                'targetPost' => 'exists:post_,postid',
-            ]);
-
             $uNotif = TRUE;
-
-            $notifType = $request->input('notifType');
 
             $notification = new Notification();
             $notification->notificationid = Notification::orderBy('notificationid','desc')->first()->notificationid + 1;
             $notification->time_ = now();
-            $notification->notifies = $request->input('to');
+            $notification->notifies = $to;
             $notification->sends_notif = Auth::user()->id;
 
             $username = Auth::user()->username;
@@ -86,6 +77,12 @@ class NotificationController extends Controller
                 case('accepted_follow'):
                     $notification->description_ = $username . ' accepted your follow request!';
                     break;
+                case('unfollow'):
+                    $notification->description_ = $username . ' unfollowed you!';
+                    break;
+                case('unfriend'): 
+                    $notification->description_ = $username . ' unfriended you!';
+                    break; 
                 case('rejected_follow'):
                     $notification->description_ = $username . ' rejected your follow request!';
                     break;
@@ -109,7 +106,7 @@ class NotificationController extends Controller
             } else {
                 $notif_type_add = new PostNotification();
                 $notif_type_add->notificationid = $notification->notificationid;
-                $notif_type_add->postid = $request->input('targetPost');
+                $notif_type_add->postid = $targetPost;
                 $notif_type_add->notification_type = $notifType;
             }
 

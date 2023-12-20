@@ -33,9 +33,32 @@
                 @if (auth()->user() == $user)
                     <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
                 @else
-                    <!-- add account privacy verification -->
-                    <a href="#" class="send-friend-request-link">Notifications</a>
-                    <a href="#" class="send-friend-request-link">Send friend request</a>
+                    @switch($user->private_)
+                        @case(TRUE)
+                            @if(!auth()->user()->canSendRequestTo($user->id))
+                                <a class="edit-profile-link">Already Friends</a>    
+                            @else
+                                <form method="POST" action="{{ route('request.sendFollow') }}">
+                                    @csrf
+                                    <input type="hidden" id="to" name="to" value="{{ $user->id }}"/>
+                                    <input type="hidden" id="notifType" name="notifType" value='request_follow' />
+                                    <button type="submit" class="send-friend-request-link">Send friend request</button>
+                                </form>
+                            @endif
+                        @break
+                        @case(FALSE)
+                            @if(auth()->user()->isFollowing($user->id))
+                                <a class="edit-profile-link">Follows</a> 
+                            @else
+                                <form method="POST" action="{{ route('request.sendFollow') }}">
+                                    @csrf
+                                    <input type="hidden" id="to" name="to" value="{{ $user->id }}"/>
+                                    <input type="hidden" id="notifType" name="notifType" value='request_follow' />
+                                    <button type="submit" class="send-friend-request-link">Follow</button>
+                                </form>
+                            @endif
+                        @break
+                    @endswitch
                 @endif
             </div>
             <div class="user-info">
