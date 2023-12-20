@@ -101,6 +101,11 @@ class User extends Model implements Authenticatable
         return ($iFollowU && $uFollowMe);       
     }
 
+    public function isFollowing($friend)
+    {
+        return Follow::where('followerid', $this->id)->where('followedid', $friend)->exists();    
+    }
+
     public function removeFollow($friend){
         $remFriend = Follow::where('followerid', $this->id)->where('followedid', $friend);
         if($remFriend->exists()){
