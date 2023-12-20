@@ -40,12 +40,13 @@
             <div class="profile-container">
                 <img src="{{ asset($user->profile_picture) }}" alt="Profile Picture" class="profile-picture">
             </div>
+            @if (auth()->check())
             <div>
                 @if (auth()->user() == $user)
                     <a href="{{ route('profile.edit', auth()->id()) }}" class="edit-profile-link">Edit Profile</a>
                 @else
                     @switch($user->private_)
-                        @case(TRUE)
+                        @case(true)
                             @if(!auth()->user()->canSendRequestTo($user->id))
                                 <a class="edit-profile-link">Already Friends</a>    
                             @else
@@ -57,7 +58,7 @@
                                 </form>
                             @endif
                         @break
-                        @case(FALSE)
+                        @case(false)
                             @if(auth()->user()->isFollowing($user->id))
                                 <a class="edit-profile-link">Follows</a> 
                             @else
@@ -72,6 +73,10 @@
                     @endswitch
                 @endif
             </div>
+        @else
+            <p style="color: #D4E4F2;">.</p>
+            <p style="color: #D4E4F2;">.</p>
+        @endif
             <div class="user-info">
                 <div>
                     <h3>{{ $user->username }}</h3>
