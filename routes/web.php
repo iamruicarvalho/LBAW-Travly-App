@@ -66,7 +66,7 @@ Route::get('/post_update_page/{postid}', [HomeController::class, 'post_update_pa
 Route::post('/update_post_data/{postid}', [HomeController::class, 'update_post_data'])->middleware('auth');
 
 Route::get('/posts/{postid}/likes', [LikeController::class, 'showLikes']);
-Route::post('/posts/{postid}/like', [LikeController::class, 'likePost'])->name('posts.like');
+Route::post('/posts/{postid}/like', [LikeController::class, 'likePost'])->name('posts.likes');
 Route::delete('/posts/{postid}/unlike', [LikeController::class, 'unlikePost'])->name('posts.unlike');
 
 

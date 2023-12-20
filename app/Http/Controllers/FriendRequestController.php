@@ -104,14 +104,14 @@ class FriendRequestController extends Controller{
             
             $notifType = 'request_follow';
 
-            Auth::user()->requestsSent()->attach($request->input('to'));
-
             $check = FriendRequest::where('senderid', $request->input('to'))->where('receiverid', Auth::user()->id)->exists(); //check if other person already sent request
             
             if($check){ //if they did, make them friends and change notif to accepted_follow
                 $this->createFriends(Auth::user()->id, $request->input('to'));
                 $notifType = 'accepted_follow';
             } 
+
+            Auth::user()->requestsSent()->attach($request->input('to'));
 
             $notifCheck = app('App\Http\Controllers\NotificationController')->addNotif($notifType, $request->input('to'), FALSE); //can be used to check if notification was created
 

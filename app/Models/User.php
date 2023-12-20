@@ -108,10 +108,7 @@ class User extends Model implements Authenticatable
 
     public function canSendRequestTo($target){
         $check = FriendRequest::where('senderid', $this->id)->where('receiverid', $target)->exists();
-        if($check && ! $this->isFriend($target)){
-            return FALSE;
-        }
-        return TRUE;
+        return !($check || $this->isFriend($target));
     }
 
     public function canAcceptRequestFrom($target){
