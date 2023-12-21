@@ -165,6 +165,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::post('/users/{user}/approve', [AdminController::class, 'approveUser'])->name('admin.approveUser');
 
     Route::post('/users/{user}/ban', [AdminController::class, 'deleteAccount'])->name('admin.banUser');
+
+    Route::delete('/delete-post/{postid}', [AdminController::class, 'deletePost'])->name('admin.deletePost');
+
+
 });
 
 /*
