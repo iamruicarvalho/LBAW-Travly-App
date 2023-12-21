@@ -18,18 +18,40 @@
                 <a href="{{  route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
             </div>
         </div>
+    
+        <div class="followers-container">
+        <div class="profile-sidebar-container">
+            <div class="left-sidebar">
+                <!-- Seu conteúdo atual da barra lateral -->
+                <!-- ... -->
+            </div>
+        </div>
+
+        <div class="followers-content">
+            <div class="followers-header">
+                <h1>Followers</h1>
+            </div>
+            <ul class="followers">
+                @forelse($user->followers as $follower)
+                    <li class="follower-item">
+                        <a href="{{ route('profile.show', $follower->id) }}" class="follower-link">
+                            <img src="{{ asset($follower->profile_picture) }}" alt="{{ $follower->name }}" class="follower-picture">
+                            <div class="follower-info">
+                                <span class="follower-name">{{ $follower->name_ }}</span>
+                                <span class="follower-username">{{ $follower->username }}</span>
+                            </div>
+                        </a>
+                    </li>
+                @empty
+                    @if(Auth::user() == $user)
+                        <p class="no-followers">You don't have any followers yet.</p>
+                    @else
+                        <p class="no-followers">This user has no followers.</p>
+                    @endif
+                @endforelse
+            </ul>
+        </div>
     </div>
-    <ul class="followers">
-        @forelse($user->followers()->get() as $follower)
-            <li><a href="{{ route('profile.show', $follower->id) }}">{{ $follower->username }}</a></li>
-        @empty
-            @if(Auth()->user() == $user)
-                <p class="no-followers">You don't have any followers</p>
-            @else
-                <p class="no-followers">No followers</p>
-            @endif
-        @endforelse
-    </ul>
 </div>
 <link href="{{ url('css/followers_following.css') }}" rel="stylesheet">
 @endsection
