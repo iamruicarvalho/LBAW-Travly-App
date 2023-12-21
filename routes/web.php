@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
@@ -128,6 +129,12 @@ Route::middleware('web')->group(function () {
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
 });
+
+// Forgot Password
+Route::get('/send-email', [UserController::class, 'showEmailLinkRequestForm'])->name('send-email');
+Route::get('/password/reset', [UserController::class, 'showUpdatePasswordForm'])->name('password.reset');
+Route::post('/password/reset', [UserController::class, 'updatePassword'])->name('password.update');
+Route::post('/send', [MailController::class, 'send'])->name('send');
 
 // Static Pages
 Route::controller(StaticPageController::class)->group(function () {
