@@ -2,18 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Http\Request;
-use App\Models\Admin;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use App\Models\User;
+use App\Models\Comment;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Página inicial do painel de administração
-        $this->authorize('show', Admin::class);
-        return view('admin.index');
+        $users = User::all(); 
+        $comments = Comment::all(); 
+    
+        return view('admin.dashboard', compact('users', 'comments'));
     }
+    
+    // Método para remover um comentário
+    public function removeComment($commentid)
+    {
+        $comment = Comment::findOrFail($commentid);
+        $comment->delete();
+
+        return back()->with('success', 'Comment removed successfully.');
+    }
+
+    // Método para aprovar um usuário
+    public function approveUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_approved = true;
+        $user->save();
+
+        return back()->with('success', 'User approved successfully.');
+    }
+
+
+    public function deleteAccount($id) {
+        $userToDelete = User::findOrFail($id);
+
+        $userToDelete->username = "anonymous" . $userToDelete->id;
+        $userToDelete->name_ = "Anonymous";
+        $userToDelete->email = "anonymous" . $userToDelete->id . "@example.com";
+        $userToDelete->password_ = Hash::make(Str::random(40));
+
+        $userToDelete->save();
+
+        if (Auth::id() == $id) {
+            Auth::logout();
+        }
+
+        return back()->with('success', 'User banned successfully.');
+    }
+
+    
+
 }
+

@@ -51,28 +51,36 @@ document.addEventListener('DOMContentLoaded', function () {
         function addUserToGroup() {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-            fetch(`/groups/${groupid}/details/add-user/${selectedUserId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({ userid: selectedUserId })
-            })
-                .then(response => response.json())
-                .then(response => {
-                    if (response.error) {
-                        console.error('Error adding user to the group:', response.error);
-                    } else if (response.user && response.user.username) {
-                        console.log('User added to the group successfully');
-                        updateUserList(response.user);
-                    } else {
-                        console.error('Invalid server response. Missing user information.');
-                    }
+            // Dynamically fetch the userid associated with the selected user
+            const selectedOption = document.querySelector(`option[value="${userSearch.value}"]`);
+            const dynamicUserId = selectedOption ? selectedOption.getAttribute('data-user-id') : null;
+
+            if (dynamicUserId) {
+                fetch(`/groups/${groupid}/details/add-user/${dynamicUserId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({ userid: dynamicUserId })
                 })
-                .catch(error => {
-                    console.error('Error adding user to the group:', error);
-                });
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.error) {
+                            console.error('Error adding user to the group:', response.error);
+                        } else if (response.user && response.user.username) {
+                            console.log('User added to the group successfully');
+                            updateUserList(response.user);
+                        } else {
+                            console.error('Invalid server response. Missing user information.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding user to the group:', error);
+                    });
+            } else {
+                console.warn('No user selected. Please select a user before adding to the group.');
+            }
         }
 
         function leaveGroup() {
@@ -106,11 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('addUserBtn').addEventListener('click', function () {
             groupid = getGroupIdFromUrl();
-            if (selectedUserId && groupid) {
-                addUserToGroup();
-            } else {
-                console.warn('No user selected. Please select a user before adding to the group.');
-            }
+            addUserToGroup();
         });
 
         initializeAutocomplete();
@@ -121,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
 
 
 

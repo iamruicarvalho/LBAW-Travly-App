@@ -34,6 +34,10 @@
                         <li><a href="{{ url('/help') }}">Help</a></li>
                         <li><a href="{{ url('/faq') }}">FAQ</a></li>
                         <li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
+                        @if(Auth::check() && Auth::user()->id == 1)
+                            <li><a href="{{ route('admin.dashboard') }}" >📊 Admin Dashboard</a></li>
+                        @endif
+
                     </ul>
                 </nav>
                 @if (Auth::check())

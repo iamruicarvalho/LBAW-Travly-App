@@ -11,7 +11,8 @@
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
                 <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
-            </ul>
+
+                </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
                 <a href="{{ route('profile.show', auth()->id())  }}">👤 {{ auth()->user()->username }}</a>
@@ -47,32 +48,46 @@
             @endif
 
             @foreach($data as $data)
-
                 @if($data->groupid === null)
-                    <div class="welcome-post">
-                        <div class="post-header">
-                            @php
-                                $user = App\Models\User::find($data->created_by);
-                            @endphp
-                            <p class="user-name">{{ $user->name_ }}</p>
-                            <a href="{{ route('profile.show', $user->id) }}" class="user-username">{{ $user->username }}</a>
-                            <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
-                        </div>
-                        <div class="post-content">
-                            <p class="post-description">{{ $data->description_ }}</p>
-                        </div>
-                        <div class="post-image">
-                            <img src="{{ asset('postimage/' . $data->content_) }}">
-                        </div>
-                        <div class="post-details">
-                            <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
-                            <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
-                            <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                            <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
-                        </div>
+                <div class="welcome-post">
+                    <div class="post-header">
+                        @php
+                            $user = App\Models\User::find($data->created_by);
+                        @endphp
+                        <p class="user-name">{{ $user->name_ }}</p>
+                        <a href="{{ route('profile.show', $user->id) }}" class="user-username">{{ $user->username }}</a>
+                        <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
                     </div>
-                @endif
+                    <div class="post-content">
+                        <p class="post-description">{{ $data->description_ }}</p>
+                    </div>
+                    <div class="post-image">
+                        <img src="{{ asset('postimage/' . $data->content_) }}">
+                    </div>
+                    <div class="post-actions">
 
+                        {{-- Botão Curtir com Emoji Grande --}}
+                        <form action="{{ route('posts.likes.store', $data->postid) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="emoji-button">👍🏻</button>
+                        </form>
+
+                        {{-- Botão Descurtir com Emoji Grande --}}
+                        <form action="{{ route('posts.likes.destroy', $data->postid) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="emoji-button">👎🏻</button>
+                        </form>
+                        <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details">{{ $data->likes_ }} likes</a>
+
+                        <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details">Comments</a>
+
+
+                        <a onclick="return confirm('Are you sure to delete this?')" href="{{ url('my_posts_del', $data->postid) }}" class="btn btn-danger">Delete</a>
+                        <a href="{{ url('post_update_page', $data->postid) }}" class="btn btn-primary">Edit</a>
+                    </div>
+                </div>
+                @endif
             @endforeach
 
             <div class="welcome-post">

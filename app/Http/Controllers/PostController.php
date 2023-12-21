@@ -81,7 +81,7 @@ class PostController extends Controller
             return redirect()->route('profile.show', $id);
         }
 
-        $likes = $post->likes; // Still have to change this
+        $likes = $post->likes; 
 
         return view('posts.likes', compact('post', 'likes'));
     }
