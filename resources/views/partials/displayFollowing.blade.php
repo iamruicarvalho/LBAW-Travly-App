@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="following-container">
+<div class="followers-container">
     {{-- Left Sidebar --}}
     <div class="profile-sidebar-container">
         <div class="left-sidebar">
@@ -18,18 +18,39 @@
                 <a href="{{  route('profile.show', auth()->id()) }}">👤 {{ auth()->user()->username }}</a>
             </div>
         </div>
-    </div>
-    <ul class="following">
-        @forelse($user->following()->get() as $following)
-            <li><a href="{{ route('profile.show', $following->id) }}">{{ $following->username }}</a></li>
-        @empty
-            @if(Auth()->user() == $user)
-                <p class="no-following">You don't follow anyone</p>
-            @else
-                <p class="no-following">Doesn't follow anyone</p>
-            @endif
-        @endforelse
-    </ul>
+    
+        <div class="followers-container">
+        <div class="profile-sidebar-container">
+            <div class="left-sidebar">
+                <!-- Seu conteúdo atual da barra lateral -->
+                <!-- ... -->
+            </div>
+        </div>
+        <div class="followers-content">
+            <div class="followers-header">
+                <h1>Following</h1>
+            </div>
+            <ul class="followers">
+                @forelse($user->following as $following)
+                    <li class="follower-item">
+                        <a href="{{ route('profile.show', $following->id) }}" class="follower-link">
+                            <img src="{{ asset($following->profile_picture) }}" alt="{{ $following->name }}" class="follower-picture">
+                            <div class="follower-info">
+                                <span class="follower-name">{{ $following->name_ }}</span>
+                                <span class="follower-username">{{ $following->username }}</span>
+                            </div>
+                        </a>
+                    </li>
+                @empty
+                    @if(Auth::user() == $user)
+                        <p class="no-following">You don't follow anyone yet.</p>
+                    @else
+                        <p class="no-following">This user doesn't follow anyone.</p>
+                    @endif
+                @endforelse
+            </ul>
+        </div>
+
 </div>
 <link href="{{ url('css/followers_following.css') }}" rel="stylesheet">
 @endsection

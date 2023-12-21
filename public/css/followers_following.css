@@ -1,3 +1,13 @@
+.followers-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+.profile-sidebar-container {
+    flex: 0 0 auto; /* Evita que a barra lateral seja flexível */
+}
+
 /* Barra Lateral Esquerda */
 .left-sidebar {
     width: 300px;
@@ -62,17 +72,89 @@ color: rgb(191, 191, 191);
     margin-bottom: 10px;
 }  
 
-/* ------------- */
-.followers, .following {
-    display: block;
-    margin-left: 50em;
-}
-.followers a,
-.following a {
-    color: black;
+/* Estilos para o conteúdo dos seguidores */
+.followers-content {
+    flex: 1; 
+    margin-top: -1150px; /* Esta propriedade pode ser muito específica e causar sobreposição indesejada, ajuste conforme necessário */
+    margin-left: 20px; 
 }
 
-.followers a:hover,
-.following a:hover {
-    color: grey;
+/* Estilos para o contêiner do perfil */
+.profile-container {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+
+    /* Propriedades para posicionar à direita */
+    margin-left: auto;
+    width: 60%;
+}
+
+/* Estilos para a lista de seguidores */
+.followers {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilos para cada item da lista de seguidores */
+.followers li {
+    margin-bottom: 8px;
+    padding: 8px; /* Adicionado para dar espaço */
+    border: 1px solid #ccc; /* Adicionado para definir bordas */
+    border-radius: 4px; /* Adicionado para bordas arredondadas */
+    background-color: #fff; /* Adicionado para fundo */
+}
+
+/* Estilos para links dentro da lista de seguidores */
+.followers a {
+    text-decoration: none;
+    color: #232323;
+    font-weight: bold;
+}
+
+/* Estilo para o texto quando não há seguidores */
+.no-followers {
+    font-style: italic;
+    color: #888;
+}
+
+
+.follower-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.follower-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: inherit; /* Mantém a cor padrão dos links */
+    text-decoration: none; /* Remove o sublinhado dos links */
+}
+
+.follower-picture {
+    width: 40px; /* Tamanho da foto de perfil */
+    height: 40px; /* Tamanho da foto de perfil */
+    border-radius: 50%; /* Faz a imagem redonda */
+    object-fit: cover; /* Garante que a imagem cubra todo o espaço disponível */
+}
+
+.follower-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.follower-name {
+    font-weight: bold;
+}
+
+.follower-username {
+    font-size: smaller;
+    color: #555;
 }
