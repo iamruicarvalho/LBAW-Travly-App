@@ -11,7 +11,8 @@
                 <li><a href="{{ route('messages.showAllConversations') }}">📨 Messages</a></li>
                 <li><a href="#">🌎 Wish List</a></li>
                 <li><a href="{{ route('groups.showGroups') }}">👥 Groups</a></li>
-            </ul>
+
+                </ul>
             <div class="profile-section">
                 <!-- Profile information here -->
                 <a href="{{ route('profile.show', auth()->id())  }}">👤 {{ auth()->user()->username }}</a>

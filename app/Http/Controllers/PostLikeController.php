@@ -9,6 +9,11 @@ class PostLikeController extends Controller
 {
     public function store(Post $post, Request $request)
     {
+        // Verifica se o usuário é o criador do post
+        if ($request->user()->id == $post->created_by) {
+            return back()->withErrors('Você não pode curtir o seu próprio post.');
+        }
+    
         // Verifica se o usuário já curtiu o post
         if (!$post->likes->contains($request->user()->id)) {
             // Adiciona o like
@@ -16,9 +21,10 @@ class PostLikeController extends Controller
             // Incrementa o contador de likes
             $post->increment('likes_');
         }
-
+    
         return back();
     }
+    
 
     public function destroy(Post $post, Request $request)
     {
