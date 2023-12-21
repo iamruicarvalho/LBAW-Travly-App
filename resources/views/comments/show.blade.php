@@ -29,9 +29,11 @@
             <div class="post-content">
                 <p class="post-description">{{ $post->description_ }}</p>
             </div>
+            @if(pathinfo($post->content_, PATHINFO_EXTENSION) == 'png' || pathinfo($post->content_, PATHINFO_EXTENSION) == 'jpg' || pathinfo($post->content_, PATHINFO_EXTENSION) == 'jpeg')
             <div class="post-image">
                 <img src="{{ asset('postimage/' . $post->content_) }}">
             </div>
+            @endif
 
             <div class="post-details">
                 <a href="{{ url('/posts/' . $post->postid . '/likes') }}" class="show-details"> {{ $post->likes_ }} likes</a>

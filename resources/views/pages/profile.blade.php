@@ -140,9 +140,13 @@
                             </div>
                         </div>
                     @endforeach
-                @else
-                    <p>There are no posts yet 😭</p>
-                @endif
+                    @else
+                        <div class="no-posts-message">
+                            <p>Looks like you haven't shared any posts yet. Start sharing your thoughts and experiences!</p>
+                            <img src="https://github.com/acarolinacc/teste/blob/main/DALL%C2%B7E%202023-12-21%2023.12.58%20-%20A%20vibrant%20and%20engaging%20image%20depicting%20a%20user%20starting%20to%20create%20posts%20on%20a%20social%20media%20platform%20designed%20for%20travelers.%20The%20scene%20includes%20a%20diverse.png?raw=true" alt="Start Sharing Your Experiences" style="max-width:100%; height:auto;">
+                        </div>
+                    @endif
+
             </div>            
         <!-- Private account -->
         @else
