@@ -73,10 +73,10 @@
                     @endswitch
                 @endif
             </div>
-        @else
-            <p style="color: #D4E4F2;">.</p>
-            <p style="color: #D4E4F2;">.</p>
-        @endif
+            @else
+                <p style="color: #D4E4F2;">.</p>
+                <p style="color: #D4E4F2;">.</p>
+            @endif
             <div class="user-info">
                 <div>
                     <h3>{{ $user->username }}</h3>
@@ -123,8 +123,14 @@
                                 <p>{{ $post->description_ }}</p>
                             </div>
                             <div class="post-details">
-                                <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
-                                <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details">{{ $post->comments_ }} Comments</a>
+                                @guest
+                                    <p>{{ $post->likes_ }} likes</p>
+                                    <p class="show-details">{{ $post->comments_ }} Comments</p>
+                                @else
+                                    <a href="{{ url('/posts/' . $post->postid . '/likes') }}">{{ $post->likes_ }} likes</a>
+                                    <a href="{{ url('/posts/' . $post->postid . '/comments') }}" class="show-details">{{ $post->comments_ }} Comments</a>
+                                @endguest
+                                
                                 <p> {{ \Carbon\Carbon::parse($post->time_)->diffForHumans() }}</p>
                                 <!-- If I'm on my personal profile page -->
                                 @if (Auth()->user() == $user)  
