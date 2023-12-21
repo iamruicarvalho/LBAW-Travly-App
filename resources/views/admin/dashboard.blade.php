@@ -19,6 +19,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="#comments" data-toggle="tab">Comments</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#posts" data-toggle="tab">Posts</a>
+            </li>
         </ul>
 
         <!-- Tab panes -->
@@ -83,13 +86,14 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane" id="comments">
+            <div class="tab-pane" id="posts">
                 <!-- Comments management content -->
                 <table class="table">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Content</th>
                             <th>Author</th>
                             <th>Actions</th>
                         </tr>
@@ -97,9 +101,11 @@
                     <tbody>
                     @foreach ($posts as $post)
                         <tr>
-                            <td>{{ $post->id }}</td>
+                            <td>{{ $post->postid }}</td>
+                            <td>{{ $post->description_ }}</td>
                             <td>{{ $post->content_ }}</td>
                             <td>{{ $post->created_by }}</td>
+                        
                             <td>
                                 <form action="{{ route('admin.deletePost', $post->postid) }}" method="POST">
                                     @csrf
