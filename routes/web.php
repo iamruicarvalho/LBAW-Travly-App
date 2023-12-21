@@ -15,6 +15,9 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\CommentLikeController;
+use App\Http\Controllers\PostLikeController;
 
 
 
@@ -147,6 +150,9 @@ Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 Route::get('/posts/by-city/{city}', [PostController::class, 'getPostsByCity'])->name('posts.by.city');
 Route::get('/posts/{hashtag}', [PostController::class, 'getPostsByHashtag'])->name('posts.by.hashtag');
 
+
+Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes.store');
+Route::delete('/posts/{post}/likes', [PostLikeController::class, 'destroy'])->name('posts.likes.destroy');
 
 /*
 use Illuminate\Support\Facades\Route;

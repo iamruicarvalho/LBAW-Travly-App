@@ -6,14 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class PostLike extends Model
 {
-    public $timestamps = false;
     protected $table = 'post_likes';
-    protected $primaryKey = null; // Para indicar que não há uma chave primária simples
-    public $incrementing = false; // Para indicar que não há auto-incremento
-
-    protected $fillable = [
-        'id', 'postid'
-    ];
+    public $incrementing = false;
+    protected $primaryKey = ['id', 'postid']; 
+    public $timestamps = false;
 
     public function user()
     {
