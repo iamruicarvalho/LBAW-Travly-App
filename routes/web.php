@@ -50,7 +50,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/profile/delete/{id}', [UserController::class, 'deleteAccount'])->name('profile.delete');
 
     //other users
-    Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.search');
+    Route::get('/users/search', [UserController::class, 'searchUsers'])->name('users.searchh');
     Route::get('/{userid}/followers', [UserController::class, 'getFollowers'])->name('followers');
     Route::get('/{userid}/following', [UserController::class, 'getFollowing'])->name('following');
 });
