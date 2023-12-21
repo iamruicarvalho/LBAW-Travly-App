@@ -21,15 +21,28 @@ class HomeController extends Controller
     public function index()
     {
         $this->middleware('auth');
-        $user = Auth()->user();
+        $user = Auth::user();
         $userid = $user->id;
     
+        // Recupera os IDs dos usuários que o usuário autenticado segue
+        $followedUsers = DB::table('follows_')
+                           ->where('followerid', $userid)
+                           ->pluck('followedid');
+    
+        // Inclui o próprio ID do usuário na lista
+        $followedUsers[] = $userid;
+    
+        // Recupera os posts do usuário autenticado e dos usuários seguidos
         $data = Post::with(['comments' => function ($query) {
-            $query->orderBy('time_', 'desc')->take(50);
-        }])->where('created_by', '=', $userid)->get();
+                    $query->orderBy('time_', 'desc')->take(50);
+                }])
+                ->whereIn('created_by', $followedUsers)
+                ->orderBy('time_', 'desc') // Ordena os posts por data
+                ->get();
     
         return view('pages.home', compact('data'));
     }
+    
     
 
     public function my_posts_del($postid)
@@ -93,12 +106,25 @@ class HomeController extends Controller
 
     public function my_post()
     {
-        $user = Auth()->user();
+        $user = Auth::user();
         $userid = $user->id;
-        $data = Post::where('created_by', '=', $userid)->get();
-
+    
+        // Recupera os IDs dos usuários que o usuário autenticado segue
+        $followedUsers = DB::table('follows_')
+                           ->where('followerid', $userid)
+                           ->pluck('followedid');
+    
+        // Inclui o próprio ID do usuário na lista
+        $followedUsers[] = $userid;
+    
+        // Recupera os posts do usuário autenticado e dos usuários seguidos
+        $data = Post::whereIn('created_by', $followedUsers)
+                    ->orderBy('time_', 'desc') // Ordena os posts por data
+                    ->get();
+    
         return view('home.my_post', compact('data'));
     }
+    
 
     public function user_post(Request $request)
     {
