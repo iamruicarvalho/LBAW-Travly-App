@@ -56,6 +56,18 @@
                     </tbody>
                 </table>
             </div>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
             <div class="tab-pane" id="comments">
                 <!-- Comments management content -->
                 <table class="table">
@@ -86,6 +98,18 @@
                     </tbody>
                 </table>
             </div>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
+            <p>   </p>
             <div class="tab-pane" id="posts">
                 <!-- Comments management content -->
                 <table class="table">

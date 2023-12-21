@@ -701,7 +701,6 @@ INSERT INTO user_(username, name_, email, password_, private_) VALUES
             ('victoralice', 'Victor', 'victoralice298@test.com', '$2y$10$UliM/tUf0jn/a9HWUjnfBON4.uP/YBMbckFoDZnyNszDf424gbL3u', True);
 
 INSERT INTO post_(content_, description_, likes_, comments_, time_, created_by, content_type) VALUES
-            ('imagina uma imagem aqui', '🌍✈️ Exploring the world, one adventure at a time! 🌟 Embracing new cultures, tasting exotic flavors, and creating memories that last a lifetime. 📸 Join me on this journey of discovery and lets inspire each other to wander far and wide. 🌏 #Nature #TravelLife #Wanderlust #AdventureAwaits 🗺️✨', 2, 0, '2023-10-25 08:30:15', 1,'image'),
             ('imagina um video aqui', '🌅 Chase sunsets, collect stories. Where to next? 🗺️✨ #SunsetSeeker #Nature #TravelInspiration', 2, 0, '2023-10-25 08:30:15', 1,'video'),
             ('imagina um video aqui', '🏰 Lost in the magic of historical wonders. Every corner has a tale to tell. 📜 #Travel #HistoryBuff #ExploreDiscoverRepeat', 2, 0, '2023-10-25 08:30:15', 1,'video'),
             ('imagina uma imagem aqui', '🍜 Savoring the flavors of the world, one delicious dish at a time. Whats your favorite global cuisine? 🌮🍣 #DeliciousFood #FoodExplorer #TasteTheWorld', 2, 0, '2023-10-25 08:30:15', 1,'image'),

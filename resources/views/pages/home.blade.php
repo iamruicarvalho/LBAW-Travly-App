@@ -61,9 +61,11 @@
                     <div class="post-content">
                         <p class="post-description">{{ $data->description_ }}</p>
                     </div>
-                    <div class="post-image">
-                        <img src="{{ asset('postimage/' . $data->content_) }}">
-                    </div>
+                    @if(pathinfo($data->content_, PATHINFO_EXTENSION) == 'png' || pathinfo($data->content_, PATHINFO_EXTENSION) == 'jpg' || pathinfo($data->content_, PATHINFO_EXTENSION) == 'jpeg')
+                        <div class="post-image">
+                            <img src="{{ asset('postimage/' . $data->content_) }}">
+                        </div>
+                    @endif
                     <div class="post-actions">
 
                         {{-- Botão Curtir com Emoji Grande --}}
