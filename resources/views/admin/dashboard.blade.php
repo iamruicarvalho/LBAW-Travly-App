@@ -83,6 +83,36 @@
                     </tbody>
                 </table>
             </div>
+            <div class="tab-pane" id="comments">
+                <!-- Comments management content -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($posts as $post)
+                        <tr>
+                            <td>{{ $post->id }}</td>
+                            <td>{{ $post->content_ }}</td>
+                            <td>{{ $post->created_by }}</td>
+                            <td>
+                                <form action="{{ route('admin.deletePost', $post->postid) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>

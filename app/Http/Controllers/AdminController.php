@@ -7,16 +7,20 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Post;
+
 
 class AdminController extends Controller
 {
     public function index()
     {
-        $users = User::all(); 
-        $comments = Comment::all(); 
+        $users = User::all();
+        $comments = Comment::all();
+        $posts = Post::all();
     
-        return view('admin.dashboard', compact('users', 'comments'));
+        return view('admin.dashboard', compact('users', 'comments', 'posts'));
     }
+    
     
     // Método para remover um comentário
     public function removeComment($commentid)
@@ -55,7 +59,15 @@ class AdminController extends Controller
         return back()->with('success', 'User banned successfully.');
     }
 
-    
+    public function deletePost($postid)
+    {
+        $postToDelete = Post::findOrFail($postid);
+
+        $postToDelete->delete();
+
+        return back()->with('success', 'Post deleted successfully.');
+    }
+
 
 }
 
