@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 
+
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Group;
@@ -59,10 +60,16 @@ class HomeController extends Controller
 
     public function my_posts_del($postid)
     {
+        DB::table('saved_post')->where('postid', $postid)->delete();
+    
         $data = Post::find($postid);
-        $data->delete();
+        if ($data) {
+            $data->delete();
+        }
+    
         return redirect()->back()->with('message', 'Post deleted successfully');
     }
+    
     
 
     public function post_update_page($postid)
@@ -247,6 +254,7 @@ class HomeController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+    
     
     
 
