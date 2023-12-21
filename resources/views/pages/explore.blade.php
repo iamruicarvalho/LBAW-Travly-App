@@ -64,7 +64,7 @@
             <div class="suggested-users">
                 @foreach ($suggestedUsers as $user)
                     <div class="user-card">
-                        <img src="https://img.freepik.com/vetores-premium/perfil-de-avatar-de-homem-no-icone-redondo_24640-14044.jpg" alt="{{ $user->name_ }}">
+                        <img src="{{ asset($user->profile_picture) }}" alt="{{ $user->name_ }}" class="user-card img">
                         <p>{{ $user->name_ }}</p>
                         <p>{{ $user->username }}</p>
                         <button>Follow</button>
