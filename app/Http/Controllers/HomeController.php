@@ -140,19 +140,19 @@ class HomeController extends Controller
 
     public function user_post(Request $request)
     {
-        
         $user = Auth()->user();
-
         $userid = $user->id;
-
         $username = $user->name_;
 
         $post = new Post;
 
         $post->description_ = $request->description;
+        $post->created_by = $userid;
 
-        $post->created_by=$userid;
-        
+        if ($request->has('group_id')) {
+            $post->groupid = $request->group_id;
+        }
+
         $image = $request->image;
         if ($image) {
             $imagename = time() . '.' . $image->getClientOriginalExtension();
@@ -160,13 +160,12 @@ class HomeController extends Controller
             $post->content_ = $imagename;
         }
 
-
-        $post->time_ = now(); 
-
+        $post->time_ = now();
         $post->save();
 
         return redirect()->back();
     }
+
 
     public function addComment(Request $request)
     {

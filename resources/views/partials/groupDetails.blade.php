@@ -2,16 +2,6 @@
 
 @section('content')
 
-<!-- Include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<!-- Include jQuery UI -->
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-<!-- Include your custom JavaScript file -->
-<script src="{{ asset('js/editGroup.js') }}"></script>
-
 <div class="group-container">
 
     {{-- Left Sidebar --}}
@@ -77,18 +67,27 @@
             @endif
 
             @if($group->owners->contains(auth()->user()))
-            <div>
-                <input type="text" id="userSearch" placeholder="Search for a member">
-                <div id="autocompleteSuggestions"></div>
-                <button id="addUserBtn">Add Member</button>
-            </div>
+                <form id="users-search-bar" action="{{ route('users.search') }}" method="GET">
+                    @csrf
+                    <input type="text" id="search-users" name="query" placeholder="🔍 Search users ..." list="usernames-list" autocomplete="off">
+                    <datalist id="usernames-list"></datalist>
+                </form>
+                <ul id="users-list"></ul>
+                <form id="addMemberForm" action="{{ route('group.addUser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}" method="POST">
+                    @csrf
+                    <button id="addUserBtn">Add Member</button>
+                </form>
             @else
-                <a class="leave-group" data-group-id="{{ $group->groupid }}" data-user-id="{{ auth()->user()->id }}">Leave Group</a>
+            <form id="leaveGroupForm" action="{{ route('groups.leave', ['groupid' => $group->groupid]) }}" method="POST">
+                @csrf
+                <button type="submit">Leave Group</button>
+            </form>
             @endif
             
     </div>
     </div>
     <link href="{{ url('css/group.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/editGroup.js') }}" defer></script>
 @endsection
 
 

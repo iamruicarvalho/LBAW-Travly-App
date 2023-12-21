@@ -29,6 +29,7 @@ class PostController extends Controller
         // error handling
         $content = $request->input('media');
         $description = $request->input('description');
+        $group_id = $request->input('group_id');
 
         if (!isset($content) && $_FILES["image"]["error"] && !isset($description)) {
           return redirect()->back()->with('error', 'You can not create an empty post');
@@ -40,13 +41,15 @@ class PostController extends Controller
         // Validate data
         $request->validate([
             'description' => 'required|max:1500',
-            'content' => 'nullable|file|mimes:jpeg,png,gif,mp4,avi,wmv|max:2048'
+            'content' => 'nullable|file|mimes:jpeg,png,gif,mp4,avi,wmv|max:2048',
+            'group_id' => 'required|exists:group_,groupid',
         ]);
 
         $user = Auth()->user();
         $user->posts()->create([
             'content_'=> $content,
             'description_'=> $description,
+            'group_id' => $group_id,
         ]);
 
         // return redirect()->route('home')

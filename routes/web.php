@@ -93,12 +93,12 @@ Route::controller(GroupController::class)->group(function () {
     Route::get('/groups/{groupid}', [GroupController::class, 'showGroup'])->name('groups.show');
     Route::get('/groups/{groupid}/details', [GroupController::class, 'groupDetails'])->name('group.details');
     Route::get('/groups/{groupid}/details/remove-user/{userid}', [GroupController::class, 'removeUser'])->name('group.removeuser');
-    Route::get('/user/search', [GroupController::class, 'searchUsers'])->name('user.search');
-    Route::post('/groups/{groupid}/details/add-user/{userid}', [GroupController::class, 'addUser'])->name('group.adduser');
+    Route::get('/user/search', [GroupController::class, 'searchUsers'])->name('users.search');
+    Route::post('/groups/{groupid}/details/add-user/{userid}', [GroupController::class, 'addUser'])->name('group.addUser');
     Route::post('/groups/{groupid}/details/editName', [GroupController::class, 'editName'])->name('group.editName');
     Route::post('/groups/{groupid}/details/editDescription', [GroupController::class, 'editDescription'])->name('group.editDescription');
     Route::post('/groups/{groupid}/details/deleteGroup', [GroupController::class, 'deleteGroup'])->name('group.delete');
-    Route::post('/groups/leave', [GroupController::class, 'leaveGroup'])->name('groups.leave');
+    Route::post('/groups/{groupid}/leave', [GroupController::class, 'leaveGroup'])->name('groups.leave');
     Route::get('/groups/search', [GroupController::class, 'searchGroups'])->name('groups.search');
 });
 

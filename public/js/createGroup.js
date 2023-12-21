@@ -1,127 +1,105 @@
-$(function() {
-    var selectedUsers = []; 
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('users-search-bar');
+    const searchUsers = document.getElementById('search-users');
+    const usersList = document.getElementById('users-list');
+    const selectedMembersInput = document.getElementById('selectedMembers');
 
-    function initializeAutocomplete() {
-        $("#userSearch").autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: "/user/search", 
-                    method: "GET",
-                    data: { term: request.term },
-                    success: function (data) {
-                        var usernames = data.map(function (user) {
-                            return { label: user.username, value: user.username, id: user.id };
-                        });
-                        response(usernames);
-                    }
-                });
-            },
-            minLength: 1,
-            select: function(event, ui) {
-                console.log("ui.item:", ui.item);
-                selectedUsers.push({ id: ui.item.id, username: ui.item.label }); // Add selected user to the array
-                console.log("Selected users:", selectedUsers);
-            }
+    searchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+    });
+
+    searchUsers.addEventListener('keyup', () => {
+        const user = searchUsers.value.toLowerCase();
+        search(user);
+    });
+
+    let search = (user) => {
+        const url = `/users/search?query=${user}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                displayUsers(data);
+            })
+            .catch(error => {
+                console.log('Error: ', error);
+            })
+    }
+
+    function displayUsers(users) {
+        usersList.innerHTML = '';
+
+        let searchInput = searchUsers.value.trim().toLowerCase()
+        if (searchInput === '') {
+            usersList.innerHTML = '';
+            return;
+        }
+
+        if (users.length === 0) {
+            const usersNotFound = document.createElement('li');
+            usersNotFound.id = 'users-not-found';
+            usersNotFound.textContent = "No users found";
+
+            usersList.appendChild(usersNotFound);
+            return;
+        }
+
+        users.forEach(user => {
+            const userInfoListItem = document.createElement('li');
+            userInfoListItem.id = 'user-info';
+
+            const addUserButton = document.createElement('button');
+            addUserButton.textContent = 'Add';
+            addUserButton.addEventListener('click', () => {
+                addUserToSelectedList(user);
+            });
+
+            const userUsername = document.createElement('p');
+            userUsername.id = 'user-username';
+            const userName = document.createElement('p');
+            userName.id = 'user-name';
+
+            userUsername.textContent = user.username;
+            userName.textContent = user.name_;
+
+            usersList.appendChild(userInfoListItem);
+            userInfoListItem.appendChild(addUserButton);
+            userInfoListItem.appendChild(userUsername);
+            userUsername.insertAdjacentElement('afterend', userName);
+            userUsername.style.fontSize = '16px';
+            userName.style.fontSize = '13px';
         });
     }
 
-    initializeAutocomplete();
+    function addUserToSelectedList(user) {
+        const selectedMembersList = document.getElementById('selectedMembersList');
 
-    $("#addUserBtn").click(function() {
-        // Fetch CSRF token from meta tags
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        const isUserAlreadySelected = [...selectedMembersList.children].some(li => li.dataset.userId === user.id.toString());
 
-        // Use a loop to handle multiple selected users
-        if (selectedUsers.length > 0) { // Check if at least one user is selected
-            selectedUsers.forEach(function(user) {
-                $.ajax({
-                    url: "/groups/create", // Update the URL to match your actual route for adding users
-                    method: "POST",
-                    data: {
-                        userId: user.id,
-                        name_: user.username,
-                        _token: csrfToken
-                    },
-                    success: function(response) {
-                        console.log("Server response:", response);
+        if (!isUserAlreadySelected) {
+            const selectedUserItem = document.createElement('li');
+            selectedUserItem.textContent = user.username;
+            selectedUserItem.dataset.userId = user.id;
 
-                        if (response.groupId && response.users && response.users.length > 0 && response.users[0].username) {
-                            console.log("User added to the group successfully");
-
-                            // Update the user list on the client side
-                            updateUserList(response.users[0]);
-
-                            // Assuming you have a container for the group ID, update it
-                            updateGroupId(response.groupId);
-                        } else {
-                            console.error("Invalid server response. Missing group ID or user information.");
-                        }
-                    },
-                    error: function(error) {
-                        console.error("Error adding user to the group:", error);
-
-                        // Log validation errors to the console
-                        if (error.responseJSON && error.responseJSON.errors) {
-                            console.error("Validation Errors:", error.responseJSON.errors);
-                        }
-                    }
-                });
-            });
-
-            // Clear the selectedUsers array after adding users
-            selectedUsers = [];
-        } else {
-            console.warn("No user selected. Please select a user before adding to the group.");
+            selectedMembersList.appendChild(selectedUserItem);
         }
+    }
+
+    // Hook into the form submission event
+    const createGroupForm = document.querySelector('.group-create-container form');
+    createGroupForm.addEventListener('submit', function(event) {
+        // Update the form's hidden input with the selected users
+        const selectedUserIds = [...selectedMembersList.children].map(li => li.dataset.userId);
+        selectedMembersInput.value = JSON.stringify(selectedUserIds);
+
+        // Submit the form programmatically
+        createGroupForm.submit();
     });
 
-    function updateGroupId(groupId) {
-        // Update the group ID in your UI or perform any necessary actions
-        console.log("Group ID:", groupId);
-    }
-
-    function updateUserList(user) {
-        // Assuming #selectedMembersList is the container for the user list
-        let userList = $("#selectedMembersList");
-    
-        // Log the user information for debugging
-        console.log("Adding user to the list:", user);
-    
-        // Use a unique identifier for each user list item
-        let userListItemId = 'user_' + user.id;
-    
-        // Check if the user is already in the list
-        if (!$("#" + userListItemId).length) {
-            // Append the new user to the user list
-            userList.append('<li id="' + userListItemId + '">' + user.username + '</li>');
-    
-            // Log a message after appending
-            console.log("User added to the list successfully.");
-    
-            // Update the hidden input value with selected user IDs
-            updateSelectedMembersInput(user.id);
-        } else {
-            console.warn("User is already in the list.");
-        }
-    }    
-    
-    
-    function updateSelectedMembersInput(userId) {
-        // Assuming #selectedMembers is the hidden input for selected member IDs
-        let selectedMembersInput = $("#selectedMembers");
-    
-        // Get the current value and append the new user ID
-        let currentValue = selectedMembersInput.val();
-        let newValue = currentValue ? currentValue + ',' + userId : userId;
-    
-        // Update the hidden input value
-        selectedMembersInput.val(newValue);
-    
-        // Log the updated value for debugging
-        console.log("Selected Members Input Updated:", newValue);
+    function getSelectedUserIds() {
+        const selectedMembersList = document.getElementById('selectedMembersList');
+        return [...selectedMembersList.children].map(li => li.dataset.userId);
     }
 });
-
 
 
 

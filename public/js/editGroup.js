@@ -1,130 +1,128 @@
-$(function() {
-    var selectedUserId;
- 
-    function initializeAutocomplete() {
-        $("#userSearch").autocomplete({
-            source: function(request, response) {
-                $.ajax({
-                    url: "/user/search",
-                    method: "GET",
-                    data: { term: request.term },
-                    success: function (data) {
-                        var usernames = data.map(function (user) {
-                            return { label: user.username, value: user.username, id: user.id };
-                        });
-                        response(usernames);
-                    }
-                });
-            },
-            minLength: 1,
-            select: function(event, ui) {
-                console.log("ui.item:", ui.item); 
-                selectedUserId = ui.item.id; 
-                console.log("Selected user ID:", selectedUserId);
-            }
-        });
-    }
- 
-    initializeAutocomplete();
- 
-    $("#addUserBtn").click(function() {
-        var groupId = getGroupIdFromUrl();
-        if (selectedUserId && groupId) {
-            // Fetch CSRF token from meta tags
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
- 
-            $.ajax({
-                url: "/groups/" + groupId + "/details/add-user/" + selectedUserId,
-                method: "POST",
-                data: {
-                    userId: selectedUserId,
-                    _token: csrfToken
-                },
-                success: function(response) {
-                    console.log("Server response:", response);
-                
-                    if (response.user && response.user.username) {
-                        console.log("User added to the group successfully");
-                
-                        // Update the user list on the client side
-                        updateUserList(response.user);
-                    } else {
-                        console.error("Invalid server response. Missing user information.");
-                    }
-                },
-                error: function(error) {
-                    console.error("Error adding user to the group:", error);
+document.addEventListener('DOMContentLoaded', function () {
+    const addUserBtn = document.getElementById('addUserBtn');
+
+    if (addUserBtn) {
+        let selectedUserId;
+        let userSearch;
+        let groupid;
+
+        function initializeAutocomplete() {
+            userSearch = document.getElementById('search-users');
+            const datalist = document.getElementById('usernames-list');
+
+            userSearch.addEventListener('input', function () {
+                const searchTerm = this.value;
+                if (searchTerm.length >= 1) {
+                    searchUsers(searchTerm);
                 }
             });
-        } else {
-            console.warn("No user selected. Please select a user before adding to the group.");
+
+            userSearch.addEventListener('change', function () {
+                const selectedOption = datalist.querySelector(`option[value="${userSearch.value}"]`);
+                if (selectedOption) {
+                    selectedUserId = selectedOption.getAttribute('data-user-id');
+                }
+            });
         }
-    });
- 
-    function getGroupIdFromUrl() {
-        var path = window.location.pathname;
-        var regex = /\/groups\/(\d+)\/details/;
-        var match = path.match(regex);
- 
-        if (match && match[1]) {
-            return match[1];
-        } else {
-            console.error("Unable to extract groupId from the URL.");
-            return null;
-        }
-    }
 
-    function updateUserList(user) {
-        // Assuming #users is the container for the user list
-        let userList = $("#users");
-
-        // Append the new user to the user list
-        userList.append('<li id="user">' + user.username + '</li>');
-
-        // Check if the current user has the permission to remove users
-        
-            // Append the remove link
-            userList.append('<a href="/groups/' + user.groupId + '/remove-user/' + user.id + '">Remove</a>');
-        
-    }
-
-    $(document).ready(function() {
-        // Assuming you have a variable to store the CSRF token
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-    
-        // Event listener for the "Leave Group" link
-        $(document).on('click', '.leave-group', function() {
-            // Get the group ID from the data attribute
-            var groupid = $(this).data('group-id');
-    
-            // Confirm with the user before leaving the group
-            var confirmLeave = confirm("Are you sure you want to leave the group?");
-            
-            if (confirmLeave) {
-                // Send an AJAX request to leave the group
-                $.ajax({
-                    url: '/groups/leave',
-                    method: 'POST',
-                    data: {
-                        groupid: groupid,
-                        _token: csrfToken
-                    },
-                    success: function(response) {
-                        console.log("Left group successfully:", response);
-    
-                        // Handle UI updates or redirection after leaving the group
-                        // For example, you can reload the page
-                        location.reload();
-                    },
-                    error: function(error) {
-                        console.error("Error leaving group:", error);
-    
-                        // Handle errors or show a user-friendly message
-                        alert("An error occurred while leaving the group. Please try again.");
-                    }
+        function searchUsers(searchTerm) {
+            fetch(`/user/search?term=${searchTerm}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateUserAutocomplete(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
                 });
+        }
+
+        function updateUserAutocomplete(usernames) {
+            const datalist = document.getElementById('usernames-list');
+            datalist.innerHTML = "";
+
+            usernames.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.username;
+                option.setAttribute('data-user-id', user.id);
+                datalist.appendChild(option);
+            });
+        }
+
+        function addUserToGroup() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            fetch(`/groups/${groupid}/details/add-user/${selectedUserId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ userid: selectedUserId })
+            })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.error) {
+                        console.error('Error adding user to the group:', response.error);
+                    } else if (response.user && response.user.username) {
+                        console.log('User added to the group successfully');
+                        updateUserList(response.user);
+                    } else {
+                        console.error('Invalid server response. Missing user information.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding user to the group:', error);
+                });
+        }
+
+        function leaveGroup() {
+            const userid = getUserId();
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            fetch(`/groups/${groupid}/leave`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    groupid: groupid,
+                    userid: userid
+                })
+            })
+                .then(response => response.json())
+                .then(response => {
+                    if (response.success) {
+                        console.log('User left the group successfully');
+                    } else {
+                        console.error('Error leaving the group:', response.error);
+                        alert(`Error: ${response.error}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error leaving the group:', error);
+                });
+        }
+
+        document.getElementById('addUserBtn').addEventListener('click', function () {
+            groupid = getGroupIdFromUrl();
+            if (selectedUserId && groupid) {
+                addUserToGroup();
+            } else {
+                console.warn('No user selected. Please select a user before adding to the group.');
             }
         });
-    });
- });
- 
+
+        initializeAutocomplete();
+
+        const leaveGroupBtn = document.getElementById('leaveGroupBtn');
+        if (leaveGroupBtn) {
+            leaveGroupBtn.addEventListener('click', leaveGroup);
+        }
+    }
+});
+
+
+
+
+

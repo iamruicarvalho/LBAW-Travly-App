@@ -4,7 +4,6 @@
     <form action="{{ route('user_post') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="upload-post-section">
-            {{-- Seu HTML de upload de post vai aqui --}}
             <textarea name="description" placeholder="Write your post..."></textarea>
             <input type="file" name="image">
             <input type="submit" value="Add Post" class="btn btn-outline-secondary">

@@ -35,4 +35,5 @@ class Message extends Model
     {
         return $this->hasMany(Message::class, 'message_replies');
     }
+
 }

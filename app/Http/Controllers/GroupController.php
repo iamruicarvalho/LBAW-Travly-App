@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Group;
 use App\Models\User;
+use App\Models\Owner;
+use App\Models\Belongs;
 
 class GroupController extends Controller
 {   
@@ -24,6 +26,8 @@ class GroupController extends Controller
     // Cria um novo grupo
     public function createGroup(Request $request)
     {
+        $selectedMembers = json_decode($request->input('selectedMembers'));
+        
         $request->validate([
             'name_' => 'required|string|max:255',
             'description_' => 'nullable|string',
@@ -37,8 +41,19 @@ class GroupController extends Controller
         $group->users()->attach(auth()->user()->id);
         $group->owners()->attach(auth()->user()->id);
 
-        return response()->json(['groupId' => $group->groupid, 'users' => $group->users]);
+        if ($selectedMembers) {
+            foreach ($selectedMembers as $userId) {
+                if ($userId !== auth()->user()->id && !$group->users()->find($userId)) {
+                    $group->users()->attach($userId);
+                }
+            }
+        }
+
+        $updatedUsers = $group->users;
+
+        return redirect()->route('groups.showGroups')->with(['groupId' => $group->groupid, 'users' => $updatedUsers]);
     }
+
 
     // Edit group name
     public function editName(Request $request, $groupid)
@@ -80,22 +95,6 @@ class GroupController extends Controller
             ->with('success', 'Group description updated successfully');
     }
 
-    // Delete group
-    public function deleteGroup($groupid)
-    {
-        $group = Group::find($groupid);
-
-        if (!$group) {
-            return redirect()->route('groups')->with('error', 'Group not found');
-        }
-
-        //$this->authorize('delete', $group);
-
-        $group->delete();
-
-        return redirect()->route('groups')->with('success', 'Group deleted successfully');
-    }
-
     // Exibe a página de um grupo específico
     public function showGroup($groupid)
     {
@@ -108,6 +107,25 @@ class GroupController extends Controller
         $data = $group->posts; 
 
         return view('partials.showGroup', compact('group', 'data'));
+    }
+
+    // Delete group
+    public function deleteGroup($groupid)
+    {
+        $group = Group::find($groupid);
+    
+        if (!$group) {
+            return redirect()->route('groups.showGroups')->with('error', 'Group not found');
+        }
+        
+        $group->posts()->delete();
+        $group->messages()->delete();
+        Belongs::where('groupid', $groupid)->delete();
+        Owner::where('groupid', $groupid)->delete();
+    
+        $group->delete();
+    
+        return redirect()->route('groups.showGroups')->with('success', 'Group deleted successfully');
     }
 
     // Exibir detalhes de um grupo específico
@@ -162,7 +180,7 @@ class GroupController extends Controller
         return response()->json($users);
     }
 
-    public function addUser(Request $request, $groupid, $userId)
+    public function addUser($groupid, $userId)
     {
         // Find the group
         $group = Group::find($groupid);
@@ -191,6 +209,7 @@ class GroupController extends Controller
 
         return response()->json($response);
     }
+
 
     // Permite que um usuário solicite ingresso em um grupo
     public function requestJoin($groupId)
@@ -231,22 +250,19 @@ class GroupController extends Controller
             ->with('success', 'User joined the group successfully');
     }
 
-    public function leaveGroup(Request $request)
+    public function leaveGroup($groupid)
     {
-        $groupid = $request->input('groupid');
-
         $group = Group::find($groupid);
 
         if (!$group) {
-            return redirect()->route('home')->with('error', 'Group not found');
+            return redirect()->route('groups.showGroups')->with('error', 'Group not found');
         }
 
         $user = auth()->user();
 
-        // Detach the user from the group
         $user->groups()->detach($groupid);
 
-        return response()->json(['message' => 'Left the group successfully.']);
+        return redirect()->route('groups.showGroups')->with('success', 'Left the group successfully.');
     }
 
     public function searchGroups(Request $request)

@@ -24,12 +24,12 @@
 
     <div class="main-content">
     <div class="search-container">
-            <form id="groups-search-bar" action="{{ route('groups.search') }}" method="GET">
-                @csrf
-                <input type="text" id="search-groups" name="query" placeholder="🔍 Search groups ..." autocomplete="off" class="search-input">
-            </form>
-            <ul id="groups-list" class="groups-list"></ul>
-        </div>
+        <form id="groups-search-bar" action="{{ route('groups.search') }}" method="GET">
+            @csrf
+            <input type="text" id="search-groups" name="query" placeholder="🔍 Search groups ..." autocomplete="off" class="search-input">
+        </form>
+        <ul id="groups-list" class="groups-list"></ul>
+    </div>
     <div class="groups">
     <h2> Your Groups </h2>
     <ul>
@@ -44,6 +44,7 @@
     </div>
 
     <link href="{{ url('css/groups.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/searchGroups.js') }}" defer></script>
 @endsection
 
 

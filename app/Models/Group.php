@@ -30,4 +30,9 @@ class Group extends Model
     {
         return $this->hasMany(Post::class, 'groupid');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sent_to');
+    }
 }

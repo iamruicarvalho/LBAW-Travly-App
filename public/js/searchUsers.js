@@ -1,4 +1,3 @@
-// const token = document.querySelector('meta[name="csrf-token"').content;
 const searchForm = document.getElementById('users-search-bar');
 const searchUsers = document.getElementById('search-users');
 const usersList = document.getElementById('users-list');

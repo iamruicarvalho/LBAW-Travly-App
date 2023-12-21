@@ -48,29 +48,30 @@
 
             @foreach($data as $data)
 
-            <div class="welcome-post">
-                <div class="post-header">
-                    @php
-                        $user = App\Models\User::find($data->created_by);
-                    @endphp
-                    <p class="user-name">{{ $user->name_ }}</p>
-                    <a href="{{ route('profile.show', $user->id) }}" class="user-username">{{ $user->username }}</a>
-                    <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
-                </div>
-                <div class="post-content">
-                    <p class="post-description">{{ $data->description_ }}</p>
-                </div>
-                <div class="post-image">
-                    <img src="{{ asset('postimage/' . $data->content_) }}">
-                </div>
-                <div class="post-details">
-                    <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
-                    <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
-                    
-                    <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
-                    <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
-                </div>
-            </div>
+                @if($data->groupid === null)
+                    <div class="welcome-post">
+                        <div class="post-header">
+                            @php
+                                $user = App\Models\User::find($data->created_by);
+                            @endphp
+                            <p class="user-name">{{ $user->name_ }}</p>
+                            <a href="{{ route('profile.show', $user->id) }}" class="user-username">{{ $user->username }}</a>
+                            <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
+                        </div>
+                        <div class="post-content">
+                            <p class="post-description">{{ $data->description_ }}</p>
+                        </div>
+                        <div class="post-image">
+                            <img src="{{ asset('postimage/' . $data->content_) }}">
+                        </div>
+                        <div class="post-details">
+                            <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
+                            <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
+                            <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
+                            <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
+                        </div>
+                    </div>
+                @endif
 
             @endforeach
 
