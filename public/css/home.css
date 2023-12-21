@@ -249,68 +249,96 @@ textarea {
 }
 
   
-  .welcome-post {
-    border: 1px solid #ddd;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+.welcome-post {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
 }
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 20px; /* Aumentando o espaçamento para 20px */
+}
+
+.emoji-button {
+  font-size: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
 
 .post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.user-name, .user-username {
-    font-size: 16px;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 25px;
+.user-name {
+  font-weight: bold;
+  margin-right: 10px;
 }
 
-.user-username:hover{
-  color: grey;
-}
-
-.show-details {
-    color: #555;
-    font-size: 14px;
-    text-decoration: none;
-}
-
-.show-details:hover {
-    color: #333;
+.user-username {
+  color: #666;
+  text-decoration: none;
 }
 
 .post-content {
-    margin: 15px 0;
-}
-
-.post-description {
-    font-size: 18px;
-    line-height: 1.5;
+  margin-bottom: 10px;
 }
 
 .post-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-top: 10px;
+  max-width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
 .post-details {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.comments-section {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #ddd;
+.show-details {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
 }
+
+.emoji-button {
+  font-size: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-danger {
+  background-color: #666;
+  color: white;
+}
+
+.btn-primary {
+  background-color: #666;
+  color: white;
+}
+
 
 .btn {
     display: inline-block;
