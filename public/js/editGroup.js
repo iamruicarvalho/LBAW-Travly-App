@@ -46,14 +46,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 option.setAttribute('data-user-id', user.id);
                 datalist.appendChild(option);
             });
+
+            // Set the user ID as a property of the userSearch input
+            userSearch.dataset.userId = usernames.length > 0 ? usernames[0].id : null;
+        }
+
+        function updateUsersList(users) {
+            const userList = document.getElementById('users-list');
+        
+            // Clear the existing list
+            userList.innerHTML = "";
+        
+            // Add the updated users to the list
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.className = 'user-item';
+                li.setAttribute('data-user-id', user.id);
+                li.textContent = user.username;
+        
+                const removeLink = document.createElement('a');
+                removeLink.href = `/groups/${groupid}/remove-user/${user.id}`;
+                removeLink.className = 'remove-user';
+                removeLink.textContent = 'Remove';
+        
+                // Append the new user item to the list
+                userList.appendChild(li);
+        
+                // If the logged-in user is an owner and the user is not an owner, add the remove link
+                if (user.is_owner !== true) {
+                    li.appendChild(removeLink);
+                }
+            });
         }
 
         function addUserToGroup() {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-            // Dynamically fetch the userid associated with the selected user
-            const selectedOption = document.querySelector(`option[value="${userSearch.value}"]`);
-            const dynamicUserId = selectedOption ? selectedOption.getAttribute('data-user-id') : null;
+            const dynamicUserId = userSearch.dataset.userId;
+            console.log('dynamicUserId', dynamicUserId);
 
             if (dynamicUserId) {
                 fetch(`/groups/${groupid}/details/add-user/${dynamicUserId}`, {
@@ -70,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             console.error('Error adding user to the group:', response.error);
                         } else if (response.user && response.user.username) {
                             console.log('User added to the group successfully');
-                            updateUserList(response.user);
+                            updateUsersList(response.users);
                         } else {
                             console.error('Invalid server response. Missing user information.');
                         }
@@ -113,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.getElementById('addUserBtn').addEventListener('click', function () {
-            groupid = getGroupIdFromUrl();
+            groupid = document.getElementById('users-search-bar').dataset.groupid;
             addUserToGroup();
         });
 
@@ -125,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
 
 
 

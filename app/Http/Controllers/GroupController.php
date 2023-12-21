@@ -51,7 +51,7 @@ class GroupController extends Controller
 
         $updatedUsers = $group->users;
 
-        return redirect()->route('groups.showGroups')->with(['groupId' => $group->groupid, 'users' => $updatedUsers]);
+        return redirect()->route('groups.showGroups')->with(['groupid' => $group->groupid, 'users' => $updatedUsers]);
     }
 
 
@@ -180,36 +180,30 @@ class GroupController extends Controller
         return response()->json($users);
     }
 
-    public function addUser($groupid, $userId)
+    public function addUser($groupid, $userid)
     {
-        // Find the group
         $group = Group::find($groupid);
 
-        // Check if the group exists
         if (!$group) {
             return response()->json(['error' => 'Group not found'], 404);
         }
 
-        // Check if the authenticated user is the owner of the group
         if (!$group->owners->contains(auth()->user())) {
             return response()->json(['error' => 'Permission denied'], 403);
         }
 
-        // Add user to the group
-        $group->users()->attach($userId);
+        $group->users()->attach($userid);
 
-        // Retrieve the user information if needed
-        $user = User::find($userId);
+        $user = User::find($userid);
 
-        // You can customize the data you send in the response
         $response = [
             'user' => $user,
+            'users' => $group->users,
             'message' => 'User added to the group successfully',
         ];
 
         return response()->json($response);
     }
-
 
     // Permite que um usuário solicite ingresso em um grupo
     public function requestJoin($groupId)
