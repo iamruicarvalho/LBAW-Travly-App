@@ -48,42 +48,39 @@
             @if ($group->users->isEmpty())
                 <p>No users found for this group.</p>
             @else
-                <ul id="users">
-                    @foreach ($group->users as $user)
-                        <li id="user">{{ $user->username }}</li>
-                        @if($group->owners->contains(auth()->user()))
-                            @if(!$group->owners->contains($user))
-                                <a href="{{ route('group.removeuser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}">Remove</a>
-                            @else
-                                <a class="owner">Group Owner</a>
-                                <form method="post" action="{{ route('group.delete',  ['groupid' => $group->groupid]) }}">
-                                    @csrf
-                                    <button type="submit">Delete group</button>
-                                </form>
-                            @endif
+            <ul id="users-list">
+                @foreach ($group->users as $user)
+                    <li class="user-item" data-user-id="{{ $user->id }}">{{ $user->username }}</li>
+                    @if($group->owners->contains(auth()->user()))
+                        @if(!$group->owners->contains($user))
+                            <a href="{{ route('group.removeuser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}" class="remove-user">Remove</a>
+                        @else
+                            <a class="owner">Group Owner</a>
+                            <form method="post" action="{{ route('group.delete',  ['groupid' => $group->groupid]) }}">
+                                @csrf
+                                <button type="submit">Delete group</button>
+                            </form>
                         @endif
-                    @endforeach
-                </ul>
+                    @endif
+                @endforeach
+            </ul>
             @endif
 
             @if($group->owners->contains(auth()->user()))
-                <form id="users-search-bar" action="{{ route('users.search') }}" method="GET">
-                    @csrf
-                    <input type="text" id="search-users" name="query" placeholder="🔍 Search users ..." list="usernames-list" autocomplete="off">
-                    <datalist id="usernames-list"></datalist>
-                </form>
-                <ul id="users-list"></ul>
-                <form id="addMemberForm" action="{{ route('group.addUser', ['groupid' => $group->groupid, 'userid' => $user->id]) }}" method="POST">
-                    @csrf
-                    <button id="addUserBtn">Add Member</button>
-                </form>
+            <form id="users-search-bar" action="{{ route('users.search') }}" method="GET" data-groupid="{{ $group->groupid }}">
+                @csrf
+                <input type="text" id="search-users" name="query" placeholder="🔍 Search users ..." list="usernames-list" autocomplete="off">
+                <datalist id="usernames-list"></datalist>
+            </form>
+            <ul id="users-list"></ul>
+            <button id="addUserBtn">Add Member</button>
             @else
             <form id="leaveGroupForm" action="{{ route('groups.leave', ['groupid' => $group->groupid]) }}" method="POST">
                 @csrf
                 <button type="submit">Leave Group</button>
             </form>
             @endif
-            
+
     </div>
     </div>
     <link href="{{ url('css/group.css') }}" rel="stylesheet">
