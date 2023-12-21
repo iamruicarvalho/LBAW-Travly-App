@@ -17,7 +17,7 @@ class FriendRequestController extends Controller{
         if (Auth::check()) {
             
             $this->validate($request, [
-                 'to' => 'required|exists:user_,id',
+                'to' => 'required|exists:user_,id',
             ]);
 
             $userid = Auth::user()->id;

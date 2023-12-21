@@ -117,6 +117,6 @@ class User extends Model implements Authenticatable
     }
 
     public function follows($target){
-        return Follow::where('followerid', $this->id)->where('followedid', $friend)->exists();
+        return Follow::where('followerid', $this->id)->where('followedid', $target)->exists();
     }
 }

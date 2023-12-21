@@ -7,10 +7,9 @@
         {{-- Left Sidebar --}}
         <div class="left-sidebar">
             <ul class="sidebar-menu">
-            <li><a href="{{ route('login') }}">🔐 Login</a></li>
+                <li><a href="{{ route('login') }}">🔐 Login</a></li>
                 <li><a href="{{ route('register') }}">📝 Register</a></li>
             </ul>
-
         </div>
 
         {{-- Main Content --}}
@@ -69,8 +68,6 @@
                 <input type="text" id="search-users" name="query" placeholder="🔍 Search users ..." autocomplete="off">
             </form>
             <ul id="users-list"><!-- users will appear here --></ul>
-
-
         </div>
     </div>
     <link href="{{ url('css/home.css') }}" rel="stylesheet">
