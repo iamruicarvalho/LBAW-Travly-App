@@ -8,6 +8,7 @@ class GuestController extends Controller
 {
     public function showGuestPosts()
     {
+        // get posts from users with public account
         $posts = Post::with('created_by')
             ->whereHas('created_by', function ($query) {
                 $query->where('private_', false);

@@ -161,8 +161,7 @@
         color: black;
     }
 
-    body .followers-following-link a:hover, 
-    body .followers-following-link p:hover {
+    body .followers-following-link a:hover {
         color: grey;
     }
 

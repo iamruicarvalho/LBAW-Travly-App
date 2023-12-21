@@ -263,9 +263,15 @@ textarea {
     align-items: center;
 }
 
-.user-name {
+.user-name, .user-username {
     font-size: 16px;
     font-weight: bold;
+    color: black;
+    margin-bottom: 25px;
+}
+
+.user-username:hover{
+  color: grey;
 }
 
 .show-details {

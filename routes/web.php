@@ -35,6 +35,7 @@ Route::redirect('/', '/login');
 // Home
 Route::controller(HomeController::class)->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/guest', [HomeController::class, 'index'])->name('guest');
 });
 
 // User
@@ -146,7 +147,6 @@ Route::get('/explore', [ExploreController::class, 'explore'])->name('explore');
 Route::get('/posts/by-city/{city}', [PostController::class, 'getPostsByCity'])->name('posts.by.city');
 Route::get('/posts/{hashtag}', [PostController::class, 'getPostsByHashtag'])->name('posts.by.hashtag');
 
-Route::get('/guest-login', [GuestController::class, 'showGuestPosts'])->name('guest');
 
 /*
 use Illuminate\Support\Facades\Route;

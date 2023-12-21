@@ -20,15 +20,29 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $this->middleware('auth');
-        $user = Auth()->user();
-        $userid = $user->id;
-    
-        $data = Post::with(['comments' => function ($query) {
-            $query->orderBy('time_', 'desc')->take(50);
-        }])->where('created_by', '=', $userid)->get();
-    
-        return view('pages.home', compact('data'));
+        if (Auth::check()) {
+            $this->middleware('auth');
+            $user = Auth()->user();
+            $userid = $user->id;
+        
+            $data = Post::with(['comments' => function ($query) {
+                $query->orderBy('time_', 'desc')->take(50);
+                }])
+                ->where('created_by', '=', $userid)
+                ->get();
+        
+            return view('pages.home', compact('data'));
+        } 
+        else {
+            $posts = Post::with('created_by')
+            ->whereHas('created_by', function ($query) {
+                $query->where('private_', false);
+            })
+            ->orderBy('time_', 'desc')  
+            ->get();
+
+            return view('pages.guest', compact('posts'));
+        }
     }
     
 

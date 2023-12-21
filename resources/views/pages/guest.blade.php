@@ -35,7 +35,7 @@
                         $user = App\Models\User::find($post->created_by);
                     @endphp
                     <p class="user-name">{{ $user->name_ }}</p>
-                    <p class="user-name">{{ $user->username }}</p>
+                    <a href="{{ route('profile.show', $user->id) }}" class="user-username">{{ $user->username }}</a>
                     <p class="show-details"> {{ \Carbon\Carbon::parse($post->time_)->diffForHumans() }}</p>
 
                 </div>
@@ -44,9 +44,7 @@
                 </div>
                 <div class="post-image">
                     <img src="{{ asset('postimage/' . $post->content_) }}">
-                </div>
-
-                
+                </div>                
             </div>
 
             @endforeach

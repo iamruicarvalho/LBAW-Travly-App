@@ -86,7 +86,7 @@
                 </div>
                 <!-- Need to see if they are friends. Not implemented yet. Add this when done (    && (weAreFriends || !($user->private_)    )-->
                 <div class="user-links">
-                    @if (Auth()->user() == $user || (Auth()->user() != $user && !($user->private_)))
+                    @if (Auth()->user() && (Auth()->user() == $user || (Auth()->user() != $user && !($user->private_))))
                         <div class="followers-following-link">
                             <a href="{{ route('followers', $user->id) }}" class="followers-link">{{ $user->followers()->count() }} Followers</a>
                             <a href="{{ route('following', $user->id) }}" class="following-link">{{ $user->following()->count() }} Following</a>

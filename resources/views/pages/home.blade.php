@@ -54,9 +54,8 @@
                         $user = App\Models\User::find($data->created_by);
                     @endphp
                     <p class="user-name">{{ $user->name_ }}</p>
-                    <p class="user-name">{{ $user->username }}</p>
+                    <a href="{{ route('profile.show', $user->id) }}" class="user-username">{{ $user->username }}</a>
                     <p class="show-details"> {{ \Carbon\Carbon::parse($data->time_)->diffForHumans() }}</p>
-
                 </div>
                 <div class="post-content">
                     <p class="post-description">{{ $data->description_ }}</p>
@@ -71,8 +70,6 @@
                     <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_posts_del', $data->postid)}}" class="btn btn-danger">Delete</a>
                     <a href="{{url('post_update_page',$data->postid)}}" class="btn btn-primary">Edit</a>
                 </div>
-
-                
             </div>
 
             @endforeach
