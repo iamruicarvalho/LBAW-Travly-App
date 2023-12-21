@@ -91,10 +91,10 @@ class UserController extends Controller
     public function searchUsers(Request $request) {
         $query = $request->input('query'); 
 
-        $users = User::where('username', 'like', '%' . $query . '%')
-                ->orWhere('name_', 'like', '%' . $query . '%')
-                ->select(['id', 'name_', 'username'])
-                ->get();
+        $users = User::whereRaw('LOWER(username) LIKE ?', ['%' . strtolower($query) . '%'])
+            ->orWhereRaw('LOWER(name_) LIKE ?', ['%' . strtolower($query) . '%'])
+            ->select(['id', 'name_', 'username'])
+            ->get();
         
         return response()->json($users);
     }

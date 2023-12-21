@@ -1111,7 +1111,7 @@ INSERT INTO request_(senderid, receiverid) VALUES
             (5, 69),
             (36, 94);*/
 
-/*
+
 INSERT INTO follows_(followerid, followedid) VALUES
             (23, 67),
             (10, 35),
@@ -1277,7 +1277,7 @@ INSERT INTO follows_(followerid, followedid) VALUES
             (33, 32),
             (5, 4),
             (2, 1);
-            */
+            
 
 INSERT INTO post_likes(id, postID) VALUES
             (2, 1), 
