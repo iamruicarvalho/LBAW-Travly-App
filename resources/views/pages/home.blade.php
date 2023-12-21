@@ -66,17 +66,17 @@
                         <a href="{{ url('/posts/' . $data->postid . '/likes') }}" class="show-details"> {{ $data->likes_ }} likes</a>
                         <a href="{{ url('/posts/' . $data->postid . '/comments') }}" class="show-details"> Comments</a>
 
-                        {{-- Botão Curtir --}}
+                        {{-- Botão Curtir com Emoji Grande --}}
                         <form action="{{ route('posts.likes.store', $data->postid) }}" method="POST" style="display: inline;">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Curtir</button>
+                            <button type="submit" class="emoji-button" style="font-size: 24px; border: none; background: none; cursor: pointer;">👍🏻</button>
                         </form>
 
-                        {{-- Botão Descurtir --}}
+                        {{-- Botão Descurtir com Emoji Grande --}}
                         <form action="{{ route('posts.likes.destroy', $data->postid) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-secondary">Descurtir</button>
+                            <button type="submit" class="emoji-button" style="font-size: 24px; border: none; background: none; cursor: pointer;">👎🏻</button>
                         </form>
 
                         <a onclick="return confirm('Are you sure to delete this?')" href="{{ url('my_posts_del', $data->postid) }}" class="btn btn-danger">Delete</a>
