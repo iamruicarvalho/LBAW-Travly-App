@@ -588,12 +588,12 @@ $BODY$
 BEGIN
     DELETE FROM comment_likes WHERE OLD.commentID = comment_likes.commentID;
     DELETE FROM post_notification WHERE OLD.commentID = post_notification.postID;
-    DELETE FROM comment_ WHERE OLD.commentID = comment_.commentID;
 
     RETURN OLD;
 END;
 $BODY$
 LANGUAGE plpgsql;
+
 
 CREATE TRIGGER delete_comment_action
     BEFORE DELETE ON comment_

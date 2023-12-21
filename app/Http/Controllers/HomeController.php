@@ -14,7 +14,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Comment;
-
+use App\Models\CommentLike;
 
 class HomeController extends Controller
 {
@@ -226,16 +226,28 @@ class HomeController extends Controller
 
     public function destroy($commentid)
     {
-        $comment = Comment::find($commentid);
+        DB::beginTransaction();
     
-        if (!$comment) {
-            return redirect()->back()->with('error', 'Comment not found');
+        try {
+            $comment = Comment::find($commentid);
+    
+            if (!$comment) {
+                throw new Exception('Comment not found');
+            }
+    
+            CommentLike::where('commentid', $commentid)->delete();
+    
+    
+            $comment->delete();
+    
+            DB::commit();
+            return redirect()->back()->with('message', 'Comment deleted successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $e->getMessage());
         }
-    
-        $comment->delete();
-    
-        return redirect()->back()->with('message', 'Comment deleted successfully!');
     }
+    
     
 
 

@@ -11,10 +11,10 @@ class CommentLike extends Model
 {
     public $timestamps = false;
     protected $table = 'comment_likes';
-    protected $primaryKey = ['id', 'commentID'];
+    protected $primaryKey = ['id', 'commentid'];
 
     protected $fillable = [
-        'id', 'commentID'
+        'id', 'commentid'
     ];
 
     public function user()
@@ -24,6 +24,6 @@ class CommentLike extends Model
 
     public function comment()
     {
-        return $this->belongsTo(Comment::class, 'commentID');
+        return $this->belongsTo(Comment::class, 'commentid');
     }
 }
