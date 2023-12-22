@@ -150,7 +150,7 @@ class UserController extends Controller
         ]);
 
         $user = User::where('email', '=', $request->input('email'))->first();
-        $user->password = Hash::make($request->input('password'));
+        $user->password_ = Hash::make($request->input('password'));
         $user->save();
 
         return redirect()->route('home')

@@ -46,17 +46,16 @@
                         </span>
                     @endif
                     
-                    <label for="password">New Password</label>
-                    <input id="password" type="password" name="password" value="{{ old('password') }}" required autofocus>
-                    <p class="min-length-password">Min 8 characters</p>
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" required>
                     @if ($errors->has('password'))
                         <span class="error">
                             {{ $errors->first('password') }}
                         </span>
                     @endif
 
-                    <label for="confirm-passowrd">Confirm Password</label>
-                    <input id="confirm-password" type="password" name="confirm-password" value="{{ old('confirm-password') }}" required autofocus>
+                    <label for="password-confirm">Confirm Password</label>
+                    <input id="password-confirm" type="password" name="password_confirmation" required>
 
                     <div class="send-email-buttons">
                         <button type="submit">Reset password</button>
