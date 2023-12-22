@@ -131,5 +131,30 @@ class UserController extends Controller
 
         return redirect()->route('login');
     }
+
+    public function showEmailLinkRequestForm()
+    {
+        return view('partials.send_email');
+    }
+
+    public function showUpdatePasswordForm()
+    {
+        return view('partials.recover_password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|max:250',
+            'password' => 'required|min:8|confirmed'
+        ]);
+
+        $user = User::where('email', '=', $request->input('email'))->first();
+        $user->password_ = Hash::make($request->input('password'));
+        $user->save();
+
+        return redirect()->route('home')
+            ->withSuccess('You have successfully changed your password!');
+    }
 }
 

@@ -222,6 +222,13 @@ nav {
   cursor: pointer;
 }
 
+.content + .login-form .forgot-password {
+  color: blue;
+  font-size: 12px;
+  text-decoration: none;
+  margin-left: 12em;
+}
+
 .destination__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

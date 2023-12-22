@@ -62,5 +62,23 @@ class LoginController extends Controller
         \Log::info('User successfully logged out.');
         return redirect()->route('login')
             ->withSuccess('You have logged out successfully!');
-    } 
+    }
+    
+    public function recoverPassword(Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|unique:user_,username', 
+            'email' => 'required|email|unique:user_,email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = User::create([   
+            'name_' => $request->input('name'),
+            'username' => $request->input('username'),
+            'email' => $request->input('email'),
+            'password_' => Hash::make($request->input('password')),
+        ]);
+
+        $user->save();
+    }
 }
